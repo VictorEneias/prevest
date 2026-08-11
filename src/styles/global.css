@@ -1,0 +1,610 @@
+/* =========================================================================
+   SISTEMA VISUAL
+   -------------------------------------------------------------------------
+   Vernáculo escolar brasileiro, levado a sério:
+   - papel quadriculado (a grade é real: tudo alinha em múltiplos de 24px)
+   - caneta AZUL   = o que o aluno escreve   -> positivo, "pra direita"
+   - caneta VERMELHA = o que se corrige/tira -> negativo, "pra esquerda"
+   - lápis grafite = anotação de margem      -> links de pré-requisito
+   - marca-texto   = atenção                 -> rascunho / não revisado
+
+   A dupla azul/vermelho não é decoração: é o par de maior saturação do site
+   inteiro, porque sinal é o conceito estrutural do currículo (junção -> vetor).
+   Também é seguro pra daltonismo (deutan/protan distinguem azul de vermelho).
+   ========================================================================= */
+
+@import '@fontsource-variable/space-grotesk';
+@import '@fontsource-variable/source-serif-4';
+
+:root {
+  /* --- unidade da grade: TUDO é múltiplo disso --- */
+  --u: 24px;
+
+  /* --- papel --- */
+  --papel: #fcfcfa;
+  --papel-fundo: #f4f5f2;
+  --grade: #d9e2e0;
+  --grade-forte: #c3d2cf;
+  --linha: #e2e4e0;
+
+  /* --- tinta --- */
+  --tinta: #14181f;
+  --tinta-media: #454d59;
+  --tinta-fraca: #78808c;
+
+  /* --- o par de sinal --- */
+  --azul: #1b4fd8;
+  --azul-fraco: #e4ebfc;
+  --azul-medio: #a9c0f4;
+  --vermelho: #d6301f;
+  --vermelho-fraco: #fce6e3;
+  --vermelho-medio: #f3ada4;
+
+  /* --- grafite: pré-requisitos --- */
+  --grafite: #5a6472;
+  --grafite-fraco: #eceef1;
+
+  /* --- marca-texto: rascunho --- */
+  --marca: #f5cf4d;
+  --marca-fraco: #fdf5d9;
+
+  /* --- tipografia --- */
+  --f-ui: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --f-texto: 'Source Serif 4 Variable', ui-serif, Georgia, serif;
+  --f-num: 'Space Grotesk Variable', ui-monospace, monospace;
+
+  --t-base: 18px;
+  --t-linha: 1.62;
+
+  --raio: 3px;
+  --sombra: 0 1px 2px rgba(20, 24, 31, 0.05), 0 4px 16px rgba(20, 24, 31, 0.05);
+}
+
+/* Modo apresentação: os dois olhando a tela de lado, na mesa da casa do aluno. */
+html[data-tamanho='grande'] {
+  --t-base: 22px;
+}
+html[data-tamanho='enorme'] {
+  --t-base: 27px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: var(--t-base);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--f-texto);
+  line-height: var(--t-linha);
+  color: var(--tinta);
+  background-color: var(--papel-fundo);
+  /* A grade do caderno. Baixo contraste de propósito — ela orienta, não compete. */
+  background-image:
+    linear-gradient(var(--grade) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grade) 1px, transparent 1px);
+  background-size: var(--u) var(--u);
+  background-position: -1px -1px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- tipografia ---------- */
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--f-ui);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--tinta);
+  margin: calc(var(--u) * 1.5) 0 calc(var(--u) * 0.5);
+}
+h1 {
+  font-size: 2.1rem;
+  letter-spacing: -0.03em;
+}
+h2 {
+  font-size: 1.42rem;
+}
+h3 {
+  font-size: 1.1rem;
+}
+h1:first-child,
+h2:first-child,
+h3:first-child {
+  margin-top: 0;
+}
+
+p {
+  margin: 0 0 var(--u);
+}
+strong {
+  font-weight: 600;
+}
+
+/* Números sempre tabulares — coluna de conta não pode dançar. */
+.num,
+td,
+th {
+  font-family: var(--f-num);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- estrutura da página ---------- */
+
+.folha {
+  max-width: calc(var(--u) * 34);
+  margin: 0 auto;
+  padding: calc(var(--u) * 2) calc(var(--u) * 1.5) calc(var(--u) * 4);
+}
+
+/* A prosa fica em papel liso: a grade orienta o layout, não atrapalha a leitura. */
+.papel {
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: calc(var(--u) * 1.5);
+  box-shadow: var(--sombra);
+}
+
+/* ---------- a régua: o elemento-assinatura ----------
+   Divisórias não são linhas: são retas numéricas. O objeto mais importante
+   do currículo virou o objeto estrutural da interface.                     */
+.regua {
+  height: calc(var(--u) * 0.75);
+  border: 0;
+  margin: calc(var(--u) * 1.5) 0;
+  background-image:
+    linear-gradient(var(--grade-forte), var(--grade-forte)),
+    repeating-linear-gradient(
+      90deg,
+      var(--grade-forte) 0 1px,
+      transparent 1px var(--u)
+    );
+  background-size:
+    100% 1px,
+    100% 9px;
+  background-position:
+    0 50%,
+    0 50%;
+  background-repeat: no-repeat, repeat-x;
+}
+
+/* ---------- cabeçalho ---------- */
+
+.topo {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: var(--u);
+  padding: calc(var(--u) * 0.5) calc(var(--u) * 1.5);
+  background: color-mix(in srgb, var(--papel) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--linha);
+  font-family: var(--f-ui);
+  font-size: 0.8rem;
+}
+.topo a {
+  color: var(--tinta-media);
+  text-decoration: none;
+}
+.topo a:hover {
+  color: var(--azul);
+}
+.topo .marca {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--tinta);
+}
+.topo .espaco {
+  flex: 1;
+}
+
+/* ---------- <C>: link de pré-requisito ----------
+   Grafite pontilhado = anotação a lápis na margem. Distinto de link normal,
+   porque o comportamento é diferente: não navega, abre painel por cima.     */
+
+.elo-conceito {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0 1px;
+  cursor: pointer;
+  border-bottom: 1.5px dotted var(--grafite);
+  transition: background-color 0.12s ease;
+}
+.elo-conceito::after {
+  content: '↘';
+  font-family: var(--f-ui);
+  font-size: 0.62em;
+  color: var(--grafite);
+  vertical-align: super;
+  margin-left: 1px;
+}
+.elo-conceito:hover,
+.elo-conceito:focus-visible {
+  background: var(--grafite-fraco);
+  border-bottom-style: solid;
+}
+.elo-conceito[data-quebrado='sim'] {
+  border-bottom-color: var(--vermelho);
+  background: var(--vermelho-fraco);
+}
+
+/* ---------- pilha de painéis ---------- */
+
+.pilha-fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(20, 24, 31, 0.28);
+  display: none;
+}
+.pilha-fundo[data-aberto='sim'] {
+  display: block;
+}
+
+.painel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(calc(var(--u) * 27), 92vw);
+  background: var(--papel);
+  border-left: 1px solid var(--linha);
+  box-shadow: -8px 0 32px rgba(20, 24, 31, 0.12);
+  display: flex;
+  flex-direction: column;
+  z-index: 51;
+  animation: entra-painel 0.18s ease-out;
+}
+@keyframes entra-painel {
+  from {
+    transform: translateX(18px);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .painel {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.painel-topo {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.5);
+  padding: calc(var(--u) * 0.5) calc(var(--u) * 0.75);
+  border-bottom: 1px solid var(--linha);
+  font-family: var(--f-ui);
+  font-size: 0.72rem;
+  background: var(--papel-fundo);
+}
+.painel-trilha {
+  flex: 1;
+  color: var(--tinta-fraca);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.painel-trilha b {
+  color: var(--tinta);
+  font-weight: 600;
+}
+.painel-botao {
+  font-family: var(--f-ui);
+  font-size: 0.72rem;
+  border: 1px solid var(--linha);
+  background: var(--papel);
+  color: var(--tinta-media);
+  border-radius: var(--raio);
+  padding: 3px 9px;
+  cursor: pointer;
+}
+.painel-botao:hover {
+  border-color: var(--grafite);
+  color: var(--tinta);
+}
+.painel iframe {
+  flex: 1;
+  border: 0;
+  width: 100%;
+}
+
+/* ---------- camadas do Modo Aula ---------- */
+
+.camada {
+  margin: 0 0 var(--u);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  background: var(--papel);
+  overflow: hidden;
+}
+.camada > summary {
+  font-family: var(--f-ui);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  padding: calc(var(--u) * 0.4) calc(var(--u) * 0.6);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+.camada > summary::-webkit-details-marker {
+  display: none;
+}
+.camada > summary::before {
+  content: '▸';
+  font-size: 0.8em;
+  transition: transform 0.12s ease;
+}
+.camada[open] > summary::before {
+  transform: rotate(90deg);
+}
+.camada > summary:hover {
+  color: var(--tinta);
+  background: var(--papel-fundo);
+}
+.camada-corpo {
+  padding: calc(var(--u) * 0.75) calc(var(--u) * 0.75) 1px;
+  border-top: 1px solid var(--linha);
+}
+
+/* cada camada tem sua cor de borda esquerda — identificação periférica,
+   você bate o olho e sabe o que é sem ler o rótulo */
+.camada[data-camada='explicacao'] {
+  border-left: 3px solid var(--grafite);
+}
+.camada[data-camada='dica'] {
+  border-left: 3px solid var(--marca);
+}
+.camada[data-camada='resolucao'] {
+  border-left: 3px solid var(--azul);
+}
+.camada[data-camada='pensamento'] {
+  border-left: 3px solid var(--tinta);
+  background: var(--papel-fundo);
+}
+.camada[data-camada='erros'] {
+  border-left: 3px solid var(--vermelho);
+}
+/* aparte opcional — azul suave: "abre se quiser", não compete com a resolução */
+.camada[data-camada='curiosidade'] {
+  border-left: 3px solid var(--azul-medio);
+}
+
+/* ---------- selo de rascunho ---------- */
+
+.rascunho {
+  font-family: var(--f-ui);
+  font-size: 0.78rem;
+  background: var(--marca-fraco);
+  border: 1px solid var(--marca);
+  border-radius: var(--raio);
+  padding: calc(var(--u) * 0.5) calc(var(--u) * 0.75);
+  margin-bottom: var(--u);
+}
+.rascunho b {
+  display: block;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  margin-bottom: 3px;
+}
+
+/* Em Modo Aula, conteúdo não revisado some da tela. */
+html[data-modo='aula'] .conceito-nao-revisado .camada,
+html[data-modo='prova'] .conceito-nao-revisado .camada {
+  display: none;
+}
+
+/* ---------- prosa da explicação ----------
+   Texto corrido, sem caixa nem clique. Some em Aula e em Prova pra a página
+   virar só títulos + gráficos — igual ao que as camadas faziam, mas sem chrome. */
+.prosa {
+  margin: 0 0 var(--u);
+}
+html[data-modo='aula'] .prosa,
+html[data-modo='prova'] .prosa {
+  display: none;
+}
+
+/* ---------- botão do plano de fundo por modo ---------- */
+
+.barra-modo {
+  display: flex;
+  gap: 3px;
+  font-family: var(--f-ui);
+  font-size: 0.7rem;
+}
+.barra-modo button {
+  border: 1px solid var(--linha);
+  background: var(--papel);
+  color: var(--tinta-fraca);
+  padding: 3px 10px;
+  border-radius: var(--raio);
+  cursor: pointer;
+  font: inherit;
+}
+.barra-modo button[aria-pressed='true'] {
+  background: var(--tinta);
+  border-color: var(--tinta);
+  color: var(--papel);
+}
+
+/* ---------- metadados / cartão de cabeçalho do conceito ---------- */
+
+.ficha {
+  font-family: var(--f-ui);
+  font-size: 0.74rem;
+  color: var(--tinta-fraca);
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--u) * 0.6);
+  margin-bottom: var(--u);
+}
+.ficha span b {
+  color: var(--tinta-media);
+  font-weight: 600;
+}
+
+.prereq-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 var(--u);
+  padding: 0;
+  list-style: none;
+}
+.prereq-lista li {
+  margin: 0;
+}
+
+/* ---------- tabelas ---------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--f-ui);
+  font-size: 0.82rem;
+  margin: 0 0 var(--u);
+}
+th,
+td {
+  text-align: left;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--linha);
+}
+th {
+  font-weight: 600;
+  color: var(--tinta-media);
+  border-bottom-color: var(--grade-forte);
+}
+
+/* ---------- código / expressões ---------- */
+
+code {
+  font-family: var(--f-num);
+  font-size: 0.9em;
+  background: var(--papel-fundo);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 1px 5px;
+}
+pre {
+  background: var(--papel-fundo);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: calc(var(--u) * 0.6);
+  overflow-x: auto;
+}
+pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+/* ---------- acessibilidade ---------- */
+
+:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.pular {
+  position: absolute;
+  left: -9999px;
+}
+.pular:focus {
+  left: 8px;
+  top: 8px;
+  z-index: 99;
+  background: var(--papel);
+  padding: 8px 12px;
+  border: 1px solid var(--tinta);
+}
+
+/* ---------- página de fragmento (dentro do iframe do painel) ---------- */
+
+body.fragmento {
+  background-color: var(--papel);
+  background-image: none;
+}
+body.fragmento .folha {
+  padding: calc(var(--u) * 0.75) var(--u) calc(var(--u) * 2);
+  max-width: none;
+}
+body.fragmento .papel {
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* ---------- índice inicial ---------- */
+
+.blocos {
+  display: grid;
+  gap: var(--u);
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--u) * 11), 1fr));
+  padding: 0;
+  list-style: none;
+}
+.cartao {
+  display: block;
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: calc(var(--u) * 0.75);
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--sombra);
+  transition:
+    border-color 0.12s ease,
+    transform 0.12s ease;
+}
+.cartao:hover {
+  border-color: var(--azul);
+  transform: translateY(-1px);
+}
+.cartao h3 {
+  margin: 0 0 4px;
+  font-size: 0.98rem;
+}
+.cartao p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--tinta-media);
+  line-height: 1.45;
+}
+.cartao .selo {
+  font-family: var(--f-ui);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  display: block;
+  margin-bottom: 6px;
+}
+.cartao[data-revisado='nao'] {
+  border-left: 3px solid var(--marca);
+}

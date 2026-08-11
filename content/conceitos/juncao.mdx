@@ -1,0 +1,197 @@
+---
+titulo: Junção
+subtitulo: Por que a subtração não existe
+materia: matematica
+bloco: aritmetica
+prereqs: [reta-numerica, numeros-negativos]
+desbloqueia: [termos-semelhantes, equacao-primeiro-grau, grandezas-com-sinal]
+nivel: fundamento
+tempo_estimado: 5
+revisado: false
+resumo: Soma e subtração são a mesma operação. Entender isso resolve metade dos erros de álgebra dos próximos três anos.
+---
+
+<Explicacao>
+
+Eu entendo que, a esta altura, você já deve estar bem familiarizado com somar e
+subtrair. Mas hoje eu vou te mostrar uma coisa que, à primeira vista, parece
+óbvia demais — e que, mesmo assim, pode te ajudar com a matemática pelo resto da
+vida.
+
+Hoje eu vou te ensinar o conceito de **junção**. Ele não vai mudar absolutamente
+nada no resultado das suas contas. O que ele muda é o seu **jeito de pensar** os
+números — de um jeito que facilita entender conceitos bem mais complexos e melhora
+a sua capacidade de resolver problemas.
+
+Pensa na junção quase como um óculos: os números continuam os mesmos, mas você
+passa a enxergar a matemática com outros olhos.
+
+</Explicacao>
+
+## Afinal, o que é junção?
+
+<Explicacao>
+
+Pra explicar isso, deixa eu te fazer uma pergunta antes: o que significam o sinal
+de menos ($-$) e o sinal de mais ($+$)?
+
+Pra muita gente, esses dois não passam de símbolos que a gente usa pra mandar
+fazer as operações de soma e subtração. E é exatamente aí que mora o erro. Esses
+sinais até servem pra isso, sim — mas eles são **muito mais** do que isso. Eles
+são, na verdade, uma característica do próprio número.
+
+"Como assim?", você pode me perguntar. O sinal de menos, quando está na frente de
+um número, está ali pra indicar que aquele número é **negativo**; o sinal de mais
+indica que ele é **positivo** (mesmo que, em muitos casos, a ausência de sinal
+também queira dizer positivo).
+
+Ou seja: quando você se depara com uma expressão como $2 + 3 - 7$, em vez de pensar
+"vou somar 3 ao 2 e depois subtrair 7", dá pra pensar que você está simplesmente
+**juntando três números**: um $+2$, um $+3$ e um $-7$. **Isso é junção.**
+
+</Explicacao>
+
+<Explicacao>
+
+O objetivo da junção é fazer o seu cérebro parar de enxergar o sinal como algo
+grudado numa operação, e passar a enxergá-lo como uma característica que nasce com
+o número. A partir de agora, a gente deixa de entender soma e subtração como
+coisas diferentes e passa a entender tudo como uma coisa só: **junção**.
+
+Veja em alguns exemplos.
+
+</Explicacao>
+
+## Alguns exemplos
+
+### Exemplo 1
+
+<Explicacao>
+
+$$3 + 5$$
+
+Normalmente a gente lê isso como "a soma de 3 com 5". Na junção, a leitura é: a
+junção do número $3$ com o número $5$. Nada de novo no resultado — as duas setas
+apontam pra direita e se encadeiam até o $8$.
+
+</Explicacao>
+
+<Setas
+  parcelas={[3, 5]}
+  legenda="3 + 5  →  (+3) + (+5) = 8"
+  titulo="Junção de dois positivos"
+/>
+
+### Exemplo 2
+
+<Explicacao>
+
+$$3 - 5$$
+
+Aqui já dá pra ver um pouco da praticidade da técnica. Pra resolver essa conta,
+boa parte dos alunos usa um truquezinho: subtrai o menor do maior ($5 - 3 = 2$) e
+depois "cola" o sinal de menos no resultado ($-2$).
+
+Funciona. Mas é justamente esse tipo de resolução que, lá na frente, cria alunos
+com dificuldade em matemática. É uma coisa que a pessoa vai usando porque "dá
+certo", sem nunca saber de verdade o que está fazendo.
+
+</Explicacao>
+
+<Curiosidade rotulo="Curiosidade — de onde vem esse truque">
+
+De onde vem esse truque de "inverter e trocar o sinal"? Se você tem uma expressão
+$(x - y)$, dá pra colocar um $-1$ em evidência e reescrever como $-(y - x)$:
+
+$$x - y = -\,(y - x).$$
+
+Ou seja: subtrair dois números dá o mesmo resultado que fazer a subtração
+**invertida** e multiplicar por $-1$. É por isso que "faz $5 - 3$ e depois troca o
+sinal" acerta o $3 - 5$.
+
+Repara que essa justificativa inteira é sobre **sinal** — que é exatamente o que a
+gente está estudando aqui. Entender bem o conceito de sinal é o que sustenta o
+truque; decorar o truque sem entender o sinal é o que quebra depois.
+
+</Curiosidade>
+
+<Explicacao>
+
+E é aí que mora o problema de decorar. Qualquer dificuldade nova que apareça mais
+pra frente e "quebre" essa técnica milagrosa que a pessoa decorou, ela se perde. E
+você já imagina a bola de neve que isso vira quando o assunto é matemática, né…
+
+Na junção não tem esse risco, porque não tem truque nenhum pra quebrar. Essa
+expressão, que a gente normalmente leria como "a subtração de 5 do 3", vira
+simplesmente a junção do número $3$ com o número $5$ negativo.
+
+</Explicacao>
+
+<Setas
+  parcelas={[3, -5]}
+  legenda="3 − 5  →  (+3) + (−5) = −2"
+  titulo="Junção de um positivo com um negativo"
+/>
+
+### Exemplo 3
+
+<Explicacao>
+
+$$-3 - 5$$
+
+Nesse último a confusão costuma ser ainda maior, porque "subtrair um número de
+outro que já é negativo" não é algo simples de imaginar. De novo, boa parte dos
+alunos se apoia em mais uma "técnica milenar" — e as técnicas vão se acumulando
+sem que a pessoa entenda nada de verdade. Uma hora elas param de funcionar, e vem
+o desespero com a matéria.
+
+E, mais uma vez, a junção resolve tudo: aqui é só a junção do número $3$ negativo
+com o número $5$ negativo. Duas setas apontando pra esquerda, encadeadas, parando
+no $-8$.
+
+</Explicacao>
+
+<Setas
+  parcelas={[-3, -5]}
+  legenda="−3 − 5  →  (−3) + (−5) = −8"
+  titulo="Junção de dois negativos"
+/>
+
+## Não é pra complicar — é pra enxergar
+
+<Explicacao>
+
+Quero reforçar uma coisa: eu não estou aqui pra complicar o que muita gente já
+acha ridículo de tão fácil. É o contrário. Esse conceito ajuda o seu cérebro a
+entender tanta coisa do que vem pela frente que eu nem conseguiria começar a
+descrever aqui.
+
+Daqui pra frente, comece a treinar a sua mente pra usar mais a **junção**.
+
+</Explicacao>
+
+## Agora experimente você
+
+<Explicacao>
+
+Antes de partir pros exercícios, brinca um pouco com a ideia. Muda os números,
+inverte o sinal de cada um com o botão ⇄, embaralha a ordem. Repara numa coisa:
+com cada número carregando o próprio sinal, a ordem em que você junta as setas não
+muda onde elas param. Isso é a junção mostrando que soma e subtração eram, o tempo
+todo, a mesma operação.
+
+</Explicacao>
+
+<Juncao
+  parcelas={[3, -5]}
+  notacao="juncao"
+  permitirAgrupar={true}
+  titulo="Junte, inverta, embaralhe — o ponto final não se move"
+  chaveUrl="j1"
+/>
+
+---
+
+*Próximos passos desta página: exercícios de nível A (junção pura) e B (expressões
+maiores). Falta decidir se a comutatividade e a associatividade entram aqui como
+seções próprias ou viram uma página só delas.*

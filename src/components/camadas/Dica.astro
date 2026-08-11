@@ -1,0 +1,12 @@
+---
+/**
+ * A escada de dicas, em software.
+ * n=1 "lê o enunciado de novo" · n=2 aponta um dado · n=3 nomeia a ferramenta.
+ * Nunca entrega a resposta. Fechada em TODOS os modos, sempre.
+ */
+import Camada from './Camada.astro';
+interface Props { n: 1 | 2 | 3 }
+const { n } = Astro.props;
+const rotulos = { 1: 'Dica 1 — reler', 2: 'Dica 2 — onde olhar', 3: 'Dica 3 — que ferramenta' };
+---
+<Camada camada="dica" rotulo={rotulos[n]} abertaEm={[]}><slot /></Camada>

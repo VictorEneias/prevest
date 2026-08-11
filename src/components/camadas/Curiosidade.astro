@@ -1,0 +1,15 @@
+---
+/**
+ * Um aparte opcional: a demonstração/porquê que o aluno curioso abre se quiser,
+ * e que não atrapalha quem só quer seguir o fio principal.
+ *
+ * Nasce SEMPRE fechada (como a Dica). É uma camada, então também some no Modo
+ * Aula de página não revisada — o mesmo portão de segurança do resto do texto.
+ */
+import Camada from './Camada.astro';
+interface Props {
+  rotulo?: string;
+}
+const { rotulo = 'Curiosidade' } = Astro.props;
+---
+<Camada camada="curiosidade" rotulo={rotulo} abertaEm={[]}><slot /></Camada>

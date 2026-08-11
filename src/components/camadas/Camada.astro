@@ -1,0 +1,14 @@
+---
+/** Base de todas as camadas. Não use direto no MDX — use os wrappers. */
+interface Props {
+  camada: 'explicacao' | 'dica' | 'resolucao' | 'pensamento' | 'erros' | 'curiosidade';
+  rotulo: string;
+  /** Modos em que essa camada nasce ABERTA. */
+  abertaEm?: string[];
+}
+const { camada, rotulo, abertaEm = ['estudo'] } = Astro.props;
+---
+<details class="camada" data-camada={camada} data-aberta-em={abertaEm.join(' ')}>
+  <summary>{rotulo}</summary>
+  <div class="camada-corpo"><slot /></div>
+</details>

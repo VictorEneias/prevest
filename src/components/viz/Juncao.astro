@@ -1,0 +1,18 @@
+---
+/**
+ * Ponte MDX -> React.
+ *
+ * POR QUE ISSO EXISTE: o Astro só consegue hidratar uma ilha React se a
+ * diretiva client:* estiver escrita num arquivo que ele analisa estaticamente.
+ * Componentes injetados via `components={...}` no MDX não passam por essa
+ * análise. Então o React fica embrulhado num .astro, a diretiva mora aqui,
+ * e o MDX escreve <Juncao parcelas={[7,-3]} /> — sem import, sem client:.
+ *
+ * TODO componente interativo novo precisa de um wrapper igual a este.
+ */
+import JuncaoReact from './Juncao.tsx';
+import type { JuncaoProps } from './Juncao.tsx';
+
+const props = Astro.props as JuncaoProps;
+---
+<JuncaoReact client:visible {...props} />

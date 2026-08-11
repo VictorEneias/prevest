@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const conceitos = (await getCollection('conceitos')).sort((a, b) =>
+  a.data.titulo.localeCompare(b.data.titulo, 'pt-BR')
+);
+const exercicios = await getCollection('exercicios');
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const revisados = conceitos.filter((c) => c.data.revisado).length;
+
+const porBloco = new Map<string, typeof conceitos>();
+for (const c of conceitos) {
+  const k = `${c.data.materia}/${c.data.bloco}`;
+  porBloco.set(k, [...(porBloco.get(k) ?? []), c]);
+}
+---
+<BaseLayout titulo="Pré-vestibular">
+  <div class="folha">
+    <h1 style="font-size:2.6rem">Pré-vestibular</h1>
+    <p style="color:var(--tinta-media);max-width:34ch">
+      Material de aula presencial. Cada conceito declara seus pré-requisitos;
+      os elos <span class="elo-conceito" style="cursor:default">assim</span> abrem por cima,
+      sem sair da página.
+    </p>
+
+    <div class="ficha" style="margin-top:var(--u)">
+      <span><b>{conceitos.length}</b> conceitos</span>
+      <span><b>{revisados}</b> revisados</span>
+      <span><b>{exercicios.length}</b> exercícios</span>
+    </div>
+
+    <hr class="regua" />
+
+    {[...porBloco.entries()].map(([bloco, lista]) => (
+      <section style="margin-bottom:calc(var(--u)*2)">
+        <h2 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--tinta-fraca)">
+          {bloco}
+        </h2>
+        <ul class="blocos">
+          {lista.map((c) => (
+            <li>
+              <a class="cartao" href={`${base}/conceitos/${c.id}/`} data-revisado={c.data.revisado ? 'sim' : 'nao'}>
+                <span class="selo">{c.data.revisado ? 'revisado' : 'rascunho'}</span>
+                <h3>{c.data.titulo}</h3>
+                {c.data.resumo && <p>{c.data.resumo}</p>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+</BaseLayout>

@@ -1,0 +1,41 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { componentesMDX } from '../../components/mdx';
+
+export async function getStaticPaths() {
+  const todos = await getCollection('conceitos');
+  return todos.map((c) => ({ params: { id: c.id }, props: { c } }));
+}
+
+const { c } = Astro.props;
+const { Content } = await render(c);
+---
+<BaseLayout titulo={c.data.titulo} fragmento={true}>
+  <div class="folha">
+    <article class={`papel ${c.data.revisado ? '' : 'conceito-nao-revisado'}`}>
+      <h2>{c.data.titulo}</h2>
+      {c.data.resumo && <p style="color:var(--tinta-media)">{c.data.resumo}</p>}
+      <hr class="regua" />
+      <Content components={componentesMDX} />
+    </article>
+  </div>
+  <script is:inline>
+    /* Dentro do painel, <C> não abre outro iframe: avisa o pai pra empilhar. */
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('[data-conceito]');
+      if (!a || a.dataset.quebrado === 'sim') return;
+      e.preventDefault();
+      parent.postMessage(
+        { tipo: 'abrir-conceito', id: a.dataset.conceito, titulo: a.textContent.trim() },
+        '*'
+      );
+    });
+    /* O modo escolhido no pai vale aqui dentro também. */
+    try {
+      const m = localStorage.getItem('modo') || 'estudo';
+      document.documentElement.dataset.modo = m;
+      if (m !== 'estudo') document.querySelectorAll('.camada').forEach((d) => (d.open = false));
+    } catch (e) {}
+  </script>
+</BaseLayout>
