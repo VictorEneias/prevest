@@ -6,7 +6,8 @@
  *   · prereq apontando pra conceito que não existe
  *   · ciclo (A precisa de B, B precisa de A)
  *   · exercício apontando pra assunto inexistente
- *   · desbloqueia declarado sem o prereq recíproco
+ *   · prereq redundante (já vem por outro caminho — o mapa nem desenha)
+ *   · mais de 5 áreas numa matéria (a paleta do mapa só distingue 5)
  *
  * Sai com código 1 se achar problema — dá pra plugar em pre-commit.
  */
@@ -62,13 +63,11 @@ const exercicios = await ler(DIR_E);
 const erros = [];
 const avisos = [];
 
-/* --- prereqs e desbloqueia apontando pro vazio --- */
+/* --- prereqs apontando pro vazio --- */
 for (const [id, { fm, arquivo }] of conceitos) {
-  for (const campo of ['prereqs', 'desbloqueia']) {
-    for (const alvo of fm[campo] ?? []) {
-      if (!conceitos.has(alvo)) {
-        erros.push(`${arquivo}: ${campo} aponta pra "${alvo}", que não existe`);
-      }
+  for (const alvo of fm.prereqs ?? []) {
+    if (!conceitos.has(alvo)) {
+      erros.push(`${arquivo}: prereqs aponta pra "${alvo}", que não existe`);
     }
   }
   /* --- <C id="..."> no corpo --- */
@@ -80,13 +79,49 @@ for (const [id, { fm, arquivo }] of conceitos) {
   }
 }
 
-/* --- reciprocidade: se A desbloqueia B, B deveria ter A em prereqs --- */
+/* --- pré-requisito redundante ---
+   Se X depende de A e de B, e A já é pré-requisito de B, então a seta A→X não
+   acrescenta nada: quem chega em B já passou por A. O mapa desenha só o elo mais
+   próximo, então a declaração extra fica invisível e só atrapalha na hora de
+   editar. Aviso, não erro: às vezes o Victor vai querer manter por clareza. */
+const ancestraisMemo = new Map();
+function ancestrais(id) {
+  if (ancestraisMemo.has(id)) return ancestraisMemo.get(id);
+  const fora = new Set();
+  ancestraisMemo.set(id, fora); // guarda contra ciclo
+  for (const p of conceitos.get(id)?.fm.prereqs ?? []) {
+    if (!conceitos.has(p)) continue;
+    fora.add(p);
+    for (const a of ancestrais(p)) fora.add(a);
+  }
+  return fora;
+}
 for (const [id, { fm, arquivo }] of conceitos) {
-  for (const alvo of fm.desbloqueia ?? []) {
-    const d = conceitos.get(alvo);
-    if (d && !(d.fm.prereqs ?? []).includes(id)) {
-      avisos.push(`${arquivo}: declara desbloquear "${alvo}", mas "${alvo}" não lista "${id}" em prereqs`);
+  const diretos = (fm.prereqs ?? []).filter((p) => conceitos.has(p));
+  for (const p of diretos) {
+    const via = diretos.find((q) => q !== p && ancestrais(q).has(p));
+    if (via) {
+      avisos.push(`${arquivo}: prereq "${p}" é redundante — já vem por "${via}". Pode remover`);
     }
+  }
+}
+
+/* --- teto de 5 blocos por matéria ---
+   A paleta categórica do mapa foi validada e cinco é o limite: com azul e
+   vermelho reservados pra sinal e o amarelo pra rascunho, nenhum sexto tom passa
+   na separação de daltonismo. O sexto bloco em diante vira cinza neutro. */
+const blocosPorMateria = new Map();
+for (const [, { fm }] of conceitos) {
+  if (!fm.materia || !fm.bloco) continue;
+  if (!blocosPorMateria.has(fm.materia)) blocosPorMateria.set(fm.materia, new Set());
+  blocosPorMateria.get(fm.materia).add(fm.bloco);
+}
+for (const [materia, blocos] of blocosPorMateria) {
+  if (blocos.size > 5) {
+    avisos.push(
+      `${materia} tem ${blocos.size} blocos (${[...blocos].join(', ')}). ` +
+        `A paleta do mapa só distingue 5 — do sexto em diante vira cinza. Considere fundir.`,
+    );
   }
 }
 

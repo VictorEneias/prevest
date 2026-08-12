@@ -86,9 +86,9 @@ Cada conceito atômico é um `.mdx` em `content/conceitos/`. O nome do arquivo �
 titulo: Junção
 subtitulo: Por que a subtração não existe   # opcional, uma linha
 materia: matematica                          # matematica | fisica
-bloco: aritmetica                            # agrupador solto: "geometria-plana", "cinematica"
-prereqs: [reta-numerica, numeros-negativos]  # ids que o aluno precisa ANTES
-desbloqueia: [termos-semelhantes]            # ids que dependem deste
+bloco: aritmetica                            # a ÁREA do mapa. Máx. 5 por matéria — ver 3.1
+prereqs: [reta-numerica]                     # ids que o aluno precisa ANTES. Só isto — não
+                                             # existe campo inverso; os filhos são calculados
 nivel: fundamento                            # fundamento | basico | medio | avancado
 tempo_estimado: 45                           # minutos de aula
 revisado: false                              # ← SEMPRE false ao criar. Ver seção 8.
@@ -101,10 +101,63 @@ resumo: Uma frase. Aparece na busca e no cartão do painel.
 
 1. `prereqs` só aponta pra conceitos que **já existem**. Se precisar de um que não
    existe, crie o esqueleto dele primeiro (seção 8).
-2. Se A declara `desbloqueia: [B]`, então B deve ter A em `prereqs`. O
-   `npm run grafo` avisa quando falta.
-3. Sem ciclos. `npm run grafo` detecta.
-4. Rode `npm run grafo` depois de **toda** sessão que mexer em `content/`.
+2. **Uma direção só.** Não existe `desbloqueia`. Quem depende de um conceito é
+   calculado a partir dos `prereqs` dos outros. Criar um elo é editar **uma linha,
+   num arquivo só** — e não tem como os dois lados divergirem.
+3. **Declare só o pré-requisito mais próximo.** Se X precisa de A e de B, e A já é
+   pré-requisito de B, **não liste A**: quem chega em B já passou por A. O mapa
+   desenha só o elo essencial, e `npm run grafo` avisa quando um elo é redundante.
+   Vale pra qualquer quantidade de caminhos, não só dois.
+4. Sem ciclos. `npm run grafo` detecta.
+5. Rode `npm run grafo` depois de **toda** sessão que mexer em `content/`.
+
+### 3.1 Não existe divisão por ano escolar
+
+Foi tentado e **descartado de propósito**. A escola ensina fração no 6º ano e de
+novo, mais fundo, no 8º; dividir por ano obrigaria a criar módulos incrementais do
+mesmo assunto, e o aluno adiantado que vem tapar um buraco teria que atravessar
+dezenas de páginas pra achar o que precisa.
+
+**Um assunto mora num módulo só.** A ordem do mapa é a ordem de DEPENDÊNCIA:
+a profundidade de um módulo é quantos módulos você precisa atravessar até chegar
+nele. Se um assunto for grande demais pra uma página, ele se divide por *conteúdo*
+(círculo trigonométrico ≠ funções trigonométricas), nunca por série.
+
+### 3.2 `bloco` é a área, e ela tem teto de cinco
+
+O `bloco` escolhe a **cor** do módulo no mapa. Só isso — ele **não** influencia a
+posição.
+
+Já foi tentado: uma "gravidade" puxava módulos da mesma área pra perto uns dos
+outros. Media bem (as áreas ficavam 39% mais compactas) e mesmo assim foi
+**descartado**, porque embolava as linhas — agrupar por área briga com desembaraçar
+o grafo, e o desenho legível vale mais que a vizinhança temática. Hoje o eixo
+horizontal serve a um objetivo só: minimizar cruzamento de seta e sobreposição de
+seta com módulo.
+
+**Máximo 5 blocos por matéria.** Não é gosto: a paleta categórica foi validada
+contra o papel do site, em todos os pares e nas três formas de daltonismo. Com azul
+e vermelho reservados pra sinal e o amarelo pra rascunho, **cinco é o teto medido**
+— quatro candidatos a sexto tom foram testados e todos colidem (o verde colide até
+pra quem enxerga cores normalmente). Do sexto em diante a área vira cinza neutro.
+`npm run grafo` avisa quando passa de cinco.
+
+Foi por causa desse teto que a Matemática ficou com estas cinco, em
+`src/lib/curriculo.ts`:
+
+| Área | Absorve |
+|---|---|
+| `aritmetica` | número, operação, proporção, porcentagem, financeira |
+| `algebra` | letra, equação, polinômio, matriz, complexo |
+| `funcoes` | função, exponencial, log, progressões, trigonometria do círculo |
+| `geometria` | ângulo, figura, área, volume, trigonometria do triângulo, analítica |
+| `estatistica` | contagem, probabilidade, estatística descritiva |
+
+Repare que **trigonometria foi partida em duas**: no triângulo retângulo é
+geometria (razão entre lados); no círculo é função (algo que se repete). Não foi
+pra caber no teto — é a divisão honesta do assunto.
+
+A **ordem** da lista hoje só define a ordem da legenda e dos rótulos.
 
 ### Ordem de currículo ≠ ordem de construção
 
@@ -229,18 +282,104 @@ associatividade (agrupar) e a equivalência soma/subtração (trocar notação).
 soma vetorial 1D. Use em Física: resultante, velocidade relativa, deslocamento.
 **Não crie um componente novo pra isso.**
 
+### `<MapaConceitos />` — o grafo desenhado
+
+Não se usa em `.mdx`; é da home (`src/pages/index.astro`) e do rodapé de cada
+conceito (`src/pages/conceitos/[id].astro`). Está documentado aqui porque é onde o
+`ano` e o `bloco` viram imagem.
+
+```astro
+<MapaConceitos controles={true} altura="66vh" />   {/* mapa inteiro, com busca */}
+<MapaConceitos foco="juncao" raio={1} />           {/* só a vizinhança */}
+```
+
+- **y = profundidade no grafo, x = só pra desembaraçar.** É Sugiyama: camadas por
+  profundidade, **nós-ponte** pras setas que pulam camadas, ordenação por mediana
+  com transposição e oito partidas embaralhadas, e coordenadas por regressão
+  isotônica. O sorteio é semeado, então o mapa sai idêntico todo build.
+- **Nó-ponte é o que impede a seta de passar por cima de um módulo.** A seta longa
+  ganha um ponto em cada camada intermediária, esse ponto reserva um corredor na
+  fila, e a linha atravessa a fileira **na vertical** dentro dele — todo o desvio
+  horizontal acontece no vão entre camadas, que é vazio. Medido nos 71 módulos:
+  sem ponte, 182 cruzamentos e 52 sobreposições; com ponte, **144 e zero**.
+- **Seta que sai do mesmo módulo anda junto e só bifurca onde precisa.** São duas
+  coisas somadas: (a) o corredor da ponte é do MÓDULO DE ORIGEM, não da seta —
+  quatro setas longas saindo do mesmo lugar dividem um ponto por camada e descem
+  coladas, cada uma se desprendendo na camada do destino dela; (b) todas as setas
+  que saem de um módulo descem um trecho reto de 30px (`MEDIDAS.tronco`) antes de
+  abrir o leque, e como o trecho é idêntico nas irmãs elas se sobrepõem exatamente.
+  Medido nos 70 módulos: **14% menos linha desenhada** (35314 → 30337px de tinta,
+  contando trecho compartilhado uma vez só), largura 2116 → 1986, cruzamentos 45 →
+  44. O comprimento somado das setas SOBE 5% (uma seta cede um pouco pra caber no
+  tronco da irmã) — é o preço, e ele compra as quatro paralelas que desciam o mapa
+  inteiro dizendo a mesma coisa.
+- **As setas já vêm reduzidas.** Elo redundante não é desenhado (regra 3 da seção
+  3), então o que você vê é só a dependência mais próxima.
+- **Passar o mouse acende a cadeia inteira** — sobe pelos pré-requisitos e desce
+  pelos dependentes, apagando o resto. É o que torna um mapa de 70 módulos
+  legível, e é a mitigação pros cruzamentos que sobram.
+- **Rascunho é contorno tracejado**, nunca cor: o amarelo colidiria com a paleta
+  das áreas, e verde/vermelho não serve pra daltônico.
+- O layout mora em `src/lib/layout-grafo.ts`, separado do desenho, e recebe objeto
+  simples em vez de `CollectionEntry` — assim dá pra rodar em node puro num teste
+  de escala sem subir o Astro.
+- **Se um dia virar novelo**, a volta pra árvore é dentro desse arquivo só:
+  escolher um pai primário por nó e desenhar só aquela aresta. Nem o componente,
+  nem a home, nem a página de conceito mudam.
+
+### `<Questao />` — múltipla escolha com correção na hora
+
+Fecha o módulo de um conceito. O aluno clica numa alternativa: acertou fica verde
+com ✓, errou fica vermelho com ✗ e a correta é apontada com uma seta tracejada. Nos
+dois casos o gabarito abre embaixo.
+
+```mdx
+<Questao n={1} correta="b" alternativas={["$-11$", "$-3$", "$3$", "$11$"]}>
+
+Qual é o resultado de $-7 + 4$ ?
+
+<div slot="gabarito">
+
+O passo a passo aqui. Markdown normal, LaTeX, e pode chamar <Setas /> dentro.
+
+</div>
+
+</Questao>
+```
+
+- **`correta`** é a letra (`"a"`..`"e"`). Se apontar pra alternativa que não existe,
+  **o build quebra** — de propósito: gabarito errado em aula é o pior defeito
+  possível.
+- **`alternativas`** aceita de 2 a 5. Trechos entre `$...$` viram LaTeX; o resto é
+  texto (`"Nenhuma das anteriores"` funciona).
+- O **enunciado é o slot padrão**; o gabarito vai num `<div slot="gabarito">`, com
+  linha em branco depois da abertura pra o Markdown de dentro ser parseado.
+- O gabarito respeita o **portão da seção 8.1**: some no Modo Aula enquanto a página
+  for `revisado: false`, e some sempre no Modo Prova.
+- Verde/vermelho é o par que daltônico deutan/protan **não** distingue, por isso
+  todo estado carrega glifo (✓ ✗ ←) e uma frase no veredito. Se mexer no
+  componente, a cor continua sendo reforço — nunca a informação sozinha.
+
 ---
 
 ## 5. Como escrever conteúdo — a voz
 
-Amostra calibrada (é a abertura de `content/conceitos/juncao.mdx`):
+Amostra calibrada (é a abertura de `content/conceitos/juncao.mdx`, escrita pelo
+Victor — mantenha esta citação em sincronia se o texto de lá mudar):
 
-> Vou começar admitindo o óbvio: você já sabe somar e subtrair. Você faz isso desde
-> os sete anos. Por que perder uma aula inteira nisso?
+> Eu entendo que a essa altura você já deve estar bem familiarizado com os conceitos
+> de adição e subtração, porém hoje eu vou te mostrar uma coisa que a princípio
+> parece muito óbvia, e que mesmo assim pode te ajudar demais com toda a matemática
+> pelo resto da sua vida.
 >
-> Porque tem uma diferença enorme entre **saber fazer** $7 - 3$ e **entender** o que
-> está acontecendo ali. Enquanto os números são pequenos e sozinhos, dá pra ir no
-> piloto automático e nunca perceber a diferença.
+> Hoje eu vou te ensinar o conceito de JUNÇÃO, que a priori não vai mudar
+> absolutamente nada nos resultados das suas contas, porém vai mudar completamente o
+> seu jeito de pensar nos números, de um jeito que vai facilitar o entendimento de
+> conceitos mais complexos, além de melhorar a sua capacidade de resolução de
+> problemas.
+
+Repare no ritmo: períodos longos, encadeados com "porém", "além de", "de um jeito
+que". É fala transcrita, não prosa editada.
 
 ### Regras
 
@@ -256,8 +395,43 @@ Amostra calibrada (é a abertura de `content/conceitos/juncao.mdx`):
   antes que ele pergunte.
 - **Traga pra realidade.** Analogia concreta > formalismo. Mas nunca troque rigor
   por analogia: a analogia entra *além* da definição correta, não no lugar dela.
-- Matemática em LaTeX: `$inline$` e `$$bloco$$`.
-- Frases curtas. Parágrafos de 2–4 linhas.
+- Matemática em LaTeX. Inline é `$x + 1$`. **Bloco exige os `$$` em linhas
+  próprias** — `$$x + 1$$` numa linha só é parseado como inline pelo `remark-math`
+  e sai pequeno, no meio do texto, em vez de centralizado:
+
+  ```
+  $$
+  x - y = -\,(y - x)
+  $$
+  ```
+- **Período longo é permitido e desejável.** O Victor fala em frases encadeadas,
+  com vírgula e "porém". Não pique o texto em frases curtas de efeito: é o que faz
+  a página soar como IA.
+
+### Tiques que denunciam IA — não escreva assim
+
+O texto tem que soar como o Victor falando, não como prosa editada. Os padrões
+abaixo já foram reprovados por ele numa revisão:
+
+- **Frase-soco isolada** fechando parágrafo: "Funciona.", "É o contrário.",
+  "Nada de novo aqui." Cadência de post de LinkedIn.
+- **Antítese "não é X, é Y"** — inclusive em títulos de seção. Um "não é pra
+  complicar" basta; não emende o "é pra enxergar".
+- **Travessão como muleta.** No máximo um por parágrafo. O Victor usa vírgula,
+  parêntese e reticências.
+- **Podar as digressões.** O "né…", o "sem mais enrolação" e os parênteses de três
+  linhas **são a voz dele** — mantenha.
+
+**Caixa alta no texto cru do Victor = negrito.** Ele escreve em editor sem
+formatação, então JUNÇÃO, ISSO É JUNÇÃO e afins são ênfase, não grito. Converta
+pra `**negrito**` ao trazer pro MDX, e aproveite pra destacar também as frases que
+sustentam o argumento — sem exagerar: umas 8 a 10 marcações por página.
+- **Inventar número de efeito** ("resolve metade dos erros dos próximos três
+  anos"). Se ninguém mediu, não escreva.
+
+Quando o Victor mandar o texto cru dele, **aproveite as frases literais** e mexa
+só no necessário pra caber na estrutura de camadas. Reescrever o que já estava na
+voz certa é retrabalho que piora.
 
 ### A seção `<Pensamento>` é o ativo mais valioso do projeto
 
@@ -298,6 +472,13 @@ desenho fixo, tipo `<Setas>`), não use React. Um único `.astro` que calcula tu
 no frontmatter e devolve `<svg>` já basta — sem `.tsx`, sem wrapper, sem
 hidratar. Mais leve e é o que a página precisa. O checklist abaixo é só pros
 componentes de verdade **interativos**.
+
+**Exceção — componente que embrulha conteúdo MDX:** se a interação é ligar/desligar
+estado (mostrar, marcar, colapsar) e o componente precisa receber **texto com LaTeX
+dentro**, use `.astro` com `<slot>` e um `<script>` vanilla, como o `<Questao>`.
+Motivo: `$...$` só vira fórmula quando passa pelo pipeline do MDX. Prop de string
+entregue a uma ilha React não passa por ele e sai crua na tela. Componente que
+**desenha** (SVG, arrasto, slider) continua sendo React com wrapper.
 
 ### Checklist de todo componente de visualização
 
@@ -368,6 +549,67 @@ Os níveis:
 - **C** — 1–2 por conceito, combina com algo anterior. É o que separa quem passa
   de quem quase passa; a FUVEST raramente cobra um tópico isolado.
 
+### 7.1 Como se escreve um gabarito — o padrão
+
+Vale pro `slot="gabarito"` do `<Questao>` e pra toda `<Resolucao>`. Calibrado
+contra sete páginas do caderno do Victor (EDO, convolução, modelagem de tanques).
+
+**O ritmo é rótulo curto + conta. Alternando apertado.** Não é parágrafo de prosa
+com a fórmula no meio — esse é o erro clássico, e ele deixa o gabarito com cara de
+apostila.
+
+```
+Reescrevendo cada número com o sinal que é dele:      ← rótulo, 6 palavras, dois-pontos
+
+$$
+-7 + 4 \;=\; (-7) + (+4)                              ← a conta, em bloco
+$$
+
+Como o 4 é menor que o 7, eu não chego no zero:       ← só o passo que não é óbvio
+
+$$
+(-7) + (+4) = -3
+$$
+```
+
+Os movimentos que ele faz, em ordem de importância:
+
+1. **Rótulo antes de cada conta, terminado em dois-pontos.** Diz o que ele está
+   prestes a fazer, não o que a conta significa. É curto: *"logo nossa eq.
+   característica:"*, *"Multiplicando por $Ce^{\sigma t}$:"*, *"Trocando $\tau$ por
+   $t-\tau$:"*, *"Então substituindo nas equações temos:"*, *"Ou seja:"*, *"Com:"*.
+2. **Modelo em palavras antes do símbolo**, quando a questão é de modelagem.
+   Ele escreveu literalmente `Água no tanque = Água que entrou − Água que saiu`
+   e só depois virou integral. Faça isso sempre que der: é o passo que o aluno
+   nunca vê em lugar nenhum.
+3. **Anuncia a estratégia antes de executar**, quando o caminho não é óbvio:
+   *"por sabermos que $y(t)$ tem o formato $c\,e^{\lambda t}$, trocamos o `c` por
+   uma função genérica $v(t)$, jogamos isso na EDO e vemos o que ela nos devolve"*.
+4. **Justifica só o passo que trava**, em meia linha, e segue: *"Como uma
+   exponencial nunca é 0, então $v''=0$"*. Não justifique o que é mecânico.
+5. **Orienta no meio do caminho** quando a resolução é longa: *"Mas ainda não
+   acabamos."*
+6. **Reaproveita em vez de repetir**: *"Similarmente, para o segundo tanque:"*,
+   *"E usando a mesma lógica para os itens b) e c)"*.
+7. **Encadeia com `→` na mesma linha** quando o passo é puramente mecânico:
+   $h_1 = 5r_1 \to \frac{dh_1}{dt} = 5\frac{dr_1}{dt}$.
+8. **Destaca o resultado final** com uma linha própria e um rótulo curto
+   (ele desenha uma caixa no caderno).
+
+**Primeira pessoa, mas econômica.** Ele escreve "trocamos", "jogamos", "vemos",
+"eu paro". Não é narração de cada respiração — é um colega apontando pro papel.
+
+**Não é `<Pensamento>`.** O `<Pensamento>` é a estratégia *antes* de escolher o
+caminho (o que descartei e por quê). O gabarito é a execução, com o mínimo de
+narração pra ela não virar uma parede de fórmulas.
+
+**Calibre o tamanho pelo assunto.** Conta de duas linhas → gabarito de duas linhas.
+**Não encha linguiça onde não precisa**: texto longo em questão simples ensina o
+aluno a pular o gabarito, e aí ele pula também o das questões que importam.
+
+Quando ajudar a ver, chame `<Setas />` (ou outro componente) dentro do próprio
+gabarito. A figura fecha melhor que mais um parágrafo.
+
 ---
 
 ## 8. Regras invioláveis
@@ -419,6 +661,13 @@ geração. Dez páginas não revisadas é dívida, não progresso.
 | Build: *"Could not render X"* | componente React usado no MDX sem wrapper |
 | Elo `<C>` aparece vermelho | o id não existe. `npm run grafo` lista |
 | LaTeX aparece cru | cifrão desbalanceado, ou `\$` escapado sem querer |
+| Fórmula de bloco sai pequena, no meio do parágrafo | escreveu `$$x$$` numa linha só. Os `$$` têm que ficar em linhas próprias (seção 5) |
+| Alternativa do `<Questao>` mostra `$-3$` literal | faltou o `$` de fechamento na string, ou usou aspas simples dentro do array |
+| Gabarito não abre no Modo Aula | a página está `revisado: false`. É o portão da 8.1 funcionando |
+| Área do mapa saiu cinza | é o 6º bloco da matéria — a paleta só tem 5 (seção 3.2). Funda dois |
+| Declarei um prereq e a seta não apareceu | ele é redundante, já vem por outro caminho. `npm run grafo` diz por qual |
+| Módulo caiu fundo demais no mapa | a profundidade é a cadeia de prereqs. Provavelmente há um prereq exagerado na corrente |
+| Build ficou lento depois de muitos módulos | é a transposição do layout, que é quadrática. Há teto de partidas em `layout-grafo.ts` — abaixe se precisar |
 | Painel abre em branco | a página `fragmento/[id]` não foi gerada — rode `npm run build` |
 | Mudei o `.mdx` e nada mudou em aula | está servindo `dist/` antigo. Rebuild |
 

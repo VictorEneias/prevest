@@ -16,11 +16,20 @@ const conceitos = defineCollection({
     titulo: z.string(),
     subtitulo: z.string().optional(),
     materia: z.enum(MATERIAS),
-    bloco: z.string(), // ex: "aritmetica", "geometria-plana", "cinematica"
+    bloco: z.string(), // a ÁREA do mapa. Máximo 5 por matéria — ver lib/curriculo.ts
 
-    // O grafo. Só ids de outros conceitos. O build quebra se apontar pro vazio.
+    /**
+     * O grafo, numa direção só. Só ids de outros conceitos; o build quebra se
+     * apontar pro vazio.
+     *
+     * Não existe campo inverso ("desbloqueia"): quem depende deste conceito é
+     * calculado. Assim criar um elo é editar UMA linha num arquivo só, e não
+     * tem como os dois lados divergirem.
+     *
+     * Declare só o pré-requisito MAIS PRÓXIMO. Se A já vem por B, não liste A —
+     * `npm run grafo` avisa quando um elo é redundante.
+     */
     prereqs: z.array(z.string()).default([]),
-    desbloqueia: z.array(z.string()).default([]),
 
     nivel: z.enum(NIVEIS).default('medio'),
     tempo_estimado: z.number().int().positive().optional(), // minutos de aula

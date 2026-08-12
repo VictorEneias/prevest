@@ -1,54 +1,237 @@
 ---
 titulo: A reta numérica
-subtitulo: Todo número tem um endereço
+subtitulo: Onde os números moram
 materia: matematica
 bloco: aritmetica
-prereqs: []
-desbloqueia: [numeros-negativos, juncao]
+prereqs: [numeros-naturais]
 nivel: fundamento
-tempo_estimado: 10
+tempo_estimado: 25
 revisado: false
-resumo: Todo número é um ponto numa reta. Essa imagem vai te acompanhar até cálculo.
+resumo: Todo número é um ponto numa reta. Dessa imagem saem o negativo, o módulo, o oposto e a comparação.
 ---
 
 <Explicacao>
 
-Antes de qualquer conta, a gente precisa de um lugar onde os números **moram**.
+Antes de fazer qualquer conta, a gente precisa combinar uma coisa: onde é que os
+números **moram**. Parece uma pergunta boba, e é justamente por parecer boba que
+quase ninguém para pra responder, porém é dessa resposta que sai praticamente tudo
+que você vai ver de matemática daqui pra frente.
 
-Desenha uma reta. Marca um ponto qualquer e chama ele de **zero**. Escolhe um
-tamanho de passo — um centímetro, um quadradinho do caderno, tanto faz, desde
-que seja **sempre o mesmo**. Agora anda um passo pra direita: chegou no $1$.
-Mais um: $2$. E assim vai.
-
-Duas coisas que parecem óbvias e não são:
-
-**Todo número tem um endereço único.** O $3$ não está "mais ou menos ali" — ele
-está num ponto exato. E entre o $3$ e o $4$ tem infinitos outros endereços
-($3{,}5$, $3{,}14$, $\pi$...). A reta está lotada.
-
-**A ordem é a posição.** Dizer que $5 > 3$ não é decorar um símbolo: é dizer que
-o $5$ está **mais à direita**. Só isso. Quando aparecer $-5$ e $-3$ mais pra
-frente e você tiver que decidir qual é maior, é essa imagem que salva.
+E o mais interessante é que a resposta é uma coisa só, muito simples, que você já
+viu na quarta série e provavelmente nunca olhou com atenção: uma reta.
 
 </Explicacao>
 
-## Por que isso não é bobagem
+## Todo número tem um endereço
 
 <Explicacao>
 
-Porque essa reta nunca vai embora. Ela vira:
+Desenha uma reta. Marca um ponto qualquer nela e chama esse ponto de **zero**.
+Agora escolhe um tamanho de passo — um centímetro, um quadradinho do caderno, tanto
+faz, contanto que seja **sempre o mesmo passo**. Anda um passo pra direita e você
+chegou no $1$. Mais um, e você está no $2$. E assim segue.
 
-- o **eixo $x$** do plano cartesiano
-- o **eixo do tempo** nos gráficos de posição e velocidade
-- a **trajetória** de um carro em cinemática
-- o **intervalo** onde uma inequação é verdadeira
-- a linha onde você marca as raízes pra estudar o sinal de uma função
+Duas coisas nascem daí, e nenhuma das duas é tão óbvia quanto parece.
 
-Quem consegue enxergar a reta enxerga metade do vestibular.
+A primeira é que **todo número tem um endereço só dele**. O $3$ não está "mais ou
+menos ali", ele está num ponto exato da reta, e entre o $3$ e o $4$ cabem infinitos
+outros endereços ($3{,}5$, $3{,}14$, e por aí vai). A reta está lotada.
+
+A segunda é que **a ordem dos números é a posição deles**. Quando você diz que
+$5 > 3$, você não está decorando pra que lado o símbolo aponta, você está dizendo
+que o $5$ mora **mais à direita** que o $3$. Guarda essa frase, porque daqui a
+pouco ela vai ser a única coisa que te salva.
 
 </Explicacao>
 
+<Setas
+  parcelas={[3]}
+  legenda="três passos pra direita, saindo do zero"
+  titulo="O endereço do 3"
+  dominio={[-6, 6]}
+/>
+
+## Do outro lado do zero
+
+<Explicacao>
+
+Agora uma pergunta honesta: se você consegue andar pra direita, **o que é que te
+impede de andar pro outro lado?**
+
+Nada. A reta não acaba no zero, ela só continua. Se dá pra dar três passos pra
+direita e chegar no $3$, então dá pra dar três passos pra esquerda e chegar em
+algum lugar também, e esse lugar precisa de um nome. O nome dele é $-3$.
+
+E aqui está a parte que costuma passar batido na escola: o $-3$ **não é menos
+número** que o $3$, nem é um número quebrado, nem é um número "errado". Ele está
+exatamente à mesma distância do zero que o $3$ está. A única diferença entre os
+dois é **pra que lado** você andou.
+
+</Explicacao>
+
+<Setas
+  parcelas={[-3]}
+  legenda="três passos pra esquerda, saindo do mesmo zero"
+  titulo="O endereço do −3"
+  dominio={[-6, 6]}
+/>
+
+## Duas informações num número só
+
+<Explicacao>
+
+Repara que, escrito desse jeito, o $-3$ está te contando **duas coisas ao mesmo
+tempo**:
+
+| | |
+|---|---|
+| **Módulo** ($3$) | o tamanho do passo, a distância até o zero |
+| **Sinal** ($-$) | a direção, pra que lado você andou |
+
+Isso é o começo de uma ideia que vai te acompanhar até o fim do ensino médio. Lá na
+Física, quando você escrever que a velocidade de um carro é $-20\ \text{m/s}$, você
+vai estar dizendo essas duas coisas de uma vez: que ele anda a $20\ \text{m/s}$ e
+que ele vai pro lado que a gente combinou de chamar de negativo. Não é um carro
+devendo velocidade a ninguém.
+
+Um número com sinal já é, na prática, **um vetor de uma dimensão** — e é por isso
+que vale a pena entender isso bem agora, e não daqui a três anos.
+
+</Explicacao>
+
+## O oposto
+
+<Explicacao>
+
+O **oposto** de um número é ele espelhado no zero: mesmo módulo, direção contrária.
+
+$$
+\text{oposto de } 3 = -3 \qquad\qquad \text{oposto de } -7 = 7
+$$
+
+E daí sai a propriedade que faz metade da álgebra funcionar:
+
+$$
+a + (-a) = 0
+$$
+
+Que em português é o seguinte: andar 3 passos pra direita e depois 3 pra esquerda
+te deixa exatamente onde você começou. Agora isso parece pequeno demais pra ter
+nome, porém é literalmente o que você faz toda vez que "passa um termo pro outro
+lado" numa equação, e é bom você já saber disso antes de decorar o macete.
+
+</Explicacao>
+
+## Quem é maior
+
+<Explicacao>
+
+Chegamos na parte que mais confunde, e ela confunde justamente porque as pessoas
+tentam responder pelo tamanho do número em vez de responder pela posição.
+
+A regra é uma só, e é a mesma de antes: **é maior quem está mais à direita**.
+
+Com números positivos isso combina com a sua intuição, porque quanto maior o
+número, mais à direita ele está. O $7$ está à direita do $2$, então $7 > 2$, e
+ninguém tem dificuldade nenhuma com isso.
+
+O problema aparece do outro lado do zero. Olha esses dois:
+
+$$
+-5 \qquad \text{e} \qquad -3
+$$
+
+Muita gente olha pro $5$ e pro $3$, vê que $5$ é maior que $3$, e conclui que $-5$
+é maior que $-3$. Mas repara no que a reta diz: pra chegar no $-5$ você precisa
+andar **mais pra esquerda** do que pra chegar no $-3$. E mais pra esquerda é
+justamente o lado do menor.
+
+$$
+-5 < -3
+$$
+
+O que engana é que o $-5$ tem o **módulo** maior. Só que módulo é tamanho de passo,
+não é posição, e quem decide quem é maior é a posição. Quando os dois números são
+negativos, **o de módulo maior é o menor dos dois**, porque ele foi mais longe pro
+lado errado.
+
+</Explicacao>
+
+<Curiosidade rotulo="Curiosidade — um jeito de conferir quando bater a dúvida">
+
+Se em algum momento você travar nessa comparação, tem um teste que resolve na hora:
+pergunta qual dos dois você prefere ter de dívida.
+
+Dever 5 reais é pior que dever 3 reais, então $-5$ é a situação pior, ou seja, o
+número menor. A analogia não substitui a reta, e você deve continuar pensando na
+reta como imagem principal, porém quando a reta não estiver na sua frente essa
+pergunta te tira do aperto.
+
+</Curiosidade>
+
+## Agora é com você
+
+<Explicacao>
+
+Duas questões pra fechar. A segunda é exatamente a pegadinha que a gente acabou de
+discutir, então vai devagar nela.
+
+</Explicacao>
+
+<Questao n={1} correta="c" alternativas={["$-8$", "$0$", "$8$", "$-4$", "$4$"]}>
+
+Qual é o oposto de $-8$ ?
+
+<div slot="gabarito">
+
+Oposto é o mesmo número espelhado no zero: mantém o módulo, troca a direção.
+
+O módulo de $-8$ é $8$, e a direção dele é pra esquerda. Espelhando, o módulo
+continua $8$ e a direção passa a ser pra direita:
+
+$$
+\text{oposto de } -8 = +8
+$$
+
+Dá pra conferir pela propriedade, que tem que fechar em zero:
+
+$$
+(-8) + (+8) = 0
+$$
+
+</div>
+
+</Questao>
+
+<Questao n={2} correta="a" alternativas={["$-9 < -2$", "$-9 > -2$", "$-9 = -2$", "$-2 < -9$", "Não dá pra comparar negativos"]}>
+
+Qual das comparações abaixo está correta?
+
+<div slot="gabarito">
+
+A pergunta não é qual número é maior de tamanho, e sim qual está mais à direita na
+reta.
+
+Pra chegar no $-9$ eu ando 9 passos pra esquerda. Pra chegar no $-2$ eu ando só 2.
+Ou seja, o $-9$ ficou bem mais longe pra esquerda, e mais à esquerda é o lado do
+menor:
+
+$$
+-9 < -2
+$$
+
+O que engana é o módulo: o $9$ é maior que o $2$, e o olho quer transferir isso pro
+número inteiro. Mas módulo é distância até o zero, não é posição, e entre dois
+negativos **quem tem o módulo maior é o menor dos dois**, porque foi mais longe pro
+lado negativo.
+
+</div>
+
+</Questao>
+
 ---
 
-*Página em esqueleto — falta escrever a parte de distância entre pontos e módulo,
-e falta um componente interativo de "arraste o ponto".*
+*Falta nesta página: um interativo de arrastar o ponto pela reta e ver o módulo, o
+sinal e o oposto acompanharem ao vivo — é o que fecharia a comparação melhor que
+texto. Falta decidir também se distância entre dois pontos entra aqui ou vira
+página própria.*

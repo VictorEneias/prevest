@@ -1,0 +1,578 @@
+---
+/**
+ * <MapaConceitos /> — a árvore de conceitos desenhada.
+ *
+ * Sem `foco`, desenha o currículo inteiro (é a home). Com `foco`, desenha só a
+ * vizinhança daquele conceito (é o rodapé de cada página de conceito).
+ *
+ * ARQUITETURA: SVG só pras áreas e as setas; os módulos são <a> de HTML
+ * posicionados por cima, no MESMO sistema de coordenadas. Motivo: texto em SVG
+ * não quebra linha nem faz reticências, e <a> de verdade dá foco, Tab e Enter
+ * de graça. O pan/zoom é um transform CSS na camada que contém os dois.
+ *
+ * Astro puro + script vanilla, como o <Questao>: as posições saem prontas do
+ * build, e a interação é só transformar e acender/apagar classe.
+ */
+import { getCollection } from 'astro:content';
+import { calcularLayout, vizinhanca, type ConceitoBruto } from '../../lib/layout-grafo';
+import { ROTULO_MATERIA, type Materia } from '../../lib/curriculo';
+
+interface Props {
+  foco?: string;
+  raio?: number;
+  /** Barra de busca, enquadramento e legenda. Só no mapa inteiro. */
+  controles?: boolean;
+  altura?: string;
+}
+const { foco, raio = 1, controles = false, altura } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const todos: ConceitoBruto[] = (await getCollection('conceitos')).map((c) => ({
+  id: c.id,
+  titulo: c.data.titulo,
+  resumo: c.data.resumo,
+  materia: c.data.materia,
+  bloco: c.data.bloco,
+  prereqs: c.data.prereqs,
+  revisado: c.data.revisado,
+}));
+
+const conjunto = foco ? vizinhanca(todos, foco, raio) : todos;
+const mapa = calcularLayout(conjunto, { foco });
+
+/* Adjacência pro script acender a cadeia — já reduzida, é o que está desenhado. */
+const idsDesenhados = new Set(mapa.nos.map((n) => n.id));
+const pais = Object.fromEntries(
+  mapa.nos.map((n) => [
+    n.id,
+    mapa.arestas.filter((a) => a.para === n.id).map((a) => a.de),
+  ]),
+);
+const filhos = Object.fromEntries(
+  mapa.nos.map((n) => [
+    n.id,
+    mapa.arestas.filter((a) => a.de === n.id).map((a) => a.para),
+  ]),
+);
+
+/* Um rótulo por área, acima do módulo mais alto dela. */
+const areasUnicas = mapa.areas;
+const rotulosArea = areasUnicas.map((a) => {
+  const meus = mapa.nos.filter((n) => n.materia === a.materia && n.bloco === a.bloco);
+  const topo = Math.min(...meus.map((n) => n.y));
+  const noTopo = meus.filter((n) => n.y === topo);
+  const x = noTopo.reduce((s, n) => s + n.x + n.w / 2, 0) / noTopo.length;
+  return { ...a, rx: x, ry: topo - 16 };
+});
+
+/* Caixa de cada matéria, pros botões de enquadrar. */
+const materias = [...new Set(mapa.nos.map((n) => n.materia))] as Materia[];
+const caixas = Object.fromEntries(
+  materias.map((m) => {
+    const seus = mapa.nos.filter((n) => n.materia === m);
+    return [
+      m,
+      {
+        x0: Math.min(...seus.map((n) => n.x)) - 30,
+        x1: Math.max(...seus.map((n) => n.x + n.w)) + 30,
+        y0: Math.min(...seus.map((n) => n.y)) - 40,
+        y1: Math.max(...seus.map((n) => n.y + n.h)) + 30,
+      },
+    ];
+  }),
+);
+
+const vazio = mapa.nos.length === 0;
+const dados = {
+  pais,
+  filhos,
+  caixas,
+  largura: mapa.largura,
+  altura: mapa.altura,
+  total: idsDesenhados.size,
+};
+---
+
+<div class="mapa" data-mapa style={altura ? `--mapa-altura:${altura}` : undefined}>
+  {
+    controles && !vazio && (
+      <div class="mapa-controles">
+        <input
+          type="search"
+          class="mapa-busca"
+          placeholder="Buscar módulo…"
+          aria-label="Buscar módulo no mapa"
+          data-busca
+        />
+        <div class="mapa-botoes" role="group" aria-label="Enquadrar">
+          <button type="button" data-enquadrar="tudo">Tudo</button>
+          {materias.map((m) => (
+            <button type="button" data-enquadrar={m}>
+              {ROTULO_MATERIA[m]}
+            </button>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  {
+    vazio ? (
+      <p class="mapa-vazio">Nenhum módulo pra desenhar ainda.</p>
+    ) : (
+      <>
+        <div
+          class="mapa-moldura"
+          data-moldura
+          tabindex="0"
+          role="group"
+          aria-label="Mapa de módulos — arraste pra mover, role pra aproximar"
+        >
+          <div class="mapa-tela" data-tela style={`width:${mapa.largura}px;height:${mapa.altura}px`}>
+            <svg
+              class="mapa-svg"
+              width={mapa.largura}
+              height={mapa.altura}
+              viewBox={`0 0 ${mapa.largura} ${mapa.altura}`}
+              aria-hidden="true"
+            >
+              <defs>
+                <marker id="mapa-ponta" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                  <path d="M0,0 L7,3.5 L0,7 z" fill="var(--grafite)" />
+                </marker>
+              </defs>
+
+              {mapa.arestas.map((a) => (
+                <path
+                  class="mapa-aresta"
+                  data-de={a.de}
+                  data-para={a.para}
+                  d={a.d}
+                  marker-end="url(#mapa-ponta)"
+                />
+              ))}
+
+              {rotulosArea.map((a) => (
+                <text class="mapa-area-rotulo" data-slot={a.slotCor} x={a.rx} y={a.ry} text-anchor="middle">
+                  {a.rotulo}
+                </text>
+              ))}
+            </svg>
+
+            {mapa.nos.map((n) => (
+              <a
+                class="mapa-no"
+                data-no={n.id}
+                data-slot={n.slotCor}
+                data-revisado={n.revisado ? 'sim' : 'nao'}
+                data-focado={n.focado ? 'sim' : undefined}
+                href={`${base}/conceitos/${n.id}/`}
+                style={`left:${n.x}px;top:${n.y}px;width:${n.w}px;height:${n.h}px`}
+                aria-label={`${n.titulo}${n.revisado ? '' : ' (rascunho)'}`}
+              >
+                <span class="mapa-no-titulo">{n.titulo}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {controles && (
+          <ul class="mapa-legenda">
+            {areasUnicas.map((a) => (
+              <li data-slot={a.slotCor}>
+                <span class="mapa-legenda-cor" aria-hidden="true" />
+                {a.rotulo}
+              </li>
+            ))}
+            <li class="mapa-legenda-rascunho">
+              <span class="mapa-legenda-cor" aria-hidden="true" />
+              rascunho
+            </li>
+          </ul>
+        )}
+
+        <script type="application/json" data-mapa-dados set:html={JSON.stringify(dados)} />
+      </>
+    )
+  }
+</div>
+
+<style>
+  .mapa {
+    --mapa-altura: 62vh;
+    margin: 0 0 var(--u);
+  }
+
+  .mapa-controles {
+    display: flex;
+    gap: calc(var(--u) * 0.4);
+    align-items: center;
+    margin-bottom: calc(var(--u) * 0.5);
+    flex-wrap: wrap;
+  }
+  .mapa-busca {
+    flex: 1;
+    min-width: 180px;
+    font-family: var(--f-ui);
+    font-size: 0.84rem;
+    padding: 5px 10px;
+    border: 1px solid var(--linha);
+    border-radius: var(--raio);
+    background: var(--papel);
+    color: var(--tinta);
+  }
+  .mapa-botoes {
+    display: flex;
+    gap: 3px;
+  }
+  .mapa-botoes button {
+    font-family: var(--f-ui);
+    font-size: 0.72rem;
+    border: 1px solid var(--linha);
+    background: var(--papel);
+    color: var(--tinta-media);
+    padding: 5px 11px;
+    border-radius: var(--raio);
+    cursor: pointer;
+  }
+  .mapa-botoes button:hover {
+    border-color: var(--grafite);
+    color: var(--tinta);
+  }
+
+  .mapa-moldura {
+    position: relative;
+    overflow: hidden;
+    height: var(--mapa-altura);
+    background: var(--papel);
+    border: 1px solid var(--linha);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    cursor: grab;
+    touch-action: none;
+  }
+  .mapa-moldura[data-arrastando] {
+    cursor: grabbing;
+  }
+
+  .mapa-tela {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+  }
+  .mapa-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    overflow: visible;
+  }
+
+  /* ---- áreas ----
+     Sem mancha de fundo: foi medido e não funciona neste grafo (ver o comentário
+     da seção 5 em layout-grafo.ts). A identidade da área vem da cor do módulo,
+     do rótulo e da gravidade que já aproxima os iguais. */
+  .mapa-area-rotulo {
+    font-family: var(--f-ui);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    fill: var(--cor-bloco);
+    opacity: 0.62;
+  }
+
+  /* ---- setas ---- */
+  .mapa-aresta {
+    fill: none;
+    stroke: var(--grafite);
+    stroke-width: 1.4;
+    opacity: 0.32;
+  }
+  .mapa-aresta.acesa {
+    stroke: var(--tinta);
+    opacity: 1;
+    stroke-width: 2;
+  }
+  .mapa-aresta.apagada {
+    opacity: 0.06;
+  }
+
+  /* ---- módulos ---- */
+  .mapa-no {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    padding: 6px 10px 6px 12px;
+    box-sizing: border-box;
+    background: color-mix(in srgb, var(--cor-bloco) 6%, var(--papel));
+    border: 1px solid var(--linha);
+    border-left: 4px solid var(--cor-bloco);
+    border-radius: var(--raio);
+    text-decoration: none;
+    color: var(--tinta);
+    font-family: var(--f-ui);
+    box-shadow: var(--sombra);
+    transition: border-color 0.12s ease, transform 0.12s ease;
+  }
+  /* rascunho = tracejado, não cor: o amarelo colidiria com a paleta das áreas
+     e verde/vermelho não serve pra daltônico */
+  .mapa-no[data-revisado='nao'] {
+    border-top-style: dashed;
+    border-right-style: dashed;
+    border-bottom-style: dashed;
+  }
+  .mapa-no-titulo {
+    font-size: 0.76rem;
+    font-weight: 600;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .mapa-no:hover,
+  .mapa-no:focus-visible {
+    border-color: var(--tinta);
+    border-left-color: var(--cor-bloco);
+    transform: translateY(-1px);
+  }
+  .mapa-no.acesa {
+    border-color: var(--tinta);
+    z-index: 2;
+  }
+  .mapa-no.apagada {
+    opacity: 0.14;
+  }
+  .mapa-no[data-focado='sim'] {
+    border-color: var(--tinta);
+    border-width: 2px;
+    border-left-width: 4px;
+  }
+
+  /* ---- legenda ---- */
+  .mapa-legenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--u) * 0.6);
+    list-style: none;
+    padding: 0;
+    margin: calc(var(--u) * 0.5) 0 0;
+    font-family: var(--f-ui);
+    font-size: 0.74rem;
+    color: var(--tinta-media);
+  }
+  .mapa-legenda li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .mapa-legenda-cor {
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+    background: var(--cor-bloco);
+  }
+  .mapa-legenda-rascunho .mapa-legenda-cor {
+    background: var(--papel);
+    border: 1px dashed var(--tinta-fraca);
+  }
+
+  .mapa-vazio {
+    font-family: var(--f-ui);
+    font-size: 0.84rem;
+    color: var(--tinta-fraca);
+  }
+
+  [data-slot='0'] { --cor-bloco: var(--bloco-0); }
+  [data-slot='1'] { --cor-bloco: var(--bloco-1); }
+  [data-slot='2'] { --cor-bloco: var(--bloco-2); }
+  [data-slot='3'] { --cor-bloco: var(--bloco-3); }
+  [data-slot='4'] { --cor-bloco: var(--bloco-4); }
+  [data-slot='5'] { --cor-bloco: var(--bloco-5); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mapa-no {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  interface Dados {
+    pais: Record<string, string[]>;
+    filhos: Record<string, string[]>;
+    caixas: Record<string, { x0: number; x1: number; y0: number; y1: number }>;
+    largura: number;
+    altura: number;
+    total: number;
+  }
+
+  function iniciar(raiz: HTMLElement) {
+    const moldura = raiz.querySelector<HTMLElement>('[data-moldura]');
+    const tela = raiz.querySelector<HTMLElement>('[data-tela]');
+    const cru = raiz.querySelector('[data-mapa-dados]')?.textContent;
+    if (!moldura || !tela || !cru) return;
+    const dados: Dados = JSON.parse(cru);
+
+    const nos = [...raiz.querySelectorAll<HTMLElement>('[data-no]')];
+    const arestas = [...raiz.querySelectorAll<SVGPathElement>('.mapa-aresta')];
+
+    /* ---------- pan / zoom ---------- */
+    let escala = 1;
+    let tx = 0;
+    let ty = 0;
+    const aplicar = () => {
+      tela.style.transform = `translate(${tx}px, ${ty}px) scale(${escala})`;
+    };
+
+    function enquadrar(x0: number, y0: number, x1: number, y1: number) {
+      const cx = moldura.clientWidth;
+      const cy = moldura.clientHeight;
+      const m = 20;
+      escala = Math.min((cx - m * 2) / Math.max(1, x1 - x0), (cy - m * 2) / Math.max(1, y1 - y0), 1.4);
+      tx = m - x0 * escala + Math.max(0, (cx - m * 2 - (x1 - x0) * escala) / 2);
+      ty = m - y0 * escala + Math.max(0, (cy - m * 2 - (y1 - y0) * escala) / 2);
+      aplicar();
+    }
+    const tudo = () => enquadrar(0, 0, dados.largura, dados.altura);
+    tudo();
+
+    let arrastando = false;
+    let px = 0;
+    let py = 0;
+    moldura.addEventListener('pointerdown', (e) => {
+      if ((e.target as HTMLElement).closest('[data-no]')) return;
+      arrastando = true;
+      px = e.clientX;
+      py = e.clientY;
+      moldura.dataset.arrastando = 'sim';
+      moldura.setPointerCapture(e.pointerId);
+    });
+    moldura.addEventListener('pointermove', (e) => {
+      if (!arrastando) return;
+      tx += e.clientX - px;
+      ty += e.clientY - py;
+      px = e.clientX;
+      py = e.clientY;
+      aplicar();
+    });
+    const soltar = () => {
+      arrastando = false;
+      delete moldura.dataset.arrastando;
+    };
+    moldura.addEventListener('pointerup', soltar);
+    moldura.addEventListener('pointercancel', soltar);
+
+    moldura.addEventListener(
+      'wheel',
+      (e) => {
+        e.preventDefault();
+        const r = moldura.getBoundingClientRect();
+        const mx = e.clientX - r.left;
+        const my = e.clientY - r.top;
+        const nova = Math.min(2.5, Math.max(0.08, escala * Math.exp(-e.deltaY * 0.0016)));
+        tx = mx - ((mx - tx) * nova) / escala;
+        ty = my - ((my - ty) * nova) / escala;
+        escala = nova;
+        aplicar();
+      },
+      { passive: false },
+    );
+
+    /* ---------- acender a cadeia ----------
+       Sobe pelos pré-requisitos e desce pelos dependentes: o aluno vê tudo que
+       sustenta aquele módulo e tudo que depende dele, e o resto apaga. É o que
+       torna um mapa de 70 módulos legível. */
+    function cadeia(id: string): Set<string> {
+      const dentro = new Set([id]);
+      const anda = (atual: string, campo: 'pais' | 'filhos') => {
+        for (const v of dados[campo][atual] ?? []) {
+          if (dentro.has(v)) continue;
+          dentro.add(v);
+          anda(v, campo);
+        }
+      };
+      anda(id, 'pais');
+      anda(id, 'filhos');
+      return dentro;
+    }
+
+    function acender(id: string | null) {
+      if (!id) {
+        nos.forEach((n) => n.classList.remove('acesa', 'apagada'));
+        arestas.forEach((a) => a.classList.remove('acesa', 'apagada'));
+        return;
+      }
+      const dentro = cadeia(id);
+      nos.forEach((n) => {
+        const sim = dentro.has(n.dataset.no!);
+        n.classList.toggle('acesa', sim);
+        n.classList.toggle('apagada', !sim);
+      });
+      arestas.forEach((a) => {
+        const sim = dentro.has(a.dataset.de!) && dentro.has(a.dataset.para!);
+        a.classList.toggle('acesa', sim);
+        a.classList.toggle('apagada', !sim);
+      });
+    }
+
+    nos.forEach((n) => {
+      n.addEventListener('pointerenter', () => acender(n.dataset.no!));
+      n.addEventListener('focus', () => acender(n.dataset.no!));
+    });
+    moldura.addEventListener('pointerleave', () => acender(null));
+    moldura.addEventListener('focusout', (e) => {
+      if (!moldura.contains(e.relatedTarget as Node)) acender(null);
+    });
+
+    /* ---------- busca ---------- */
+    const busca = raiz.querySelector<HTMLInputElement>('[data-busca]');
+    busca?.addEventListener('input', () => {
+      const q = busca.value.trim().toLowerCase();
+      if (!q) {
+        nos.forEach((n) => n.classList.remove('apagada', 'acesa'));
+        tudo();
+        return;
+      }
+      const casam: HTMLElement[] = [];
+      nos.forEach((n) => {
+        const casa = (n.textContent ?? '').toLowerCase().includes(q);
+        n.classList.toggle('apagada', !casa);
+        n.classList.toggle('acesa', casa);
+        if (casa) casam.push(n);
+      });
+      if (casam.length) {
+        const xs = casam.map((n) => parseFloat(n.style.left));
+        const ys = casam.map((n) => parseFloat(n.style.top));
+        enquadrar(
+          Math.min(...xs) - 180,
+          Math.min(...ys) - 120,
+          Math.max(...xs) + 340,
+          Math.max(...ys) + 200,
+        );
+      }
+    });
+
+    /* ---------- enquadrar por matéria ---------- */
+    raiz.querySelectorAll<HTMLElement>('[data-enquadrar]').forEach((b) => {
+      b.addEventListener('click', () => {
+        const alvo = b.dataset.enquadrar!;
+        const c = dados.caixas[alvo];
+        if (alvo === 'tudo' || !c) tudo();
+        else enquadrar(c.x0, c.y0, c.x1, c.y1);
+      });
+    });
+
+    let redim: number | undefined;
+    new ResizeObserver(() => {
+      clearTimeout(redim);
+      redim = window.setTimeout(tudo, 120);
+    }).observe(moldura);
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-mapa]').forEach(iniciar);
+</script>

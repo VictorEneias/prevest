@@ -9,9 +9,10 @@ import Resolucao from './camadas/Resolucao.astro';
 import Pensamento from './camadas/Pensamento.astro';
 import Erros from './camadas/Erros.astro';
 import Curiosidade from './camadas/Curiosidade.astro';
+import Questao from './Questao.astro';
 import Juncao from './viz/Juncao.astro';
 import Setas from './viz/Setas.astro';
 
 export const componentesMDX = {
-  C, Explicacao, Dica, Resolucao, Pensamento, Erros, Curiosidade, Juncao, Setas,
+  C, Explicacao, Dica, Resolucao, Pensamento, Erros, Curiosidade, Questao, Juncao, Setas,
 };

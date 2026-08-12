@@ -2,6 +2,8 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { componentesMDX } from '../../components/mdx';
+import MapaConceitos from '../../components/viz/MapaConceitos.astro';
+import { ROTULO_MATERIA, rotuloBloco } from '../../lib/curriculo';
 import { dependemDe } from '../../lib/grafo';
 
 export async function getStaticPaths() {
@@ -34,7 +36,7 @@ const NIVEL = { fundamento: 'Fundamento', basico: 'Básico', medio: 'Médio', av
       {d.subtitulo && <p style="color:var(--tinta-media);margin-top:calc(var(--u)*-0.5)">{d.subtitulo}</p>}
 
       <div class="ficha">
-        <span><b>{d.materia === 'matematica' ? 'Matemática' : 'Física'}</b> · {d.bloco}</span>
+        <span><b>{ROTULO_MATERIA[d.materia]}</b> · {rotuloBloco(d.bloco)}</span>
         <span>{NIVEL[d.nivel]}</span>
         {d.tempo_estimado && <span>~{d.tempo_estimado} min</span>}
         {d.itens_fuvest !== undefined && <span><b>{d.itens_fuvest}</b> itens FUVEST</span>}
@@ -60,17 +62,17 @@ const NIVEL = { fundamento: 'Fundamento', basico: 'Básico', medio: 'Médio', av
       <hr class="regua" />
       <Content components={componentesMDX} />
 
-      {filhos.length > 0 && (
+      {(filhos.length > 0 || d.prereqs.length > 0) && (
         <>
           <hr class="regua" />
           <p style="font-family:var(--f-ui);font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--tinta-fraca);margin-bottom:6px">
-            Isto destrava
+            Onde este módulo se encaixa
           </p>
-          <ul class="prereq-lista">
-            {filhos.map((f) => (
-              <li><a class="cartao" style="padding:5px 10px;font-family:var(--f-ui);font-size:.8rem" href={`${base}/conceitos/${f.id}/`}>{f.data.titulo}</a></li>
-            ))}
-          </ul>
+          <p style="font-family:var(--f-ui);font-size:.8rem;color:var(--tinta-media);margin-bottom:calc(var(--u)*0.5)">
+            Nada aqui está bloqueado. É só o que se conecta a este módulo — o que
+            vem antes, à esquerda, e o que continua a partir dele, à direita.
+          </p>
+          <MapaConceitos foco={c.id} raio={1} altura="34vh" />
         </>
       )}
     </article>
