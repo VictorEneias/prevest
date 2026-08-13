@@ -1,9 +1,9 @@
 ---
-/** Base de todas as camadas. Não use direto no MDX — use os wrappers. */
+/** Base das camadas. No MDX use os wrappers, não este. */
 interface Props {
-  camada: 'explicacao' | 'dica' | 'resolucao' | 'pensamento' | 'erros' | 'curiosidade';
+  camada: 'dica' | 'resolucao' | 'pensamento' | 'erros' | 'curiosidade';
   rotulo: string;
-  /** Modos em que essa camada nasce ABERTA. */
+  /** Modos em que a camada nasce aberta. */
   abertaEm?: string[];
 }
 const { camada, rotulo, abertaEm = ['estudo'] } = Astro.props;

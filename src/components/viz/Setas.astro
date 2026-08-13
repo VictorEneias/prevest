@@ -1,14 +1,12 @@
 ---
 /**
- * <Setas /> — figura ESTÁTICA de junção.
+ * <Setas /> — a figura estática de junção.
  *
- * Mesma linguagem visual do <Juncao /> interativo (setas encadeadas sobre a reta
- * numérica, azul = positivo, vermelho = negativo), só que congelada: sem
- * controles, sem hidratação React. Serve pros exemplos introdutórios, onde a
- * conta é fixa e o aluno só precisa VER as setas caírem nos números certos.
- *
- * É Astro puro, roda no build. Pra explorar (mexer, embaralhar, agrupar) use
- * <Juncao />, que é ilha React.
+ * Mesma linguagem do <Juncao /> (setas encadeadas sobre a reta, azul positivo,
+ * vermelho negativo), só que congelada: sem controle e sem React, calculada no
+ * build. Serve pros exemplos em que a conta é fixa e o aluno só precisa ver as
+ * setas caírem nos números certos. Pra mexer, embaralhar ou agrupar, use o
+ * <Juncao />.
  */
 interface Props {
   /** Parcelas da junção, com sinal. Ex.: [3, -5] */
@@ -58,7 +56,7 @@ const passoTick = span <= 14 ? 1 : span <= 30 ? 2 : span <= 70 ? 5 : 10;
 const ticks: number[] = [];
 for (let v = Math.ceil(min / passoTick) * passoTick; v <= max; v += passoTick) ticks.push(v);
 
-/* setas encadeadas — "pulinhos" acima da reta */
+/* setas encadeadas, os "pulinhos" acima da reta */
 const setas = parcelas.map((p, i) => {
   const x0 = x(acum[i]);
   const x1 = x(acum[i + 1]);

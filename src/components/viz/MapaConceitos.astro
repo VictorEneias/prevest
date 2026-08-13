@@ -1,17 +1,16 @@
 ---
 /**
- * <MapaConceitos /> — a árvore de conceitos desenhada.
+ * <MapaConceitos /> — o grafo de conceitos desenhado. Sem `foco` sai o
+ * currículo inteiro, que é a home; com `foco` sai só a vizinhança daquele
+ * conceito, que é o rodapé da página de conceito.
  *
- * Sem `foco`, desenha o currículo inteiro (é a home). Com `foco`, desenha só a
- * vizinhança daquele conceito (é o rodapé de cada página de conceito).
+ * O SVG desenha só os rótulos de área e as setas; os módulos são <a> de HTML
+ * por cima, no mesmo sistema de coordenadas, porque texto em SVG não quebra
+ * linha nem faz reticências e <a> de verdade dá foco, Tab e Enter de graça. O
+ * pan e o zoom são um transform na camada que segura os dois.
  *
- * ARQUITETURA: SVG só pras áreas e as setas; os módulos são <a> de HTML
- * posicionados por cima, no MESMO sistema de coordenadas. Motivo: texto em SVG
- * não quebra linha nem faz reticências, e <a> de verdade dá foco, Tab e Enter
- * de graça. O pan/zoom é um transform CSS na camada que contém os dois.
- *
- * Astro puro + script vanilla, como o <Questao>: as posições saem prontas do
- * build, e a interação é só transformar e acender/apagar classe.
+ * Astro puro com script vanilla, como o <Questao>: as posições saem prontas do
+ * build e a interação é só transformar e acender ou apagar classe.
  */
 import { getCollection } from 'astro:content';
 import { calcularLayout, vizinhanca, type ConceitoBruto } from '../../lib/layout-grafo';
@@ -41,7 +40,7 @@ const todos: ConceitoBruto[] = (await getCollection('conceitos')).map((c) => ({
 const conjunto = foco ? vizinhanca(todos, foco, raio) : todos;
 const mapa = calcularLayout(conjunto, { foco });
 
-/* Adjacência pro script acender a cadeia — já reduzida, é o que está desenhado. */
+/* Adjacência pro script acender a cadeia, já reduzida: é o que está desenhado. */
 const idsDesenhados = new Set(mapa.nos.map((n) => n.id));
 const pais = Object.fromEntries(
   mapa.nos.map((n) => [
@@ -271,9 +270,9 @@ const dados = {
   }
 
   /* ---- áreas ----
-     Sem mancha de fundo: foi medido e não funciona neste grafo (ver o comentário
-     da seção 5 em layout-grafo.ts). A identidade da área vem da cor do módulo,
-     do rótulo e da gravidade que já aproxima os iguais. */
+     Sem mancha de fundo: como o x só desembaraça o desenho, os módulos de uma
+     área ficam espalhados e a mancha viraria um borrão por cima de tudo. A área
+     se identifica pela cor do módulo e pelo rótulo. */
   .mapa-area-rotulo {
     font-family: var(--f-ui);
     font-size: 12px;
@@ -317,8 +316,8 @@ const dados = {
     box-shadow: var(--sombra);
     transition: border-color 0.12s ease, transform 0.12s ease;
   }
-  /* rascunho = tracejado, não cor: o amarelo colidiria com a paleta das áreas
-     e verde/vermelho não serve pra daltônico */
+  /* rascunho é tracejado e não cor: o amarelo colidiria com a paleta das áreas
+     e verde com vermelho não serve pra daltônico */
   .mapa-no[data-revisado='nao'] {
     border-top-style: dashed;
     border-right-style: dashed;
@@ -484,9 +483,9 @@ const dados = {
     );
 
     /* ---------- acender a cadeia ----------
-       Sobe pelos pré-requisitos e desce pelos dependentes: o aluno vê tudo que
-       sustenta aquele módulo e tudo que depende dele, e o resto apaga. É o que
-       torna um mapa de 70 módulos legível. */
+       Sobe pelos prereqs e desce pelos dependentes, apagando o resto: o aluno vê
+       tudo que sustenta aquele módulo e tudo que sai dele. É o que torna um mapa
+       de 70 módulos legível. */
     function cadeia(id: string): Set<string> {
       const dentro = new Set([id]);
       const anda = (atual: string, campo: 'pais' | 'filhos') => {

@@ -1,27 +1,17 @@
 /**
- * Posiciona o grafo de conceitos. Roda no BUILD.
+ * Posiciona o grafo de conceitos. Roda no build.
  *
- * A ordem é de DEPENDÊNCIA, não de calendário escolar (ver curriculo.ts):
- * a profundidade de um módulo é quantos módulos você atravessa até chegar nele.
+ * O y é a profundidade: quantos módulos você atravessa até chegar naquele. O x
+ * serve a um objetivo só, desembaraçar o desenho, minimizando cruzamento de
+ * seta com seta e de seta com módulo. Aproximar módulos da mesma área foi
+ * tentado e embolava as linhas; a área se comunica por cor e rótulo.
  *
- * O objetivo do posicionamento horizontal é UM SÓ: desembaraçar o desenho.
- * Nada de aproximar módulos da mesma área — foi tentado, e a gravidade que
- * agrupava as áreas embolava as linhas. Aqui o x existe pra minimizar
- * cruzamento de seta com seta e de seta com módulo, e nada mais. A área é
- * comunicada por cor e rótulo.
+ * É Sugiyama, em três passos: camadas por profundidade, nós-ponte pras setas
+ * que pulam camada, e ordenação por mediana com transposição antes das
+ * coordenadas.
  *
- * É o método clássico de Sugiyama, nos três passos:
- *   1. camadas por profundidade
- *   2. NÓS-PONTE: toda seta que pula mais de uma camada ganha pontos
- *      intermediários. É isso que impede a linha de passar por cima de um
- *      módulo — ela agora desvia por um corredor reservado. O corredor é do
- *      MÓDULO DE ORIGEM, não da seta: as setas longas que saem do mesmo lugar
- *      descem juntas e só se separam onde precisam.
- *   3. ordenação por mediana + transposição, guardando a melhor tentativa,
- *      e só então as coordenadas.
- *
- * A entrada é objeto simples, não CollectionEntry — assim dá pra rodar esta
- * função em node puro num teste de escala, sem subir o Astro.
+ * A entrada é objeto simples em vez de CollectionEntry pra dar pra rodar em
+ * node puro num teste de escala, sem subir o Astro.
  */
 import { ordenarAreas, rotuloBloco, slotDeCor, type Materia } from './curriculo';
 
@@ -73,7 +63,7 @@ export const MEDIDAS = {
   noH: 52,
   gapX: 30,
   gapY: 80,
-  /** Largura reservada pro corredor de uma seta que atravessa a camada. */
+  /** Largura do corredor de uma seta que atravessa a camada. */
   ponteW: 22,
   /** Trecho reto abaixo do módulo onde as setas que saem dele andam juntas. */
   tronco: 10,
@@ -88,11 +78,9 @@ const passoY = M.noH + M.gapY;
  * ------------------------------------------------------------------ */
 
 /**
- * Pré-requisito que já vem por outro caminho é ruído no desenho.
- *
- * Se X depende de A e de B, e A já é pré-requisito de B, então a seta A→X não
- * acrescenta nada: quem chega em B já passou por A. A seta some do mapa e resta
- * só B→X. Vale pra qualquer quantidade de caminhos, não só dois.
+ * Prereq que já vem por outro caminho é ruído no desenho: se X depende de A e
+ * de B, e A já é prereq de B, a seta A→X não acrescenta nada, porque quem chega
+ * em B já passou por A. Vale pra qualquer quantidade de caminhos.
  */
 export function reduzirTransitivamente(conceitos: ConceitoBruto[]): {
   essenciais: Map<string, string[]>;
@@ -233,11 +221,10 @@ export function calcularLayout(
   const nCamadas = Math.max(...conceitos.map((c) => camadaDe.get(c.id)!)) + 1;
 
   /* ---------- 2. nós-ponte ----------
-     Toda seta que pula mais de uma camada vira uma corrente de pontos, um por
-     camada intermediária. A ponte ocupa lugar na fila junto com os módulos, o
-     que reserva um corredor: é por isso que a linha deixa de passar por cima
-     de um módulo. Também é o que permite ao passo de ordenação enxergar a seta
-     longa como várias curtas e desembaraçá-la. */
+     Seta que pula mais de uma camada vira uma corrente de pontos, um por camada
+     intermediária. A ponte pega lugar na fila junto com os módulos, e é esse
+     corredor reservado que impede a linha de passar por cima de um módulo. De
+     quebra, a ordenação passa a enxergar a seta longa como várias curtas. */
   const camadas: Item[][] = Array.from({ length: nCamadas }, () => []);
   const itemDe = new Map<string, Item>();
   for (const c of conceitos) {
@@ -249,12 +236,10 @@ export function calcularLayout(
   const trechos: Trecho[] = [];
   const correntes: { de: string; para: string; pontes: Item[] }[] = [];
 
-  /* O corredor é do MÓDULO DE ORIGEM, não da seta.
-     Antes cada seta longa abria uma ponte só dela em cada camada, e quatro setas
-     saindo do mesmo módulo desciam o mapa inteiro como quatro linhas paralelas,
-     lado a lado, dizendo a mesma coisa quatro vezes. Agora todas as setas longas
-     que saem de um módulo dividem UM ponto por camada: elas descem coladas, como
-     um tronco só, e cada uma se desprende na camada do destino dela. */
+  /* O corredor é do módulo de origem, não da seta. Quando cada seta longa abria
+     uma ponte só dela, quatro setas saindo do mesmo módulo desciam o mapa
+     inteiro como quatro paralelas dizendo a mesma coisa. Dividindo um ponto por
+     camada elas descem coladas e cada uma se desprende na camada do destino. */
   const corredorDe = new Map<string, Map<number, Item>>();
   const jaLigado = new Set<string>();
   const ligar = (a: Item, b: Item) => {
@@ -293,8 +278,8 @@ export function calcularLayout(
   }
 
   /* ---------- 3. ordenação ----------
-     Mediana + transposição, guardando a melhor tentativa. A ordem inicial é
-     alfabética só pra ser determinística; a partir daí quem manda é o número
+     Mediana e transposição, guardando a melhor tentativa. A ordem inicial é
+     alfabética só pra ser determinística; daí pra frente quem manda é o número
      de cruzamentos. */
   const ordem = new Map<string, number>();
   for (const camadaItens of camadas) {
@@ -347,16 +332,15 @@ export function calcularLayout(
   let melhor = salvar();
   let melhorCruz = contarTudo();
 
-  /* Várias partidas. O resultado da mediana depende da ordem inicial, então
-     rodar de alguns pontos diferentes e ficar com o melhor sai bem mais barato
-     que qualquer heurística mais esperta. O sorteio é semeado: mesmo build,
-     mesmo mapa. */
+  /* O resultado da mediana depende da ordem inicial, então saio de alguns
+     pontos diferentes e fico com o melhor, que sai mais barato que qualquer
+     heurística mais esperta. Sorteio semeado: mesmo build, mesmo mapa. */
   let semente = 20260812;
   const sorteio = () => ((semente = (semente * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
 
-  /* Teto de esforço: a transposição é quadrática no número de trechos, então
-     um grafo grande precisa de menos partidas pra o build não arrastar. Com 71
-     módulos (93 trechos) são 8 partidas e ~0,6 s. */
+  /* A transposição é quadrática no número de trechos, então grafo grande leva
+     menos partidas pra o build não arrastar. Com 71 módulos (93 trechos) são
+     8 partidas e ~0,6 s. */
   const partidas = trechos.length > 400 ? 2 : trechos.length > 200 ? 4 : 8;
 
   for (let partida = 0; partida < partidas; partida++) {
@@ -440,13 +424,13 @@ export function calcularLayout(
 
   /* ---------- 4. coordenadas ----------
      Cada item quer ficar na média dos vizinhos, respeitando um espaçamento
-     mínimo. Isso é um problema de regressão isotônica, e tem solução EXATA
-     (PAVA) — resolver por empurrão sucessivo, como eu tinha feito antes, incha
-     o mapa: a varredura empurra pra direita e nada puxa de volta, e o
-     acumulado deixou o desenho três vezes mais largo do que precisava.
+     mínimo, o que é regressão isotônica e tem solução exata (PAVA). Antes eu
+     resolvia por empurrão sucessivo e o mapa inchava: a varredura empurra pra
+     direita e nada puxa de volta, e o acumulado deixou o desenho três vezes
+     mais largo do que precisava.
 
-     Corrente de ponte pesa mais que módulo: é o que mantém a seta longa reta
-     em vez de serpenteando entre as camadas. */
+     Corrente de ponte pesa mais que módulo, que é o que mantém a seta longa
+     reta em vez de serpenteando entre as camadas. */
   const folga = (a: Item, b: Item) =>
     a.real && b.real ? M.gapX : !a.real && !b.real ? 12 : 18;
   const sep = (a: Item, b: Item) => (a.w + b.w) / 2 + folga(a, b);
@@ -479,9 +463,9 @@ export function calcularLayout(
     return out;
   }
 
-  /* Quanto o item cede da posição ideal em nome de não abrir vão.
-     Sem isso o baricentro espalha: em 0, a camada 1 abria 2040px pra 6 módulos.
-     Calibrado medindo, no currículo de 71 módulos:
+  /* Quanto o item cede da posição ideal pra não abrir vão. Sem isso o
+     baricentro espalha: em 0, a camada 1 abria 2040px pra 6 módulos.
+     Medido no currículo de 71 módulos:
 
        peso   largura   desvio médio   comprimento total das setas
        0       2414        115px            35457
@@ -489,8 +473,8 @@ export function calcularLayout(
        0.30    2109        113px            34154
        0.60    2097        118px            35212
 
-     Cruzamento e sobreposição não mudam com esse peso (a ordem já está fixada
-     na etapa anterior), então dá pra escolher só por largura e retidão. */
+     Cruzamento e sobreposição não mudam com esse peso, porque a ordem já foi
+     fixada na etapa anterior, então dá pra escolher só por largura e retidão. */
   const PESO_COMPACTA = 0.15;
 
   const compactar = (camadaItens: Item[], desejado: Map<string, number>) => {
@@ -585,17 +569,17 @@ export function calcularLayout(
   for (const corrente of correntes) {
     const origem = itemDe.get(corrente.de)!;
     const destino = itemDe.get(corrente.para)!;
-    /* Cada ponte contribui DOIS pontos, no topo e na base da faixa dela. Assim
-       a linha atravessa a faixa dos módulos na vertical, dentro do corredor que
-       a ponte reservou, e todo o desvio horizontal acontece no vão entre
-       camadas, que é vazio. Com um ponto só, no centro da faixa, o trecho
-       varria na diagonal por dentro da fileira e raspava os módulos vizinhos. */
+    /* Cada ponte dá dois pontos, no topo e na base da faixa dela, pra linha
+       atravessar a fileira de módulos na vertical, dentro do corredor, e todo o
+       desvio horizontal acontecer no vão entre camadas, que é vazio. Com um
+       ponto só, no centro, o trecho varria na diagonal por dentro da fileira e
+       raspava os módulos vizinhos. */
     const base = yDaCamada(origem.camada) + M.noH;
     const pontos: [number, number][] = [
       [origem.x, base],
-      /* Tronco: as setas que saem juntas descem um trecho reto ANTES de abrir o
-         leque. Como o trecho é idêntico nas irmãs, elas se sobrepõem exatamente
-         e o que se vê é uma linha só saindo do módulo, que só então bifurca. */
+      /* Tronco: as setas irmãs descem um trecho reto antes de abrir o leque.
+         Como o trecho é idêntico, elas se sobrepõem exatamente e o que se vê é
+         uma linha só saindo do módulo, que só então bifurca. */
       ...((saidas.get(corrente.de) ?? 0) > 1
         ? ([[origem.x, base + M.tronco]] as [number, number][])
         : []),
@@ -632,16 +616,15 @@ export function calcularLayout(
 }
 
 /* ------------------------------------------------------------------ *
- * Métricas — só pra medir a qualidade do desenho, não rodam no build
+ * Métricas: medem a qualidade do desenho, não rodam no build
  * ------------------------------------------------------------------ */
 
 /**
- * Os segmentos DESENHADOS, sem repetição.
- *
- * Trecho compartilhado por várias setas (o tronco, o corredor) é uma linha só na
- * tela, então tem que contar uma vez só — senão a métrica pune um desenho por
- * ele estar mais limpo. `pontas` guarda todos os módulos que são extremidade de
- * alguma seta que passa ali, pra sobreposição não acusar a própria origem.
+ * Os segmentos desenhados, sem repetição. Trecho compartilhado por várias setas
+ * (o tronco, o corredor) é uma linha só na tela, então conta uma vez só, senão a
+ * métrica pune o desenho justamente por ele estar mais limpo. `pontas` guarda os
+ * módulos que são extremidade de alguma seta dali, pra sobreposição não acusar a
+ * própria origem.
  */
 function segmentosDe(mapa: Mapa) {
   const porChave = new Map<
@@ -677,8 +660,9 @@ export function contarCruzamentos(mapa: Mapa): number {
     for (let j = i + 1; j < seg.length; j++) {
       const p = seg[i];
       const q = seg[j];
-      /* Encostar não é cruzar: dois trechos que saem do mesmo ponto (a bifurcação
-         do tronco, ou dois trechos seguidos da mesma seta) tocam-se de propósito. */
+      /* Encostar não é cruzar: dois trechos que saem do mesmo ponto, seja a
+         bifurcação do tronco ou dois trechos seguidos da mesma seta, se tocam
+         de propósito. */
       const toca =
         (perto(p.x1, q.x1) && perto(p.y1, q.y1)) ||
         (perto(p.x1, q.x2) && perto(p.y1, q.y2)) ||

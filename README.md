@@ -19,7 +19,7 @@ no meio da explicação. Faça o build em casa e sirva estático:
 npm run aula       # build + serve dist/ na porta 4321
 ```
 
-Abre em ~2 segundos, funciona sem internet, e nada quebra se o Wi-Fi cair.
+Assim funciona sem internet e nada quebra se o Wi-Fi cair.
 
 ## Comandos
 
@@ -28,7 +28,7 @@ Abre em ~2 segundos, funciona sem internet, e nada quebra se o Wi-Fi cair.
 | `npm run dev` | desenvolvimento |
 | `npm run build` | gera `dist/` |
 | `npm run aula` | build + servidor estático — **é o de aula** |
-| `npm run grafo` | valida elos de pré-requisito, ciclos, reciprocidade |
+| `npm run grafo` | valida elo morto, ciclo e prereq redundante |
 
 Rode `npm run grafo` depois de toda sessão que mexer em `content/`.
 
@@ -46,8 +46,7 @@ pasta migra intacta.
 
 ## Atalhos em aula
 
-`Alt+1` estudo · `Alt+2` aula · `Alt+3` prova · `Alt+Z` tamanho da fonte ·
-`Esc` fecha painel
+`Alt+1` estudo · `Alt+2` aula · `Alt+Z` tamanho da fonte · `Esc` fecha painel
 
 ## Estado
 

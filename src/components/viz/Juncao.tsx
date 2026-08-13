@@ -1,36 +1,32 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-/* ===========================================================================
-   <Juncao />  — o primitivo de sinal.
-
-   Cada número é uma SETA: comprimento = módulo, direção = sinal.
-   Junção = encadear setas ponta a ponta a partir do zero.
-
-   O que esse componente prova, e que é impossível provar no papel:
-     · comutatividade — reordene as setas, o ponto final não se move
-     · associatividade — agrupe setas, a soma do grupo é uma seta só
-     · subtração não existe — o mesmo desenho serve pras duas notações
-
-   REUSO: com contexto="deslocamento" ou "forca", isto vira soma vetorial em 1D.
-   Cinemática, velocidade relativa e resultante de forças na mesma direção
-   usam ESTE componente. Um componente, dois anos de currículo.
-   =========================================================================== */
+/* <Juncao /> — o primitivo de sinal.
+ *
+ * Cada número é uma seta: o comprimento é o módulo e a direção é o sinal, e
+ * juntar é encadear seta ponta a ponta a partir do zero. Mexendo nas setas o
+ * aluno vê o que no papel só dá pra afirmar: que reordenar não move o ponto
+ * final, que um grupo de setas vira uma seta só, e que o mesmo desenho serve
+ * pra "menos" e pra "mais um negativo".
+ *
+ * Com contexto="deslocamento" ou "forca" isto vira soma vetorial em 1D, então
+ * cinemática, velocidade relativa e resultante na mesma direção reusam este
+ * componente em vez de ganhar um novo. */
 
 type Contexto = 'numero' | 'deslocamento' | 'forca';
 
 export interface JuncaoProps {
   /** Parcelas iniciais. Ex.: [5, -3, 2] */
   parcelas?: number[];
-  /** Como a expressão é escrita por cima. 'juncao' mostra (+5) + (−3). */
+  /** Como a expressão aparece escrita. 'juncao' mostra (+5) + (−3). */
   notacao?: 'juncao' | 'subtracao';
   contexto?: Contexto;
   permitirEditar?: boolean;
   permitirReordenar?: boolean;
   permitirAgrupar?: boolean;
-  /** Trava o domínio da reta. Sem isso, ele se ajusta sozinho. */
+  /** Trava o domínio da reta. Sem isso ele se ajusta sozinho. */
   dominio?: [number, number];
   titulo?: string;
-  /** Guarda o estado no hash da URL, pra você salvar a configuração da aula. */
+  /** Guarda o estado no hash da URL, pra eu salvar a configuração da aula. */
   chaveUrl?: string;
 }
 
@@ -45,8 +41,8 @@ const A = 246;
 const Y = 178;
 const MARGEM = 34;
 
-/** Onde o arco realmente estoura. Bezier cúbico com os dois controles em `topo`:
- *  B(0.5) = (P0 + 3C1 + 3C2 + P3) / 8. Sem isso o rótulo cai em cima da curva. */
+/** Onde o arco estoura de verdade. Bezier cúbico com os dois controles em
+ *  `topo`: B(0.5) = (P0 + 3C1 + 3C2 + P3) / 8. Sem isso o rótulo cai na curva. */
 const picoDoArco = (topo: number) => (2 * (Y - 3) + 6 * topo) / 8;
 
 const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/\.?0+$/, ''));
@@ -64,7 +60,7 @@ export default function Juncao({
   titulo,
   chaveUrl,
 }: JuncaoProps) {
-  // id estável por parcela: sem isso o React reaproveita o <input> errado ao reordenar
+  // id estável por parcela, senão o React reaproveita o <input> errado ao reordenar
   const proximoId = useRef(iniciais.length);
   const [itens, setItens] = useState(() => iniciais.map((v, i) => ({ id: i, v })));
   const parcelas = useMemo(() => itens.map((it) => it.v), [itens]);
@@ -86,7 +82,7 @@ export default function Juncao({
   const fitaRef = useRef<HTMLDivElement>(null);
   const c = CTX[contexto];
 
-  /* ---- restaura estado da URL (preparo de aula reprodutível) ---- */
+  /* ---- restaura o estado da URL, pra a configuração do preparo voltar ---- */
   useEffect(() => {
     if (!chaveUrl) return;
     const bruto = new URLSearchParams(location.hash.slice(1)).get(chaveUrl);
@@ -124,7 +120,7 @@ export default function Juncao({
 
   const x = useCallback((v: number) => MARGEM + ((v - min) / (max - min)) * (L - 2 * MARGEM), [min, max]);
 
-  /* ---- marcações inteiras, ralas o bastante pra caber ---- */
+  /* ---- marcações inteiras, ralas o bastante pra caberem ---- */
   const ticks = useMemo(() => {
     const span = max - min;
     const passoTick = span <= 14 ? 1 : span <= 30 ? 2 : span <= 70 ? 5 : 10;
@@ -365,7 +361,7 @@ export default function Juncao({
           </g>
         ))}
 
-        {/* setas encadeadas — "pulinhos" acima da reta */}
+        {/* setas encadeadas, os "pulinhos" acima da reta */}
         {parcelas.slice(0, visiveis).map((p, i) => {
           const x0 = x(acum[i]);
           const x1 = x(acum[i + 1]);
@@ -399,7 +395,7 @@ export default function Juncao({
           );
         })}
 
-        {/* seta combinada do grupo — associatividade */}
+        {/* a seta que resume o grupo */}
         {grupo && (
           <path
             d={`M ${x(acum[grupo[0]])} ${Y + 34} L ${x(acum[grupo[1] + 1])} ${Y + 34}`}

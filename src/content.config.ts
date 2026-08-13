@@ -2,9 +2,9 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 /**
- * O conteúdo vive em /content, FORA de /src, de propósito.
- * O app é descartável; o conteúdo é o ativo. Se um dia trocar de stack,
- * essa pasta migra intacta.
+ * O conteúdo mora em /content, fora de /src, de propósito: o app é descartável
+ * e o conteúdo é o ativo. Se um dia eu trocar de stack, essa pasta migra
+ * intacta.
  */
 
 const MATERIAS = ['matematica', 'fisica'] as const;
@@ -16,32 +16,29 @@ const conceitos = defineCollection({
     titulo: z.string(),
     subtitulo: z.string().optional(),
     materia: z.enum(MATERIAS),
-    bloco: z.string(), // a ÁREA do mapa. Máximo 5 por matéria — ver lib/curriculo.ts
+    bloco: z.string(), // a área do mapa. Máximo 5 por matéria, ver lib/curriculo.ts
 
     /**
-     * O grafo, numa direção só. Só ids de outros conceitos; o build quebra se
-     * apontar pro vazio.
+     * O grafo, numa direção só: id de conceito que existe (quem checa é o
+     * npm run grafo, o Zod aqui só garante que é lista de string).
      *
-     * Não existe campo inverso ("desbloqueia"): quem depende deste conceito é
-     * calculado. Assim criar um elo é editar UMA linha num arquivo só, e não
-     * tem como os dois lados divergirem.
+     * Não tem campo inverso: quem depende deste conceito é calculado. Assim um
+     * elo é uma linha num arquivo só e os dois lados não têm como divergir.
      *
-     * Declare só o pré-requisito MAIS PRÓXIMO. Se A já vem por B, não liste A —
-     * `npm run grafo` avisa quando um elo é redundante.
+     * Declare só o prereq mais próximo. Se A já vem por B, não liste A.
      */
     prereqs: z.array(z.string()).default([]),
 
     nivel: z.enum(NIVEIS).default('medio'),
     tempo_estimado: z.number().int().positive().optional(), // minutos de aula
 
-    // Portão de revisão. Enquanto for false, o Modo Aula recusa exibir.
-    // NUNCA marque true sem ter lido linha por linha.
+    // Portão de revisão: enquanto for false o Modo Aula esconde as camadas.
+    // Só marco true depois de ler linha por linha.
     revisado: z.boolean().default(false),
 
-    // Rastreabilidade: quantos itens FUVEST esse bloco representa (das tabelas do Raio X)
-    itens_fuvest: z.number().int().nonnegative().optional(),
+    itens_fuvest: z.number().int().nonnegative().optional(), // do Raio X FUVEST
 
-    resumo: z.string().optional(), // 1 frase, usada na busca e no card do painel
+    resumo: z.string().optional(), // 1 frase, usada na busca e no cartão do painel
   }),
 });
 

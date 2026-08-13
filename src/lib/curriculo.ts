@@ -1,30 +1,24 @@
 /**
- * As constantes do currículo: as áreas (blocos) de cada matéria.
+ * As áreas (blocos) de cada matéria. Fica fora do content.config.ts pra não
+ * criar dependência circular.
  *
- * NÃO existe divisão por ano escolar. Foi uma tentativa descartada de propósito:
- * a escola ensina fração no 6º e de novo, mais fundo, no 8º — e o aluno que vem
- * tapar um buraco não quer atravessar trinta módulos pra achar o assunto. Cada
- * assunto mora num módulo só, e a ordem do mapa é a ordem de DEPENDÊNCIA, não a
- * ordem do calendário escolar.
- *
- * Fica fora do content.config.ts pra não criar dependência circular.
+ * Não tem divisão por ano escolar, e isso foi descartado de propósito: a escola
+ * ensina fração no 6º e de novo, mais fundo, no 8º, e o aluno que vem tapar um
+ * buraco não quer atravessar trinta módulos pra achar o assunto. Cada assunto
+ * mora num módulo só, e a ordem do mapa é a de dependência.
  */
 
 export type Materia = 'matematica' | 'fisica';
 
 /**
- * As áreas, em ordem. A posição na lista faz duas coisas:
- *   1. escolhe a cor (slot 1..5 da paleta)
- *   2. dá a "gravidade" horizontal — o mapa puxa os módulos de uma mesma área
- *      pra perto uns dos outros, sem forçar
+ * As áreas, em ordem. A posição na lista escolhe a cor (slot 1..5 da paleta) e
+ * a ordem da legenda. Ela não mexe na posição do módulo no mapa: agrupar área
+ * por posição foi tentado e embolava as linhas.
  *
- * MÁXIMO 5 POR MATÉRIA. Não é gosto: a paleta foi validada contra o papel do
- * site e cinco é o teto medido. Com azul e vermelho reservados pra sinal e o
- * amarelo pra rascunho, nenhum sexto tom passa na separação de daltonismo — o
- * verde falha até pra visão normal. Bloco fora da lista cai em cinza neutro.
- *
- * A ordem também importa pro desenho: áreas que se conectam muito devem ficar
- * VIZINHAS na lista, porque isso encurta as setas que cruzam áreas.
+ * Máximo 5 por matéria, e isso é medido, não gosto. Testei a paleta contra o
+ * papel do site nas três formas de daltonismo, e com azul e vermelho reservados
+ * pra sinal e o amarelo pro rascunho nenhum sexto tom se separa dos outros (o
+ * verde falha até pra visão normal). Bloco fora da lista cai em cinza neutro.
  */
 export const BLOCOS_POR_MATERIA: Record<Materia, string[]> = {
   matematica: ['aritmetica', 'algebra', 'funcoes', 'geometria', 'estatistica'],
@@ -57,8 +51,8 @@ export const ROTULO_MATERIA: Record<Materia, string> = {
 };
 
 /**
- * Slot de cor do bloco dentro da matéria: 1..5, ou 0 pro neutro.
- * Vira a variável CSS --bloco-1 … --bloco-5 no global.css.
+ * Slot de cor do bloco dentro da matéria: 1..5, ou 0 pro cinza neutro.
+ * Vira a variável --bloco-1 … --bloco-5 do global.css.
  */
 export function slotDeCor(materia: Materia, bloco: string): number {
   const i = (BLOCOS_POR_MATERIA[materia] ?? []).indexOf(bloco);
@@ -68,10 +62,8 @@ export function slotDeCor(materia: Materia, bloco: string): number {
 export const ORDEM_MATERIAS: Materia[] = ['matematica', 'fisica'];
 
 /**
- * Ordena as áreas que de fato aparecem no mapa: primeiro por matéria, depois
- * pela posição declarada em BLOCOS_POR_MATERIA. É essa ordem que vira a
- * "gravidade" horizontal — e é por isso que áreas que se conectam muito devem
- * estar VIZINHAS na lista.
+ * Ordena as áreas que aparecem no mapa: primeiro por matéria, depois pela
+ * posição em BLOCOS_POR_MATERIA. É a ordem da legenda e dos rótulos.
  */
 export function ordenarAreas(chaves: string[]): string[] {
   return [...chaves].sort((a, b) => {

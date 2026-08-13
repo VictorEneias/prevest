@@ -1,19 +1,18 @@
 ---
 /**
- * <Questao /> — questão de múltipla escolha com correção na hora.
+ * <Questao /> — múltipla escolha com correção na hora. O aluno clica numa
+ * alternativa, acertou fica verde e errou fica vermelho com a correta apontada,
+ * e nos dois casos o gabarito abre embaixo.
  *
- * O aluno clica numa alternativa: acertou fica verde, errou fica vermelho (e a
- * correta é apontada). Nos dois casos o gabarito passo a passo abre embaixo.
+ * É Astro puro e não React, ao contrário do que a seção 6 do CLAUDE.md pede,
+ * porque enunciado, alternativas e gabarito têm LaTeX, e o KaTeX só processa o
+ * que passa pelo pipeline do MDX. String entregue a uma ilha React não passa e
+ * sairia "$-3$" cru na tela. Como a interação aqui é só ligar e desligar classe,
+ * meia dúzia de linhas de script paga melhor que hidratar React; componente que
+ * desenha e reage a arrasto continua sendo React.
  *
- * POR QUE ASTRO PURO E NÃO REACT (a seção 6 do CLAUDE.md pede React + wrapper):
- * o enunciado, as alternativas e o gabarito precisam de LaTeX, e o LaTeX só é
- * processado pelo KaTeX quando o conteúdo passa pelo pipeline do MDX. Prop de
- * string entregue a uma ilha React não passa — sairia "$-3$" cru na tela. Aqui a
- * interação é ligar/desligar classe, então ~40 linhas de script valem mais que
- * hidratar React. Componente que DESENHA e reage a arrasto continua sendo React.
- *
- * O gabarito respeita o portão de revisão: some no Modo Aula enquanto a página
- * for `revisado: false`, igual às camadas. Em Modo Prova some sempre.
+ * O gabarito respeita o portão de revisão, igual às camadas: some no Modo Aula
+ * enquanto a página for `revisado: false`.
  */
 import katex from 'katex';
 
@@ -25,7 +24,7 @@ interface Props {
    * o resto é texto. Ex.: ["$-3$", "$3$", "Nenhuma das anteriores"]
    */
   alternativas: string[];
-  /** Letra da correta: "a".."e". Errar aqui quebra o build de propósito. */
+  /** Letra da correta, "a".."e". Errar aqui quebra o build de propósito. */
   correta: string;
   /** "FUVEST 2019 — Q42" ou "Autoral". Opcional. */
   fonte?: string;
@@ -34,7 +33,7 @@ const { n, alternativas, correta, fonte } = Astro.props;
 
 const LETRAS = ['a', 'b', 'c', 'd', 'e'] as const;
 
-/* Validação no build: melhor quebrar aqui do que servir gabarito errado em aula. */
+/* Melhor quebrar o build do que servir gabarito errado em aula. */
 if (!Array.isArray(alternativas) || alternativas.length < 2) {
   throw new Error('<Questao>: precisa de ao menos 2 alternativas.');
 }
@@ -99,8 +98,8 @@ const comMatematica = (bruto: string) =>
 </section>
 
 <script>
-  /* Delegação: um listener cobre todas as questões da página (e do fragmento
-     dentro do iframe do painel, que carrega este mesmo componente). */
+  /* Um listener só cobre todas as questões da página, e também as do fragmento
+     dentro do iframe do painel, que carrega este mesmo componente. */
   const LETRAS_ARIA: Record<string, string> = {
     a: 'A', b: 'B', c: 'C', d: 'D', e: 'E',
   };
@@ -123,7 +122,7 @@ const comMatematica = (bruto: string) =>
       if (certa) certa.dataset.estado = 'era-esta';
     }
 
-    /* Não uso disabled: o botão sairia da ordem de tabulação e o aluno de
+    /* Não uso disabled porque o botão sairia da ordem de tabulação e o aluno de
        teclado perderia a leitura das outras alternativas. */
     q.querySelectorAll<HTMLElement>('.alt').forEach((b) => {
       b.dataset.travado = 'sim';

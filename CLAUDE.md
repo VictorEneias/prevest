@@ -199,13 +199,13 @@ para de clicar.
 | `<Erros>` | sim | sim | as armadilhas |
 
 **`<Explicacao>` NÃO é mais uma caixa retrátil.** É texto corrido: no Modo Estudo
-aparece como prosa normal, sem rótulo e sem clique; no Modo Aula e no Modo Prova
-some inteiro. Nada de empilhar "Exemplo 2" como rótulo de camada — pra rotular um
-exemplo, use um título de verdade (`### Exemplo 2`), que sobrevive no Modo Aula.
+aparece como prosa normal, sem rótulo e sem clique; no Modo Aula some inteiro.
+Nada de empilhar "Exemplo 2" como rótulo de camada — pra rotular um exemplo, use
+um título de verdade (`### Exemplo 2`), que sobrevive no Modo Aula.
 
 As outras camadas continuam retráteis (`<details>`). Em página **não revisada**
-elas somem em Aula/Prova (portão da seção 8.1); em página revisada, colapsam pro
-rótulo. `<Explicacao>`, por ser prosa, some em Aula/Prova sempre — revisada ou não.
+elas somem no Modo Aula (portão da seção 8.1); em página revisada, colapsam pro
+rótulo. `<Explicacao>`, por ser prosa, some no Modo Aula sempre — revisada ou não.
 
 **Regra de ouro da estrutura de página:** títulos (`##`, `###`) e componentes
 (o interativo `<Juncao>`, a figura estática `<Setas>`) ficam FORA das camadas; a
@@ -231,7 +231,7 @@ Mais prosa comentando o que acabou de acontecer no gráfico.
 
 O único bloco de texto que continua retrátil de propósito. Serve pra demonstração,
 dedução ou "de onde vem isso" — coisa que enriquece mas não pode travar quem só
-quer seguir o fio. Nasce fechada em todos os modos; o aluno clica pra abrir. Como
+quer seguir o fio. Nasce fechada nos dois modos; o aluno clica pra abrir. Como
 é camada, respeita o portão de revisão (some no Modo Aula de página não revisada).
 
 ```mdx
@@ -306,7 +306,7 @@ conceito (`src/pages/conceitos/[id].astro`). Está documentado aqui porque é on
   coisas somadas: (a) o corredor da ponte é do MÓDULO DE ORIGEM, não da seta —
   quatro setas longas saindo do mesmo lugar dividem um ponto por camada e descem
   coladas, cada uma se desprendendo na camada do destino dela; (b) todas as setas
-  que saem de um módulo descem um trecho reto de 30px (`MEDIDAS.tronco`) antes de
+  que saem de um módulo descem um trecho reto de 10px (`MEDIDAS.tronco`) antes de
   abrir o leque, e como o trecho é idêntico nas irmãs elas se sobrepõem exatamente.
   Medido nos 70 módulos: **14% menos linha desenhada** (35314 → 30337px de tinta,
   contando trecho compartilhado uma vez só), largura 2116 → 1986, cruzamentos 45 →
@@ -355,7 +355,7 @@ O passo a passo aqui. Markdown normal, LaTeX, e pode chamar <Setas /> dentro.
 - O **enunciado é o slot padrão**; o gabarito vai num `<div slot="gabarito">`, com
   linha em branco depois da abertura pra o Markdown de dentro ser parseado.
 - O gabarito respeita o **portão da seção 8.1**: some no Modo Aula enquanto a página
-  for `revisado: false`, e some sempre no Modo Prova.
+  for `revisado: false`.
 - Verde/vermelho é o par que daltônico deutan/protan **não** distingue, por isso
   todo estado carrega glifo (✓ ✗ ←) e uma frase no veredito. Se mexer no
   componente, a cor continua sendo reforço — nunca a informação sozinha.
@@ -449,6 +449,33 @@ Não é resumo da resolução. Se o `<Pensamento>` só reconta os passos, está 
 
 Escreva o erro **do jeito que o aluno comete**, não do jeito certo. Mostre a linha
 errada. Depois diga qual conceito está faltando — não qual regra foi violada.
+
+### 5.1 Comentário de código é escrito na mesma voz
+
+O código também é lido pelo Victor, e comentário com cara de documentação de
+biblioteca denuncia IA tanto quanto prosa com frase-soco. As mesmas regras da
+seção 5 valem aqui, mais estas:
+
+- **Explique a decisão, não o código.** Se o comentário reconta o que a linha
+  abaixo faz, apague. O que vale registrar é o que foi tentado e descartado, o
+  número que foi medido, e a armadilha que fez o código ficar torto.
+- **Enxuto.** Uma ou duas frases. Cabeçalho de arquivo pode ter um parágrafo, e
+  só quando o arquivo carrega uma decisão de arquitetura de verdade.
+- **Nada de CAIXA ALTA pra ênfase**, nada de `POR QUE ISSO EXISTE:`, nada de
+  moldura de `=====` ou `-----` em volta do texto. Separador de seção dentro do
+  arquivo pode, é o `/* ---------- nome ---------- */` que já está no código.
+- **Sem bullet decorativo** (`·`) e sem lista de três itens paralelos, que é o
+  formato que a IA usa quando não tem o que dizer. Frase corrida encadeada com
+  "porque", "então" e "senão".
+- **Primeira pessoa** quando é decisão sua: "não uso `disabled` porque…",
+  "antes eu resolvia por empurrão e o mapa inchava". Não "optou-se por".
+- **Um travessão por comentário, no máximo.** Prefira vírgula e dois-pontos.
+- **Número só se foi medido.** Os números que estão nos comentários hoje (14%
+  menos tinta, largura 2116 → 1986, ΔE da paleta) saíram de medição de verdade —
+  se você não rodou a medida, não escreva o número.
+- **Comentário que virou mentira é pior que comentário nenhum.** Ao mexer no
+  código, releia o comentário de cima: já aconteceu de sobrar comentário falando
+  de "gravidade" que aproxima áreas, uma ideia que tinha sido descartada.
 
 ---
 
@@ -683,8 +710,12 @@ pra modo e tamanho de fonte.
 |---|---|
 | `Alt+1` | Estudo — tudo aberto |
 | `Alt+2` | Aula — só títulos e gráficos |
-| `Alt+3` | Prova — só enunciado |
 | `Alt+Z` | tamanho da fonte (normal → grande → enorme) |
 | `Esc` | fecha o painel do topo da pilha |
 
 O modo escolhido vale também dentro dos painéis.
+
+**Só existem dois modos.** Existiu um terceiro, o Modo Prova, que escondia tudo
+menos o enunciado; foi removido porque na prática o Modo Aula já fazia isso e
+manter dois portões quase iguais só espalhava condição pelo CSS. Se pedirem "modo
+prova" de volta, pergunte o que ele faria que o Modo Aula não faz.

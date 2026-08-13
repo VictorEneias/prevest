@@ -29,7 +29,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           <div class="barra-modo" role="group" aria-label="Modo de exibição">
             <button data-modo-btn="estudo" aria-pressed="true">Estudo</button>
             <button data-modo-btn="aula" aria-pressed="false">Aula</button>
-            <button data-modo-btn="prova" aria-pressed="false">Prova</button>
           </div>
           <button class="painel-botao" data-zoom title="Tamanho da fonte (Alt+Z)">A↕</button>
         </header>
@@ -53,14 +52,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       (() => {
         const html = document.documentElement;
 
-        /* ---------------- Modo Aula ----------------
-           Cada camada declara em quais modos nasce aberta.
-           Trocar o modo só abre/fecha <details> — nada é destruído,
-           você reabre no clique se quiser mostrar sua própria redação. */
+        /* Cada camada declara em que modos nasce aberta. Trocar o modo só
+           abre e fecha <details>, então dá pra reabrir no clique em aula. */
         const MODOS = {
-          estudo: ['explicacao', 'resolucao', 'pensamento', 'erros'],
+          estudo: ['resolucao', 'pensamento', 'erros'],
           aula: [],
-          prova: [],
         };
 
         function aplicarModo(modo) {
@@ -95,10 +91,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           aplicarModo('estudo');
         }
 
-        /* ---------------- Pilha de painéis ----------------
-           iframe, não innerHTML: o fragmento carrega inteiro, com CSS,
-           KaTeX e as ilhas React hidratando de verdade. Um painel de
-           pré-requisito consegue ter o gráfico interativo DELE. */
+        /* Pilha de painéis. Uso iframe pra o fragmento carregar inteiro, com
+           CSS, KaTeX e as ilhas React hidratando: assim o painel do
+           pré-requisito tem o gráfico interativo dele. */
         const fundo = document.querySelector('[data-pilha-fundo]');
         const raiz = document.querySelector('[data-pilha]');
         const pilha = [];
@@ -157,7 +152,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           abrir(alvo.dataset.conceito, alvo.textContent.trim());
         });
 
-        /* Clique de <C> DENTRO de um painel: o iframe avisa o pai. */
+        /* Clique de <C> dentro de um painel: o iframe avisa o pai. */
         window.addEventListener('message', (e) => {
           if (e.data?.tipo === 'abrir-conceito') abrir(e.data.id, e.data.titulo);
         });
@@ -165,7 +160,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape' && pilha.length) { fechar(); return; }
           if (!e.altKey) return;
-          const mapa = { '1': 'estudo', '2': 'aula', '3': 'prova' };
+          const mapa = { '1': 'estudo', '2': 'aula' };
           if (mapa[e.key]) { e.preventDefault(); aplicarModo(mapa[e.key]); }
           if (e.key.toLowerCase() === 'z') { e.preventDefault(); girarZoom(); }
         });

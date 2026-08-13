@@ -1,6 +1,6 @@
 /**
- * Tudo aqui fica disponível em QUALQUER arquivo .mdx sem import.
- * Ao criar um componente novo de visualização, registre-o aqui.
+ * Tudo daqui fica disponível em qualquer .mdx sem import.
+ * Componente novo de visualização entra nesta lista.
  */
 import C from './C.astro';
 import Explicacao from './camadas/Explicacao.astro';

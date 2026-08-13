@@ -1,15 +1,12 @@
 /**
  * npm run grafo
  *
- * Com 150 páginas interligadas, link morto é inevitável e invisível.
- * Este script é o que impede o grafo de apodrecer sem você perceber:
- *   · prereq apontando pra conceito que não existe
- *   · ciclo (A precisa de B, B precisa de A)
- *   · exercício apontando pra assunto inexistente
- *   · prereq redundante (já vem por outro caminho — o mapa nem desenha)
- *   · mais de 5 áreas numa matéria (a paleta do mapa só distingue 5)
+ * Com uma centena de páginas interligadas, elo morto é inevitável e invisível.
+ * Este script é o que impede o grafo de apodrecer sem eu perceber. Ele acusa:
+ * prereq apontando pra conceito que não existe, ciclo, exercício apontando pra
+ * assunto inexistente, prereq redundante e matéria com mais de 5 áreas.
  *
- * Sai com código 1 se achar problema — dá pra plugar em pre-commit.
+ * Sai com código 1 se achar problema, então dá pra plugar num pre-commit.
  */
 import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -79,11 +76,11 @@ for (const [id, { fm, arquivo }] of conceitos) {
   }
 }
 
-/* --- pré-requisito redundante ---
-   Se X depende de A e de B, e A já é pré-requisito de B, então a seta A→X não
-   acrescenta nada: quem chega em B já passou por A. O mapa desenha só o elo mais
+/* --- prereq redundante ---
+   Se X depende de A e de B, e A já é prereq de B, a seta A→X não acrescenta
+   nada, porque quem chega em B já passou por A. O mapa desenha só o elo mais
    próximo, então a declaração extra fica invisível e só atrapalha na hora de
-   editar. Aviso, não erro: às vezes o Victor vai querer manter por clareza. */
+   editar. É aviso e não erro, porque às vezes eu quero manter por clareza. */
 const ancestraisMemo = new Map();
 function ancestrais(id) {
   if (ancestraisMemo.has(id)) return ancestraisMemo.get(id);
@@ -107,9 +104,9 @@ for (const [id, { fm, arquivo }] of conceitos) {
 }
 
 /* --- teto de 5 blocos por matéria ---
-   A paleta categórica do mapa foi validada e cinco é o limite: com azul e
-   vermelho reservados pra sinal e o amarelo pra rascunho, nenhum sexto tom passa
-   na separação de daltonismo. O sexto bloco em diante vira cinza neutro. */
+   Cinco é o limite medido da paleta: com azul e vermelho reservados pra sinal e
+   o amarelo pro rascunho, nenhum sexto tom se separa dos outros pra daltônico.
+   Do sexto bloco em diante a área vira cinza neutro. */
 const blocosPorMateria = new Map();
 for (const [, { fm }] of conceitos) {
   if (!fm.materia || !fm.bloco) continue;

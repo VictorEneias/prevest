@@ -1,17 +1,8 @@
-/* =========================================================================
-   SISTEMA VISUAL
-   -------------------------------------------------------------------------
-   Vernáculo escolar brasileiro, levado a sério:
-   - papel quadriculado (a grade é real: tudo alinha em múltiplos de 24px)
-   - caneta AZUL   = o que o aluno escreve   -> positivo, "pra direita"
-   - caneta VERMELHA = o que se corrige/tira -> negativo, "pra esquerda"
-   - lápis grafite = anotação de margem      -> links de pré-requisito
-   - marca-texto   = atenção                 -> rascunho / não revisado
-
-   A dupla azul/vermelho não é decoração: é o par de maior saturação do site
-   inteiro, porque sinal é o conceito estrutural do currículo (junção -> vetor).
-   Também é seguro pra daltonismo (deutan/protan distinguem azul de vermelho).
-   ========================================================================= */
+/* Sistema visual: caderno de escola.
+   Grade de 24px, azul = positivo, vermelho = negativo, grafite = pré-requisito,
+   marca-texto = rascunho. Azul e vermelho são as cores mais fortes do site
+   porque sinal é o conceito que sustenta o currículo inteiro, de junção a vetor,
+   e é um par que deutan e protan enxergam separado. */
 
 @import '@fontsource-variable/space-grotesk';
 @import '@fontsource-variable/source-serif-4';
@@ -40,23 +31,18 @@
   --vermelho-fraco: #fce6e3;
   --vermelho-medio: #f3ada4;
 
-  /* --- acerto: SÓ pra correção de exercício, nunca pra sinal ---
-     Verde e vermelho é o par que daltônico deutan/protan não separa, então
-     todo lugar que usa isso tem que carregar também um glifo (✓ / ✗) e texto.
-     A cor é reforço, não é a informação. */
+  /* --- acerto: só pra correção de exercício, nunca pra sinal ---
+     Deutan e protan não separam verde de vermelho, então todo estado que usa
+     esse par carrega junto um glifo (✓ ✗) e uma frase. */
   --verde: #1a7f4b;
   --verde-fraco: #e4f4ea;
   --verde-medio: #9ed3b5;
 
   /* --- blocos do mapa: paleta categórica ---
-     Validada contra o papel (#fcfcfa) em TODOS os pares e nas três formas de
-     daltonismo: pior par ΔE 9,2 (deuteranopia) e 19,2 (visão normal).
-     CINCO É O TETO MEDIDO. Azul e vermelho estão reservados pra sinal e o
-     amarelo pra rascunho; testei quatro candidatos a sexto tom e todos colidem
-     — o verde #2f7d32 colide até pra quem enxerga cores normalmente. Bloco que
-     passar de cinco cai em --bloco-0 e é identificado só pelo rótulo da raia.
-     A raia rotulada é o canal primário; a cor é reforço (o aqua fica em 2,74:1
-     de contraste, abaixo de 3:1, então o rótulo visível é obrigatório). */
+     Cinco é o teto, testado contra o papel nas três formas de daltonismo. Azul
+     e vermelho ficam reservados pra sinal e o amarelo pro rascunho, e nenhum
+     sexto tom se separa dos outros. Área que passar disso cai em --bloco-0 e se
+     identifica pelo rótulo, que é o canal principal de qualquer jeito. */
   --bloco-0: #78808c;
   --bloco-1: #1baf7a;
   --bloco-2: #eb6834;
@@ -84,7 +70,7 @@
   --sombra: 0 1px 2px rgba(20, 24, 31, 0.05), 0 4px 16px rgba(20, 24, 31, 0.05);
 }
 
-/* Modo apresentação: os dois olhando a tela de lado, na mesa da casa do aluno. */
+/* Nós dois olhando a mesma tela, na mesa da casa do aluno. */
 html[data-tamanho='grande'] {
   --t-base: 22px;
 }
@@ -109,7 +95,7 @@ body {
   line-height: var(--t-linha);
   color: var(--tinta);
   background-color: var(--papel-fundo);
-  /* A grade do caderno. Baixo contraste de propósito — ela orienta, não compete. */
+  /* A grade do caderno, de contraste baixo de propósito: ela só orienta. */
   background-image:
     linear-gradient(var(--grade) 1px, transparent 1px),
     linear-gradient(90deg, var(--grade) 1px, transparent 1px);
@@ -154,7 +140,7 @@ strong {
   font-weight: 600;
 }
 
-/* Números sempre tabulares — coluna de conta não pode dançar. */
+/* Números tabulares: coluna de conta não pode dançar. */
 .num,
 td,
 th {
@@ -170,12 +156,12 @@ th {
   padding: calc(var(--u) * 2) calc(var(--u) * 1.5) calc(var(--u) * 4);
 }
 
-/* O mapa da home precisa de largura — 816px espremeria as raias. */
+/* O mapa da home precisa de largura: 816px espremem as áreas. */
 .folha-larga {
   max-width: calc(var(--u) * 62);
 }
 
-/* A prosa fica em papel liso: a grade orienta o layout, não atrapalha a leitura. */
+/* A prosa fica em papel liso, senão a grade atrapalha a leitura. */
 .papel {
   background: var(--papel);
   border: 1px solid var(--linha);
@@ -184,9 +170,9 @@ th {
   box-shadow: var(--sombra);
 }
 
-/* ---------- a régua: o elemento-assinatura ----------
-   Divisórias não são linhas: são retas numéricas. O objeto mais importante
-   do currículo virou o objeto estrutural da interface.                     */
+/* ---------- a régua ----------
+   Toda divisória do site é uma reta numérica graduada, que é o objeto que a
+   gente mais usa em aula.                                                  */
 .regua {
   height: calc(var(--u) * 0.75);
   border: 0;
@@ -240,8 +226,8 @@ th {
 }
 
 /* ---------- <C>: link de pré-requisito ----------
-   Grafite pontilhado = anotação a lápis na margem. Distinto de link normal,
-   porque o comportamento é diferente: não navega, abre painel por cima.     */
+   Grafite pontilhado, que é a anotação a lápis na margem. Fica diferente de um
+   link normal porque o comportamento é outro: abre painel em vez de navegar. */
 
 .elo-conceito {
   font: inherit;
@@ -398,11 +384,7 @@ th {
   border-top: 1px solid var(--linha);
 }
 
-/* cada camada tem sua cor de borda esquerda — identificação periférica,
-   você bate o olho e sabe o que é sem ler o rótulo */
-.camada[data-camada='explicacao'] {
-  border-left: 3px solid var(--grafite);
-}
+/* uma cor de borda por camada, pra bater o olho e saber o que é sem ler */
 .camada[data-camada='dica'] {
   border-left: 3px solid var(--marca);
 }
@@ -416,7 +398,7 @@ th {
 .camada[data-camada='erros'] {
   border-left: 3px solid var(--vermelho);
 }
-/* aparte opcional — azul suave: "abre se quiser", não compete com a resolução */
+/* aparte opcional, em azul suave pra não competir com a resolução */
 .camada[data-camada='curiosidade'] {
   border-left: 3px solid var(--azul-medio);
 }
@@ -524,7 +506,7 @@ th {
 .alt-texto {
   flex: 1;
 }
-/* o glifo: é ELE que carrega a informação, a cor só reforça */
+/* o glifo carrega a informação; a cor só reforça */
 .alt-marca {
   flex: none;
   font-family: var(--f-ui);
@@ -630,10 +612,8 @@ th {
   margin-bottom: 0;
 }
 
-/* Mesmo portão da seção 8.1: gabarito de página não revisada não vai pra aula.
-   Em Modo Prova o gabarito some sempre — prova não mostra resposta. */
-html[data-modo='aula'] .conceito-nao-revisado .questao-gabarito,
-html[data-modo='prova'] .questao-gabarito {
+/* Mesmo portão da seção 8.1: gabarito de página não revisada não vai pra aula. */
+html[data-modo='aula'] .conceito-nao-revisado .questao-gabarito {
   display: none !important;
 }
 
@@ -663,23 +643,21 @@ html[data-modo='prova'] .questao-gabarito {
 }
 
 /* Em Modo Aula, conteúdo não revisado some da tela. */
-html[data-modo='aula'] .conceito-nao-revisado .camada,
-html[data-modo='prova'] .conceito-nao-revisado .camada {
+html[data-modo='aula'] .conceito-nao-revisado .camada {
   display: none;
 }
 
 /* ---------- prosa da explicação ----------
-   Texto corrido, sem caixa nem clique. Some em Aula e em Prova pra a página
-   virar só títulos + gráficos — igual ao que as camadas faziam, mas sem chrome. */
+   Texto corrido, sem caixa nem clique. Some em Aula pra sobrar só título e
+   gráfico na tela. */
 .prosa {
   margin: 0 0 var(--u);
 }
-html[data-modo='aula'] .prosa,
-html[data-modo='prova'] .prosa {
+html[data-modo='aula'] .prosa {
   display: none;
 }
 
-/* ---------- botão do plano de fundo por modo ---------- */
+/* ---------- barra de modo ---------- */
 
 .barra-modo {
   display: flex;

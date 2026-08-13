@@ -2,13 +2,12 @@
 /**
  * <C id="potenciacao">potenciação</C>
  *
- * NÃO navega. Abre um painel por cima, e os painéis empilham.
- * Motivo: no meio de uma explicação, trocar de página faz o aluno perder o fio.
- * Com painel, você desce até onde o buraco estiver e volta fechando um por um.
+ * Abre painel por cima em vez de navegar, porque trocar de página no meio da
+ * explicação faz o aluno perder o fio. Os painéis empilham, então dá pra descer
+ * até onde estiver o buraco e voltar fechando um por um.
  *
- * Se o id não existir na collection, o build NÃO quebra aqui (o script
- * scripts/checar-grafo.mjs é quem quebra), mas o elo aparece marcado em
- * vermelho — você vê o link morto na hora, na própria página.
+ * Id que não existe não quebra o build aqui, quem quebra é o npm run grafo,
+ * mas o elo já aparece vermelho na página.
  */
 import { getCollection } from 'astro:content';
 
