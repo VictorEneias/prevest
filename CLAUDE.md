@@ -729,6 +729,7 @@ geração. Dez páginas não revisadas é dívida, não progresso.
 | Módulo caiu fundo demais no mapa | a profundidade é a cadeia de prereqs. Provavelmente há um prereq exagerado na corrente |
 | Build ficou lento depois de muitos módulos | é a transposição do layout, que é quadrática. Há teto de partidas em `layout-grafo.ts` — abaixe se precisar |
 | Painel abre em branco | a página `fragmento/[id]` não foi gerada — rode `npm run build` |
+| Gráfico aparece meio segundo e some, com *"jsxDEV is not a function"* no console | build e dev dividindo o cache do Vite. É por isso que `astro.config.mjs` separa `.vite-dev` de `.vite-build`; se voltar, apague as duas pastas e reinicie o dev |
 | Mudei o `.mdx` e nada mudou em aula | está servindo `dist/` antigo. Rebuild |
 
 Não use `localStorage` dentro de componentes React de visualização — o estado
