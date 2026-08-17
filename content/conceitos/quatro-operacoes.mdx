@@ -1,0 +1,273 @@
+---
+titulo: As quatro operações
+subtitulo: O que cada uma faz de verdade
+materia: matematica
+bloco: aritmetica
+prereqs: [conjuntos-numericos]
+nivel: fundamento
+tempo_estimado: 45
+revisado: false
+resumo: Somar, subtrair, multiplicar e dividir vistos pelo significado, mais os dois pares em que uma operação desfaz a outra.
+---
+
+<Explicacao>
+
+Você já sabe fazer as quatro contas, isso eu vou assumir. O que a gente vai fazer
+hoje é olhar o que cada uma delas **significa**, e eu já vou te adiantar por que isso
+vale o tempo da aula: decorar o algoritmo resolve a conta que alguém já montou pra
+você, e entender o significado é o que te deixa **montar a conta sozinho** quando o
+problema chega escrito em português, que é exatamente o que acontece na prova.
+
+Todas as quatro vão ser explicadas em cima da <C id="reta-numerica">reta</C>, porque
+a reta é o lugar onde a operação vira movimento e dá pra ver o que ela fez.
+
+</Explicacao>
+
+## Somar é andar mais um tanto
+
+<Explicacao>
+
+Essa é a mais fácil de enxergar. Você está num lugar da reta e anda mais um tanto pra
+direita, e onde você para é o resultado.
+
+</Explicacao>
+
+<Setas
+  parcelas={[4, 3]}
+  legenda="4 + 3  →  andei 4, e depois mais 3"
+  titulo="Somar é andar mais um tanto"
+  dominio={[-2, 10]}
+/>
+
+<Explicacao>
+
+Repara que a soma junta **quantidades da mesma natureza**, e é por isso que somar
+maçã com laranja não faz sentido nenhum, enquanto somar 4 maçãs com 3 maçãs faz.
+Parece bobo agora, e daqui a algumas aulas isso volta com outro nome, termos
+semelhantes, quando você for somar $4x$ com $3x$ e ficar proibido de somar $4x$ com
+$3y$.
+
+</Explicacao>
+
+## Subtrair é andar pra trás, e também é medir distância
+
+<Explicacao>
+
+A subtração tem duas leituras, e as duas são úteis.
+
+A primeira é o movimento: em $7 - 3$ você está no $7$ e volta $3$, parando no $4$.
+
+</Explicacao>
+
+<Setas
+  parcelas={[7, -3]}
+  legenda="7 − 3  →  andei 7, e voltei 3"
+  titulo="Subtrair é andar pra trás"
+  dominio={[-2, 10]}
+/>
+
+<Explicacao>
+
+A segunda leitura é a que mais aparece em problema: a subtração **mede a distância
+entre dois números**. Quando você faz $7 - 3$ e acha $4$, você está respondendo
+"quanto falta pra sair do $3$ e chegar no $7$", e é por isso que toda pergunta do
+tipo "quanto aumentou", "quanto sobrou", "qual a diferença de altura", "quantos anos
+mais velho" vira uma subtração.
+
+Guarda essa segunda leitura, porque ela é a que salva você em problema de gráfico e
+de tabela, onde a pergunta quase nunca é "quanto é" e quase sempre é "quanto mudou".
+
+</Explicacao>
+
+## Multiplicar é repetir a mesma seta
+
+<Explicacao>
+
+$3 \times 4$ é somar o $4$ três vezes. Na reta isso fica bonito de ver, porque são
+três setas do mesmo tamanho, uma atrás da outra:
+
+</Explicacao>
+
+<Setas
+  parcelas={[4, 4, 4]}
+  legenda="3 × 4  →  a mesma seta de 4, repetida três vezes"
+  titulo="Multiplicar é repetir a mesma seta"
+  dominio={[-1, 14]}
+/>
+
+<Explicacao>
+
+Essa leitura de "repetir" funciona muito bem enquanto o multiplicador é um número de
+contar, e ela começa a ficar estranha quando você multiplica por $\frac{1}{2}$ ou por
+$-3$, porque repetir meia vez não quer dizer nada. Existe uma leitura melhor, que é a
+de **esticar e encolher a seta**, e ela ganha aula própria daqui a duas aulas, então
+por agora fica com a repetição, que dá conta de tudo que a gente vai fazer aqui.
+
+</Explicacao>
+
+## Dividir tem duas leituras, e as duas importam
+
+<Explicacao>
+
+Aqui está a parte que quase ninguém para pra separar, e que resolve uma quantidade
+enorme de confusão em problema. A conta $12 \div 4$ pode ser lida de dois jeitos
+diferentes.
+
+O primeiro jeito é **quantos cabem**: quantos $4$ cabem dentro do $12$? Na reta você
+sai do $12$ e volta de $4$ em $4$ até chegar no zero, contando quantas setas você
+gastou. Foram três, então a resposta é $3$.
+
+</Explicacao>
+
+<Setas
+  parcelas={[12, -4, -4, -4]}
+  legenda="12 ÷ 4  →  gastei 3 setas de 4 pra voltar até o zero"
+  titulo="Dividir perguntando quantos cabem"
+  dominio={[-2, 14]}
+/>
+
+<Explicacao>
+
+O segundo jeito é **repartir em partes iguais**: você tem $12$ e vai dividir entre
+$4$ pessoas, quanto vai pra cada uma? Também dá $3$.
+
+As duas contas são a mesma e as duas perguntas são diferentes, e a diferença está em
+quem é o $4$ e quem é a resposta:
+
+| leitura | o que é o $4$ | o que é o $3$ |
+|---|---|---|
+| quantos cabem | o tamanho de cada grupo | a quantidade de grupos |
+| repartir | a quantidade de grupos | o tamanho de cada grupo |
+
+Quando um problema te diz "12 bolinhas em pacotes de 4" e outro te diz "12 bolinhas
+repartidas em 4 pacotes", você vai fazer a mesmíssima conta nos dois, e o número que
+sair vai significar **coisas diferentes**: no primeiro é quantidade de pacotes, no
+segundo é quantidade de bolinhas por pacote. Saber ler dos dois jeitos é o que te
+impede de responder a pergunta errada com a conta certa, que é um dos jeitos mais
+tristes de perder ponto.
+
+</Explicacao>
+
+## Por que não dá pra dividir por zero
+
+<Explicacao>
+
+Na aula passada eu falei que na fração o de baixo não pode ser zero, e prometi o
+motivo. Com a leitura de "quantos cabem" ele fica claro na hora.
+
+A conta $12 \div 0$ pergunta quantos zeros cabem dentro do $12$. Só que cada zero não
+te tira do lugar, então você pode empilhar quantos quiser e continua parado no zero,
+sem nunca chegar no $12$. Não existe resposta, e a conta fica **proibida**.
+
+Tem um caso ainda mais estranho, que é $0 \div 0$. Aí qualquer número serviria de
+resposta, porque zero vezes qualquer coisa dá zero, e uma conta que aceita todas as
+respostas é tão inútil quanto uma que não aceita nenhuma. Nos dois casos a saída é a
+mesma: **divisão por zero não é conta**, e quando ela aparece no meio de um exercício
+é sinal de que você tem que voltar e ver o que aconteceu antes.
+
+</Explicacao>
+
+## Dois pares em que uma desfaz a outra
+
+<Explicacao>
+
+Pra fechar, repara numa coisa que vai ser o assunto das duas próximas aulas: as
+quatro operações andam em dois pares, e dentro de cada par uma **desfaz** a outra.
+
+| par | o desfazer |
+|---|---|
+| soma e subtração | somar $5$ e depois subtrair $5$ te deixa exatamente onde você estava |
+| multiplicação e divisão | multiplicar por $5$ e depois dividir por $5$ te deixa exatamente onde você estava |
+
+E o que vem a seguir é mais forte do que isso. Dentro de cada par não existem duas
+operações separadas, existe **uma só**, escrita de dois jeitos diferentes. A da soma
+com a subtração é a próxima aula, a **junção**, que é o assunto que mais muda o seu
+jeito de pensar nos números. A da multiplicação com a divisão vem logo depois dela.
+
+</Explicacao>
+
+<Curiosidade rotulo="Curiosidade — por que 3 × 4 dá o mesmo que 4 × 3">
+
+Pela leitura de repetir, $3 \times 4$ é somar quatro três vezes, e $4 \times 3$ é
+somar três quatro vezes. São duas histórias diferentes, com setas de tamanhos
+diferentes na reta, e mesmo assim elas terminam no mesmo lugar.
+
+O jeito de ver por que é desenhar um retângulo de 3 linhas com 4 bolinhas em cada:
+
+```
+● ● ● ●
+● ● ● ●
+● ● ● ●
+```
+
+Contando por linha você faz $4 + 4 + 4$. Contando por coluna você faz
+$3 + 3 + 3 + 3$. É o mesmo desenho, só com a cabeça virada, e virar a cabeça não
+cria nem destrói bolinha, então os dois jeitos de contar têm que dar o mesmo número.
+
+Isso tem nome, **comutatividade**, e o retângulo é a demonstração mais honesta dela
+que existe nesse nível. Guarda o desenho, porque ele volta quando você estudar área.
+
+</Curiosidade>
+
+## Agora é com você
+
+<Questao n={1} correta="b" alternativas={["$0 \\div 5$", "$5 \\div 0$", "$0 \\times 5$", "$5 - 0$"]}>
+
+Qual dessas contas **não tem resultado**?
+
+<div slot="gabarito">
+
+Vale ler cada uma na versão "quantos cabem":
+
+$0 \div 5$ pergunta quantos $5$ cabem dentro do zero, e a resposta é nenhum, ou
+seja, $0$. É uma conta perfeitamente normal.
+
+$5 \div 0$ pergunta quantos zeros cabem dentro do $5$, e aí você empilha zero em cima
+de zero pra sempre sem sair do lugar, então **não existe resposta**:
+
+$$
+5 \div 0 \quad \text{não é conta}
+$$
+
+As outras duas nem são divisão: $0 \times 5 = 0$ e $5 - 0 = 5$.
+
+O que engana nessa questão é a semelhança entre as duas primeiras. Zero dividido por
+alguém é tranquilo, e alguém dividido por zero é proibido, então a ordem aqui muda
+tudo.
+
+</div>
+
+</Questao>
+
+<Questao n={2} correta="a" alternativas={["o número de caixas", "o número de lápis em cada caixa", "o número de lápis que sobraram", "o número de amigos"]}>
+
+Você tem $42$ lápis e vai guardar todos em caixas que cabem $6$ lápis cada. A conta é
+$42 \div 6 = 7$. Nesse problema, o que o $7$ significa?
+
+<div slot="gabarito">
+
+O enunciado te deu o **tamanho de cada grupo**, que é a caixa de $6$ lápis, então
+essa é a leitura de "quantos cabem": quantos grupos de $6$ cabem dentro de $42$?
+
+$$
+42 \div 6 = 7 \quad \to \quad \textbf{7 caixas}
+$$
+
+O que faz essa questão valer o tempo é comparar com o outro problema, que tem a conta
+idêntica: se fossem "$42$ lápis repartidos entre $6$ amigos", o $6$ seria a
+quantidade de grupos e o $7$ seria a quantidade de lápis de cada amigo.
+
+Mesma conta, mesmo resultado, respostas com significados diferentes. Por isso, antes
+de dividir, sempre pergunta: o número que eu estou usando pra dividir é o **tamanho**
+de cada grupo ou a **quantidade** de grupos?
+
+</div>
+
+</Questao>
+
+---
+
+*Falta nesta página: os algoritmos de conta armada não estão aqui e eu preciso
+decidir se eles merecem uma página só deles ou se ficam de fora de propósito, já que
+a aula assume que o aluno já sabe fazer as quatro contas. Falta também um interativo
+de retângulo pra comutatividade, que hoje está só como desenho de bolinha.*

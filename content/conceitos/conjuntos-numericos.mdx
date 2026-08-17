@@ -1,0 +1,260 @@
+---
+titulo: Conjuntos numéricos
+subtitulo: Dando nome aos moradores da reta
+materia: matematica
+bloco: aritmetica
+prereqs: [reta-numerica]
+nivel: fundamento
+tempo_estimado: 35
+revisado: false
+resumo: Naturais, inteiros e racionais — quem é cada grupo, qual é a regra de entrada e por que um cabe dentro do outro.
+---
+
+<Explicacao>
+
+Na aula passada a gente combinou onde os números moram, e viu que a
+<C id="reta-numerica">reta</C> continua pros dois lados do zero e que ela está
+lotada, porque entre dois números quaisquer sempre cabe mais um. Hoje a gente vai
+fazer uma coisa que parece só burocracia de escola, porém vai te economizar muita
+dor de cabeça em prova: **dar nome aos grupos de moradores dessa reta**.
+
+O motivo é bem prático. Enunciado de vestibular quase nunca diz "um número
+qualquer", ele diz "um número inteiro positivo", "um racional não nulo", "o menor
+natural tal que...", e se você não souber exatamente quem está dentro e quem está
+fora de cada um desses grupos, você perde a questão sem nem chegar a errar uma
+conta.
+
+</Explicacao>
+
+## O que é um conjunto
+
+<Explicacao>
+
+Antes dos nomes, a ideia. Um **conjunto** é só um saco onde a gente resolveu juntar
+algumas coisas, e o que define esse saco é a **regra de entrada**: se você consegue
+dizer, pra qualquer coisa do mundo, se ela entra ou não entra, então o conjunto está
+definido. No nosso caso as coisas são números, e a regra de entrada vai ser sempre
+uma frase curta sobre que tipo de número aquele é.
+
+Junto com os nomes vem uma notação que você vai ver pelo resto do ensino médio. O
+símbolo $\in$ significa "pertence a", e cortado, $\notin$, significa "não pertence
+a":
+
+$$
+3 \in \mathbb{N} \qquad\qquad -3 \notin \mathbb{N}
+$$
+
+que se lê "3 pertence aos naturais" e "menos 3 não pertence aos naturais". Não tem
+mistério nenhum nisso, é abreviação de escrita, porém é bom você ficar íntimo dos
+símbolos agora, porque daqui pra frente eles aparecem no enunciado sem aviso.
+
+</Explicacao>
+
+## Os naturais: os números de contar
+
+<Explicacao>
+
+Os **naturais** são os números que você usou primeiro na vida, os de contar coisa, e
+o símbolo deles é $\mathbb{N}$:
+
+$$
+\mathbb{N} = \{0,\ 1,\ 2,\ 3,\ 4,\ 5,\ \dots\}
+$$
+
+A regra de entrada é simples: cai numa marca inteira da reta e não é negativo.
+
+Vale um aviso sobre o zero, porque isso confunde muita gente e depende de quem
+escreveu o livro que você está lendo: aqui no Brasil, na escola e nos vestibulares,
+**o zero está dentro dos naturais**. Quando alguém quer falar dos naturais sem o
+zero, escreve $\mathbb{N}^*$, e esse asterisco significa, em qualquer conjunto,
+"esse mesmo conjunto tirando o zero".
+
+Repara que na reta os naturais ocupam um lado só: eles começam no zero, vão pra
+direita de passo em passo, nunca visitam o lado esquerdo e nunca param num lugar que
+não seja marca de passo inteiro.
+
+</Explicacao>
+
+<Reta
+  dominio={[-3, 6]}
+  passo={1}
+  destacar={[0, 1, 2, 3, 4, 5, 6]}
+  titulo="Os naturais na reta"
+  legenda="as marcas altas são os naturais: do zero pra direita, e só nas marcas inteiras"
+/>
+
+## Os inteiros: os naturais mais os opostos deles
+
+<Explicacao>
+
+Na aula da reta a gente andou pro outro lado do zero e apareceu o $-3$. Então, se a
+gente pegar os naturais e jogar dentro do saco todos os opostos deles, a gente ganha
+um conjunto maior, o dos **inteiros**, com símbolo $\mathbb{Z}$:
+
+$$
+\mathbb{Z} = \{\dots,\ -3,\ -2,\ -1,\ 0,\ 1,\ 2,\ 3,\ \dots\}
+$$
+
+A regra de entrada agora é: cai numa marca inteira da reta, pra qualquer um dos dois
+lados. E é daí que vem o nome, porque **inteiro** é justamente o número que não tem
+pedaço, que não sobra nada, que cai exatamente na marca.
+
+O $\mathbb{Z}$ é a única letra dessa lista que não combina com o nome em português,
+e o motivo é que ela vem do alemão *Zahlen*, que significa simplesmente "números".
+
+Repara numa coisa que vai voltar daqui a pouco: **todo natural também é inteiro**,
+porque o $5$ continua sendo número de marca inteira. Só que o contrário não vale, já
+que o $-5$ é inteiro e não é natural.
+
+</Explicacao>
+
+<Reta
+  dominio={[-6, 6]}
+  passo={1}
+  titulo="Os inteiros na reta"
+  legenda="as marcas inteiras dos dois lados do zero, sem parar em nenhuma das pontas"
+/>
+
+## Os racionais: quem dá pra escrever como fração
+
+<Explicacao>
+
+Agora os quebrados, que na aula passada a gente viu que moram entre as marcas. Um
+número é **racional** quando dá pra escrever ele como uma fração de dois inteiros:
+
+$$
+\frac{a}{b}, \qquad \text{com } a \text{ e } b \text{ inteiros e } b \neq 0
+$$
+
+e o símbolo do conjunto é $\mathbb{Q}$. O nome vem de **razão**, que é como se
+chamava a divisão antigamente, então racional aqui quer dizer "que dá pra escrever
+como razão de dois inteiros", e não tem nada a ver com ser sensato.
+
+Olha quem entra por essa regra, porque é mais gente do que parece:
+
+| | |
+|---|---|
+| $\dfrac{3}{4}$ | já está escrito como fração, entra na hora |
+| $0{,}75$ | é a mesma coisa que $\dfrac{3}{4}$, então entra |
+| $-2$ | é $\dfrac{-2}{1}$, então **todo inteiro é racional** |
+| $0{,}333\dots$ | é $\dfrac{1}{3}$, e como isso funciona a gente vê com calma mais pra frente |
+
+Aquele detalhe do $b \neq 0$ na definição não é frescura de notação: o de baixo da
+fração não pode ser zero porque **não dá pra dividir por zero**, e o motivo disso
+fica pra próxima aula, quando a gente olhar o que a divisão realmente faz.
+
+Na reta, os racionais estão em todo lugar. Os inteiros são as marcas, bem separadas
+uma da outra, e os racionais preenchem tudo o que sobra entre elas, em quantidade
+infinita, como a gente já tinha visto na aula passada.
+
+</Explicacao>
+
+<Reta
+  dominio={[0, 3]}
+  passo={1}
+  menores={4}
+  destacar={[0, 1, 2, 3]}
+  titulo="Os racionais moram entre as marcas"
+  legenda="as marcas altas são os inteiros, e as marquinhas são só alguns dos infinitos racionais que cabem entre eles"
+/>
+
+## Um dentro do outro
+
+<Explicacao>
+
+Juntando as três coisas aparece o encaixe, que é a parte que a prova cobra:
+
+$$
+\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q}
+$$
+
+que se lê "os naturais estão contidos nos inteiros, que estão contidos nos
+racionais". Pensa em caixa dentro de caixa: a caixa dos naturais está inteirinha
+dentro da dos inteiros, que está inteirinha dentro da dos racionais, e cada caixa de
+fora tem morador que a de dentro não tem.
+
+A frase que vale guardar é esta: **todo natural é inteiro e todo inteiro é
+racional**, e nenhuma dessas duas frases funciona de trás pra frente.
+
+O jeito que o enunciado usa isso contra você é escolhendo a caixa certa pra apertar.
+Quando ele diz "seja $n$ um natural", ele já te avisou que $n$ não é negativo e não é
+quebrado, e essa informação às vezes é metade da resolução. Quando ele diz "seja $x$
+um racional", ele está te liberando pra usar fração, e normalmente é porque a
+resposta é uma.
+
+</Explicacao>
+
+<Curiosidade rotulo="Curiosidade — e será que sobrou alguém de fora?">
+
+Pergunta honesta: será que todo número que existe cabe em alguma dessas três caixas?
+
+A resposta é não. O exemplo mais famoso é o número que multiplicado por si mesmo dá
+$2$, aquele que a gente escreve $\sqrt{2}$: por mais que você tente, não existe
+fração de inteiros que dê exatamente ele, e isso não é falta de esforço nem de
+paciência, é uma coisa que dá pra provar.
+
+Esse pessoal que fica de fora tem nome, são os **irracionais**, e eles ganham aula
+própria mais pra frente, porque a prova de que eles existem é bonita e merece o
+tempo dela. Por agora basta você saber que a caixa dos racionais, grande como ela é,
+ainda deixa gente na rua.
+
+</Curiosidade>
+
+## Agora é com você
+
+<Questao n={1} correta="b" alternativas={["Todo inteiro é natural", "Todo natural é inteiro", "Todo racional é inteiro", "Nenhum inteiro é racional"]}>
+
+Qual dessas afirmações está correta?
+
+<div slot="gabarito">
+
+O encaixe é $\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q}$, e ele só funciona
+num sentido: de dentro pra fora.
+
+Indo de dentro pra fora, **todo natural é inteiro**, porque o $7$ cai numa marca da
+reta e não é negativo, então ele satisfaz as duas regras de entrada.
+
+Cada uma das outras três morre com um contraexemplo:
+
+| afirmação | quem derruba |
+|---|---|
+| Todo inteiro é natural | o $-5$ é inteiro e não é natural |
+| Todo racional é inteiro | o $\frac{1}{2}$ é racional e não cai em marca nenhuma |
+| Nenhum inteiro é racional | o $-2$ é $\frac{-2}{1}$, então é inteiro e racional ao mesmo tempo |
+
+</div>
+
+</Questao>
+
+<Questao n={2} correta="d" alternativas={["$-3$", "$0{,}25$", "$\\frac{7}{2}$", "Todos os anteriores"]}>
+
+Qual desses números é racional?
+
+<div slot="gabarito">
+
+A regra de entrada dos racionais é uma só: dá pra escrever como fração de dois
+inteiros, com o de baixo diferente de zero. Vale conferir um por um:
+
+$$
+-3 = \frac{-3}{1} \qquad 0{,}25 = \frac{25}{100} = \frac{1}{4} \qquad \frac{7}{2}
+$$
+
+O $-3$ passa porque todo inteiro é uma fração com $1$ embaixo. O $0{,}25$ passa
+porque decimal exato sempre vira fração de dez, cem, mil. O $\frac{7}{2}$ já chegou
+escrito como fração e não precisa fazer nada.
+
+Então **todos os três são racionais**, e é justamente essa a pegadinha da questão:
+a palavra "racional" parece indicar um tipo esquisito de número, quando na verdade
+ela indica um clube enorme, que inclui todos os inteiros e todos os decimais exatos
+que você já usa desde sempre.
+
+</div>
+
+</Questao>
+
+---
+
+*Falta nesta página: um interativo em que o aluno joga um número em cada caixa e vê
+onde ele cai, e decidir se o símbolo de pertence merece mais exemplos. A notação de
+união, interseção e intervalo fica de propósito com o módulo de conjuntos e
+intervalos, lá na frente — aqui é só quem é quem.*
