@@ -34,43 +34,66 @@ vazio.
 
 ## 2. Arquitetura
 
-Astro 5 + MDX + ilhas React. Saída 100% estática.
+Vite + React 19 + MDX. Um comando só, sem build no meio do caminho.
+
+O projeto foi Astro até aqui e saiu de propósito. O que a troca comprou: componente
+interativo voltou a ser **um arquivo só** (não existe mais wrapper com
+`client:visible`), o painel de pré-requisito virou componente em vez de `<iframe>`
+com uma segunda rota dentro, e `npm run dev` passou a ser o único comando, então
+não tem mais `dist/` velho pra servir sem eu perceber. O que ela custou: a página
+é renderizada no cliente, então não existe mais HTML estático nem zero-JS. Pra
+material de aula 1-a-1 em localhost isso não muda nada.
 
 ```
 content/                 ← O ATIVO. Fora de src/ de propósito.
   conceitos/*.mdx          Se um dia trocar de stack, esta pasta migra intacta.
   exercicios/*.mdx
+index.html               ← a casca; o app monta em #raiz
+vite.config.ts           ← MDX + KaTeX na compilação, e o providerImportSource
 src/
-  content.config.ts      ← schemas Zod. Frontmatter inválido quebra o build.
+  main.tsx                 entrypoint: BrowserRouter + ProvedorAula
+  App.tsx                  topo, rotas, pilha de painéis, MDXProvider
+  estado.tsx               modo, tamanho da fonte, pilha, atalhos de teclado
+  conteudo.ts            ← o índice: import.meta.glob dos .mdx + frontmatter
   components/
-    C.astro                elo de pré-requisito
-    mdx.ts                 barrel: tudo aqui fica disponível no MDX sem import
-    camadas/*.astro        Explicacao (prosa estática), Curiosidade, Dica,
-                           Resolucao, Pensamento, Erros
+    C.tsx                  elo de pré-requisito
+    Questao.tsx            múltipla escolha com correção na hora
+    mdx.tsx                a lista do que o MDX pode usar sem import
+    camadas/*.tsx          Explicacao (prosa), Curiosidade, Dica, Resolucao,
+                           Pensamento, Erros
     viz/
-      Juncao.tsx           o componente React interativo (canônico)
-      Juncao.astro         wrapper que aplica client:visible  ← LEIA A SEÇÃO 6
-      Setas.astro          figura ESTÁTICA de junção (Astro puro, sem React)
-  layouts/BaseLayout.astro pilha de painéis, Modo Aula, atalhos
-  lib/grafo.ts             helpers do grafo
+      Juncao.tsx           interativo de sinal
+      RetaZoom.tsx         interativo de escala
+      Setas.tsx            figura congelada de junção
+      Reta.tsx             figura congelada de reta
+      MapaConceitos.tsx    o grafo desenhado
+  lib/
+    layout-grafo.ts        o Sugiyama, TS puro, roda em node sem o app
+    curriculo.ts           áreas, rótulos e cores
   pages/
-    conceitos/[id].astro   página inteira
-    fragmento/[id].astro   versão sem cromo, carregada no iframe do painel
-    exercicios/[id].astro
-scripts/checar-grafo.mjs  ← npm run grafo
+    Home.tsx               o mapa inteiro
+    Conceito.tsx           serve de página e de conteúdo de painel
+    Exercicio.tsx
+  styles/global.css      ← todo o CSS do site, sem escopo
+scripts/
+  checar-grafo.mjs       ← npm run grafo
+  render-tudo.mjs        ← npm run paginas
 ```
 
 ### Comandos
 
 | | |
 |---|---|
-| `npm run dev` | desenvolvimento (só em casa) |
-| `npm run build` | gera `dist/` |
-| `npm run aula` | build + serve estático na porta 4321 — **é isso que roda na casa do aluno** |
-| `npm run grafo` | valida o grafo: elo morto, ciclo, reciprocidade |
+| `npm run dev` | **é isso que roda na casa do aluno**, na porta 4321 |
+| `npm run grafo` | frontmatter inválido, elo morto, ciclo, prereq redundante, teto de 5 áreas |
+| `npm run paginas` | renderiza as 76 páginas no node e diz qual quebrou |
+| `npm run check` | `tsc --noEmit` |
+| `npm run build` | gera `dist/` — só serve pra publicar na nuvem |
 
-**Nunca instrua o Victor a rodar `npm run dev` na casa do aluno.** Dev server
-cai, recompila, trava. Em aula é `dist/` servido estático.
+**Rode `npm run grafo` e `npm run paginas` depois de toda sessão que mexer em
+`content/` ou em componente.** Juntos eles são o que o build do Astro fazia de
+graça: um confere o frontmatter e o grafo, o outro confere que toda página ainda
+renderiza. Sem eles, componente escrito errado no MDX só aparece na hora da aula.
 
 ---
 
@@ -109,7 +132,8 @@ resumo: Uma frase. Aparece na busca e no cartão do painel.
    desenha só o elo essencial, e `npm run grafo` avisa quando um elo é redundante.
    Vale pra qualquer quantidade de caminhos, não só dois.
 4. Sem ciclos. `npm run grafo` detecta.
-5. Rode `npm run grafo` depois de **toda** sessão que mexer em `content/`.
+5. Rode `npm run grafo` e `npm run paginas` depois de **toda** sessão que mexer em
+   `content/`.
 
 ### 3.1 Não existe divisão por ano escolar
 
@@ -169,9 +193,9 @@ pelo que os alunos do Victor estão vendo na escola naquela semana.
 
 ## 4. Componentes disponíveis no MDX
 
-Tudo em `src/components/mdx.ts` está disponível em qualquer `.mdx`
-**sem import e sem diretiva `client:`**. Não escreva `import` em arquivos de
-conteúdo. Nunca.
+Tudo em `src/components/mdx.tsx` está disponível em qualquer `.mdx` **sem
+import**, porque quem entrega a lista é o `<MDXProvider>` do `App.tsx`. Não
+escreva `import` em arquivo de conteúdo. Nunca.
 
 ### `<C id="...">texto</C>` — elo de pré-requisito
 
@@ -243,9 +267,9 @@ A dedução completa aqui. Pode ter LaTeX, $$bloco$$, o que precisar.
 ### `<Setas />` — a figura ESTÁTICA de junção
 
 A mesma reta numérica com setas encadeadas do `<Juncao>`, mas **congelada**: sem
-controles, sem hidratação React (é Astro puro, roda no build). Para os exemplos
-introdutórios, onde a conta é fixa e o aluno só precisa VER as setas caírem nos
-números certos. Fica FORA das camadas, então aparece também no Modo Aula.
+controle nenhum e sem estado. Para os exemplos introdutórios, onde a conta é fixa
+e o aluno só precisa VER as setas caírem nos números certos. Fica FORA das
+camadas, então aparece também no Modo Aula.
 
 ```mdx
 <Setas
@@ -261,8 +285,8 @@ Quando o aluno precisa **mexer** (embaralhar, inverter, agrupar), aí sim é
 
 ### `<Reta />` — a reta sozinha, congelada
 
-Mesma reta do `<Setas>`, só que sem conta em cima. É Astro puro, então aparece
-também no Modo Aula. Serve pra falar de escala: a mesma figura com passo grande
+Mesma reta do `<Setas>`, só que sem conta em cima. Fica FORA das camadas, então
+aparece também no Modo Aula. Serve pra falar de escala: a mesma figura com passo grande
 cabe do 0 ao 100 e com passo pequeno mostra quem mora entre o 1 e o 2.
 
 ```mdx
@@ -317,11 +341,11 @@ soma vetorial 1D. Use em Física: resultante, velocidade relativa, deslocamento.
 
 ### `<MapaConceitos />` — o grafo desenhado
 
-Não se usa em `.mdx`; é da home (`src/pages/index.astro`) e do rodapé de cada
-conceito (`src/pages/conceitos/[id].astro`). Está documentado aqui porque é onde o
-`ano` e o `bloco` viram imagem.
+Não se usa em `.mdx`; é da home (`src/pages/Home.tsx`) e do rodapé de cada
+conceito (`src/pages/Conceito.tsx`). Está documentado aqui porque é onde o
+`bloco` vira imagem.
 
-```astro
+```tsx
 <MapaConceitos controles={true} altura="66vh" />   {/* mapa inteiro, com busca */}
 <MapaConceitos foco="juncao" raio={1} />           {/* só a vizinhança */}
 ```
@@ -329,7 +353,8 @@ conceito (`src/pages/conceitos/[id].astro`). Está documentado aqui porque é on
 - **y = profundidade no grafo, x = só pra desembaraçar.** É Sugiyama: camadas por
   profundidade, **nós-ponte** pras setas que pulam camadas, ordenação por mediana
   com transposição e oito partidas embaralhadas, e coordenadas por regressão
-  isotônica. O sorteio é semeado, então o mapa sai idêntico todo build.
+  isotônica. O sorteio é semeado e a lista de conceitos chega ordenada por id,
+  então o mapa sai idêntico a cada carga.
 - **Nó-ponte é o que impede a seta de passar por cima de um módulo.** A seta longa
   ganha um ponto em cada camada intermediária, esse ponto reserva um corredor na
   fila, e a linha atravessa a fileira **na vertical** dentro dele — todo o desvio
@@ -355,7 +380,7 @@ conceito (`src/pages/conceitos/[id].astro`). Está documentado aqui porque é on
   das áreas, e verde/vermelho não serve pra daltônico.
 - O layout mora em `src/lib/layout-grafo.ts`, separado do desenho, e recebe objeto
   simples em vez de `CollectionEntry` — assim dá pra rodar em node puro num teste
-  de escala sem subir o Astro.
+  de escala sem subir o app.
 - **Se um dia virar novelo**, a volta pra árvore é dentro desse arquivo só:
   escolher um pai primário por nó e desenhar só aquela aresta. Nem o componente,
   nem a home, nem a página de conceito mudam.
@@ -381,8 +406,9 @@ O passo a passo aqui. Markdown normal, LaTeX, e pode chamar <Setas /> dentro.
 ```
 
 - **`correta`** é a letra (`"a"`..`"e"`). Se apontar pra alternativa que não existe,
-  **o build quebra** — de propósito: gabarito errado em aula é o pior defeito
-  possível.
+  a questão é trocada por uma **caixa vermelha de defeito** e o `npm run paginas`
+  falha. Gabarito errado em aula é o pior defeito possível, então ele grita em vez
+  de passar batido.
 - **`alternativas`** aceita de 2 a 5. Trechos entre `$...$` viram LaTeX; o resto é
   texto (`"Nenhuma das anteriores"` funciona).
 - O **enunciado é o slot padrão**; o gabarito vai num `<div slot="gabarito">`, com
@@ -512,33 +538,30 @@ seção 5 valem aqui, mais estas:
 
 ---
 
-## 6. Componentes interativos novos
+## 6. Componentes novos
 
-Sempre DOIS arquivos:
+**Um arquivo:** `src/components/viz/Nome.tsx`, com `export interface NomeProps`, e
+registre em `src/components/mdx.tsx`. Sem wrapper, sem diretiva, sem barrel duplo.
+Existiu um segundo arquivo `.astro` por componente enquanto o projeto era Astro,
+só pra dar um lugar analisável estaticamente pro `client:visible`; isso morreu com
+o Astro e não deve voltar.
 
-1. `src/components/viz/Nome.tsx` — o React, com `export interface NomeProps`
-2. `src/components/viz/Nome.astro` — wrapper de 4 linhas que aplica `client:visible`
+O CSS do componente vai num `<style>` dentro do próprio JSX, como já fazem o
+`<Juncao>` e o `<Setas>`. Sem Astro não existe mais escopo de CSS, então o seletor
+tem que ser prefixado (`.jc-`, `.rz-`, `.setas-`) pra não vazar. O que é do sistema
+visual, e não de um componente, mora em `global.css`.
 
-E registre no `src/components/mdx.ts`.
+**Texto com LaTeX só chega montado se vier como children.** `$...$` vira fórmula no
+pipeline do MDX, então prop de string **não** passa por ele. Se o componente precisa
+receber texto matemático, receba `children` (é o que o `<Questao>` faz com o
+enunciado e com o gabarito). Quando a string é inevitável, como nas alternativas do
+`<Questao>`, aí o componente chama o KaTeX na mão — e é o único lugar do site que
+faz isso.
 
-**Por que o wrapper:** o Astro só hidrata uma ilha React se a diretiva `client:*`
-estiver num arquivo que ele analisa estaticamente. Componentes injetados via
-`components={...}` no MDX não passam por essa análise. Sem o wrapper o build
-falha com *"Could not render X. No matching import has been found."*
-Com ele, o MDX escreve `<Nome ... />` limpo.
-
-**Exceção — figura estática:** se o componente NÃO reage a clique (é só um
-desenho fixo, tipo `<Setas>`), não use React. Um único `.astro` que calcula tudo
-no frontmatter e devolve `<svg>` já basta — sem `.tsx`, sem wrapper, sem
-hidratar. Mais leve e é o que a página precisa. O checklist abaixo é só pros
-componentes de verdade **interativos**.
-
-**Exceção — componente que embrulha conteúdo MDX:** se a interação é ligar/desligar
-estado (mostrar, marcar, colapsar) e o componente precisa receber **texto com LaTeX
-dentro**, use `.astro` com `<slot>` e um `<script>` vanilla, como o `<Questao>`.
-Motivo: `$...$` só vira fórmula quando passa pelo pipeline do MDX. Prop de string
-entregue a uma ilha React não passa por ele e sai crua na tela. Componente que
-**desenha** (SVG, arrasto, slider) continua sendo React com wrapper.
+**Slot nomeado não existe em React**, e o `<Questao>` precisava de um pro gabarito.
+A saída foi filtrar `children` por `props.slot === 'gabarito'`, então o MDX continua
+escrevendo `<div slot="gabarito">` igual antes. Se precisar de um segundo bloco
+nomeado em outro componente, siga esse mesmo caminho em vez de inventar prop.
 
 ### Checklist de todo componente de visualização
 
@@ -717,8 +740,8 @@ geração. Dez páginas não revisadas é dívida, não progresso.
 
 | Sintoma | Causa |
 |---|---|
-| Gráfico aparece mas não responde ao clique | falta o wrapper `.astro` com `client:visible` (seção 6) |
-| Build: *"Could not render X"* | componente React usado no MDX sem wrapper |
+| Página em branco e *"Expected component X to be defined"* no console | componente usado no MDX que não está em `src/components/mdx.tsx`. `npm run paginas` acusa sem abrir o navegador |
+| Caixa vermelha "Questão com defeito" no lugar da questão | `correta` aponta pra alternativa que não existe, ou tem menos de 2 alternativas |
 | Elo `<C>` aparece vermelho | o id não existe. `npm run grafo` lista |
 | LaTeX aparece cru | cifrão desbalanceado, ou `\$` escapado sem querer |
 | Fórmula de bloco sai pequena, no meio do parágrafo | escreveu `$$x$$` numa linha só. Os `$$` têm que ficar em linhas próprias (seção 5) |
@@ -727,14 +750,13 @@ geração. Dez páginas não revisadas é dívida, não progresso.
 | Área do mapa saiu cinza | é o 6º bloco da matéria — a paleta só tem 5 (seção 3.2). Funda dois |
 | Declarei um prereq e a seta não apareceu | ele é redundante, já vem por outro caminho. `npm run grafo` diz por qual |
 | Módulo caiu fundo demais no mapa | a profundidade é a cadeia de prereqs. Provavelmente há um prereq exagerado na corrente |
-| Build ficou lento depois de muitos módulos | é a transposição do layout, que é quadrática. Há teto de partidas em `layout-grafo.ts` — abaixe se precisar |
-| Painel abre em branco | a página `fragmento/[id]` não foi gerada — rode `npm run build` |
-| Gráfico aparece meio segundo e some, com *"jsxDEV is not a function"* no console | build e dev dividindo o cache do Vite. É por isso que `astro.config.mjs` separa `.vite-dev` de `.vite-build`; se voltar, apague as duas pastas e reinicie o dev |
-| Mudei o `.mdx` e nada mudou em aula | está servindo `dist/` antigo. Rebuild |
+| Primeira carga ficou lenta depois de muitos módulos | é a transposição do layout, que é quadrática. Há teto de partidas em `layout-grafo.ts` — abaixe se precisar |
+| CSS de um componente vazou pra outro | sem Astro não existe mais escopo. Prefixe o seletor (seção 6) |
+| Rota direta dá 404 na nuvem | é SPA: o host precisa devolver `index.html` pra qualquer caminho. Em `npm run dev` e `npm run preview` isso já funciona |
 
-Não use `localStorage` dentro de componentes React de visualização — o estado
-deles vai no hash da URL via `chaveUrl`. `localStorage` é só do `BaseLayout`,
-pra modo e tamanho de fonte.
+Não use `localStorage` dentro de componentes de visualização — o estado deles vai
+no hash da URL via `chaveUrl`. `localStorage` é só do `estado.tsx`, pra modo e
+tamanho de fonte.
 
 ---
 

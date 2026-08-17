@@ -3,6 +3,8 @@
 Material de aula presencial 1-a-1 para FUVEST — Matemática e Física.
 Roda offline num notebook, na casa do aluno.
 
+Vite + React + MDX. Um comando só.
+
 ## Começar
 
 ```bash
@@ -10,27 +12,24 @@ npm install
 npm run dev        # http://localhost:4321
 ```
 
-## Em aula
-
-**Nunca use `npm run dev` na casa do aluno.** Dev server recompila, trava e cai
-no meio da explicação. Faça o build em casa e sirva estático:
-
-```bash
-npm run aula       # build + serve dist/ na porta 4321
-```
-
-Assim funciona sem internet e nada quebra se o Wi-Fi cair.
+**`npm run dev` é o comando de aula também.** Sobe em segundos, e o que eu edito
+aparece na tela na hora. O projeto foi Astro até aqui, com um build separado pra
+servir `dist/` em aula; isso saiu porque na prática eu usava o dev de qualquer
+jeito, e o build só criava a chance de eu estar servindo página velha sem saber.
 
 ## Comandos
 
 | | |
 |---|---|
-| `npm run dev` | desenvolvimento |
-| `npm run build` | gera `dist/` |
-| `npm run aula` | build + servidor estático — **é o de aula** |
-| `npm run grafo` | valida elo morto, ciclo e prereq redundante |
+| `npm run dev` | o único comando do dia a dia, e o de aula |
+| `npm run grafo` | frontmatter inválido, elo morto, ciclo, prereq redundante |
+| `npm run paginas` | renderiza todas as páginas no node e diz qual quebrou |
+| `npm run check` | `tsc --noEmit` |
+| `npm run build` | gera `dist/`, só pra publicar na nuvem |
 
-Rode `npm run grafo` depois de toda sessão que mexer em `content/`.
+Rode `npm run grafo` e `npm run paginas` depois de toda sessão que mexer em
+`content/`. Os dois juntos são o que o build fazia de graça antes: um confere o
+frontmatter e o grafo, o outro confere que toda página ainda renderiza.
 
 ## Onde as coisas ficam
 
@@ -38,11 +37,17 @@ Rode `npm run grafo` depois de toda sessão que mexer em `content/`.
 content/conceitos/*.mdx     ← o conteúdo. É o ativo do projeto.
 content/exercicios/*.mdx
 src/components/viz/         ← os gráficos interativos
+src/conteudo.ts             ← o índice do conteúdo, feito com import.meta.glob
 CLAUDE.md                   ← leia antes de gerar qualquer conteúdo
 ```
 
-`content/` fica fora de `src/` de propósito: se um dia o app for reescrito, essa
-pasta migra intacta.
+`content/` fica fora de `src/` de propósito: quando o app for reescrito, essa
+pasta migra intacta. Foi o que aconteceu na saída do Astro — nenhum `.mdx` mudou.
+
+## Publicar
+
+`npm run build` cospe `dist/` estático. É uma SPA, então o host precisa devolver
+`index.html` pra qualquer caminho, senão abrir `/conceitos/juncao` direto dá 404.
 
 ## Atalhos em aula
 

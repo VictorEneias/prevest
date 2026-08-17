@@ -3,8 +3,13 @@
  *
  * Com uma centena de páginas interligadas, elo morto é inevitável e invisível.
  * Este script é o que impede o grafo de apodrecer sem eu perceber. Ele acusa:
- * prereq apontando pra conceito que não existe, ciclo, exercício apontando pra
- * assunto inexistente, prereq redundante e matéria com mais de 5 áreas.
+ * frontmatter inválido, prereq apontando pra conceito que não existe, ciclo,
+ * exercício apontando pra assunto inexistente, prereq redundante e matéria com
+ * mais de 5 áreas.
+ *
+ * A checagem de frontmatter era do Zod, no content.config.ts do Astro, e veio
+ * pra cá quando o projeto saiu do Astro: eram dois validadores olhando os mesmos
+ * arquivos, e agora é um.
  *
  * Sai com código 1 se achar problema, então dá pra plugar num pre-commit.
  */
@@ -59,6 +64,57 @@ const conceitos = await ler(DIR_C);
 const exercicios = await ler(DIR_E);
 const erros = [];
 const avisos = [];
+
+/* --- frontmatter ---
+   O parser aqui é de linha, então tudo chega como texto: número vira string e
+   booleano também. Confiro forma e vocabulário, que é onde dá errado de verdade
+   (materia escrita errado deixa o módulo cinza no mapa sem avisar ninguém). */
+const MATERIAS = ['matematica', 'fisica'];
+const NIVEIS = ['fundamento', 'basico', 'medio', 'avancado'];
+const NIVEIS_EX = ['A', 'B', 'C'];
+
+const ehInteiroPositivo = (v) => /^\d+$/.test(String(v)) && Number(v) > 0;
+
+for (const [, { fm, arquivo }] of conceitos) {
+  const exigir = (campo) => {
+    if (!fm[campo]) erros.push(`${arquivo}: falta o campo "${campo}" no frontmatter`);
+  };
+  exigir('titulo');
+  exigir('resumo');
+  if (!MATERIAS.includes(fm.materia)) {
+    erros.push(`${arquivo}: materia "${fm.materia ?? ''}" — use ${MATERIAS.join(' ou ')}`);
+  }
+  if (!fm.bloco) erros.push(`${arquivo}: falta o campo "bloco" (a área do mapa)`);
+  if (!NIVEIS.includes(fm.nivel)) {
+    erros.push(`${arquivo}: nivel "${fm.nivel ?? ''}" — use um de ${NIVEIS.join(', ')}`);
+  }
+  if (fm.revisado !== 'true' && fm.revisado !== 'false') {
+    erros.push(`${arquivo}: revisado tem que ser true ou false (nasce false, ver seção 8.1)`);
+  }
+  if (fm.tempo_estimado !== undefined && !ehInteiroPositivo(fm.tempo_estimado)) {
+    erros.push(`${arquivo}: tempo_estimado tem que ser minuto inteiro positivo`);
+  }
+  if (fm.itens_fuvest !== undefined && !/^\d+$/.test(String(fm.itens_fuvest))) {
+    erros.push(`${arquivo}: itens_fuvest tem que ser número inteiro`);
+  }
+  if (fm.prereqs === undefined) {
+    erros.push(`${arquivo}: falta o campo "prereqs" (use [] se for raiz do grafo)`);
+  }
+}
+
+for (const [, { fm, arquivo }] of exercicios) {
+  if (!fm.fonte) erros.push(`${arquivo}: falta "fonte" ("Autoral" se for meu)`);
+  if (!(fm.assuntos ?? []).length) erros.push(`${arquivo}: assuntos não pode ficar vazio`);
+  if (!NIVEIS_EX.includes(fm.nivel)) {
+    erros.push(`${arquivo}: nivel "${fm.nivel ?? ''}" — use A, B ou C`);
+  }
+  if (fm.revisado !== 'true' && fm.revisado !== 'false') {
+    erros.push(`${arquivo}: revisado tem que ser true ou false`);
+  }
+  if (fm.tempo_alvo !== undefined && !ehInteiroPositivo(fm.tempo_alvo)) {
+    erros.push(`${arquivo}: tempo_alvo tem que ser minuto inteiro positivo`);
+  }
+}
 
 /* --- prereqs apontando pro vazio --- */
 for (const [id, { fm, arquivo }] of conceitos) {

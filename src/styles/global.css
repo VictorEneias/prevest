@@ -334,10 +334,21 @@ th {
   border-color: var(--grafite);
   color: var(--tinta);
 }
-.painel iframe {
+/* O corpo do painel é a própria página do conceito, sem cromo e sem grade de
+   fundo, pra ela não competir com a página que está atrás. */
+.painel-corpo {
   flex: 1;
+  overflow: auto;
+  background: var(--papel);
+}
+.painel-corpo .folha {
+  padding: calc(var(--u) * 0.75) var(--u) calc(var(--u) * 2);
+  max-width: none;
+}
+.painel-corpo .papel {
   border: 0;
-  width: 100%;
+  box-shadow: none;
+  padding: 0;
 }
 
 /* ---------- camadas do Modo Aula ---------- */
@@ -414,6 +425,16 @@ th {
   margin: 0 0 var(--u);
   box-shadow: var(--sombra);
 }
+/* Questão escrita errada (gabarito apontando pra alternativa que não existe)
+   aparece assim em vez de derrubar a página inteira. O npm run paginas acusa. */
+.questao-quebrada {
+  font-family: var(--f-ui);
+  font-size: 0.84rem;
+  border-left-color: var(--vermelho);
+  background: var(--vermelho-fraco);
+  color: var(--tinta);
+}
+
 .questao[data-resultado='certo'] {
   border-left-color: var(--verde);
 }
@@ -773,20 +794,21 @@ pre code {
   border: 1px solid var(--tinta);
 }
 
-/* ---------- página de fragmento (dentro do iframe do painel) ---------- */
+/* ---------- rótulo de seção da página de conceito ---------- */
 
-body.fragmento {
-  background-color: var(--papel);
-  background-image: none;
+.rotulo-secao {
+  font-family: var(--f-ui);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--tinta-fraca);
+  margin-bottom: 6px;
 }
-body.fragmento .folha {
-  padding: calc(var(--u) * 0.75) var(--u) calc(var(--u) * 2);
-  max-width: none;
-}
-body.fragmento .papel {
-  border: 0;
-  box-shadow: none;
-  padding: 0;
+.nota-secao {
+  font-family: var(--f-ui);
+  font-size: 0.8rem;
+  color: var(--tinta-media);
+  margin-bottom: calc(var(--u) * 0.5);
 }
 
 /* ---------- índice inicial ---------- */
@@ -837,3 +859,208 @@ body.fragmento .papel {
 .cartao[data-revisado='nao'] {
   border-left: 3px solid var(--marca);
 }
+
+/* ---------- mapa de conceitos ----------
+   Vinha do <style> escopado do componente Astro; sem Astro, escopo de CSS
+   deixou de existir e ele mora aqui, junto do resto do sistema visual. */
+
+  .mapa {
+    --mapa-altura: 62vh;
+    margin: 0 0 var(--u);
+  }
+
+  .mapa-controles {
+    display: flex;
+    gap: calc(var(--u) * 0.4);
+    align-items: center;
+    margin-bottom: calc(var(--u) * 0.5);
+    flex-wrap: wrap;
+  }
+  .mapa-busca {
+    flex: 1;
+    min-width: 180px;
+    font-family: var(--f-ui);
+    font-size: 0.84rem;
+    padding: 5px 10px;
+    border: 1px solid var(--linha);
+    border-radius: var(--raio);
+    background: var(--papel);
+    color: var(--tinta);
+  }
+  .mapa-botoes {
+    display: flex;
+    gap: 3px;
+  }
+  .mapa-botoes button {
+    font-family: var(--f-ui);
+    font-size: 0.72rem;
+    border: 1px solid var(--linha);
+    background: var(--papel);
+    color: var(--tinta-media);
+    padding: 5px 11px;
+    border-radius: var(--raio);
+    cursor: pointer;
+  }
+  .mapa-botoes button:hover {
+    border-color: var(--grafite);
+    color: var(--tinta);
+  }
+
+  .mapa-moldura {
+    position: relative;
+    overflow: hidden;
+    height: var(--mapa-altura);
+    background: var(--papel);
+    border: 1px solid var(--linha);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    cursor: grab;
+    touch-action: none;
+  }
+  .mapa-moldura[data-arrastando] {
+    cursor: grabbing;
+  }
+
+  .mapa-tela {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+  }
+  .mapa-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    overflow: visible;
+  }
+
+  /* ---- áreas ----
+     Sem mancha de fundo: como o x só desembaraça o desenho, os módulos de uma
+     área ficam espalhados e a mancha viraria um borrão por cima de tudo. A área
+     se identifica pela cor do módulo e pelo rótulo. */
+  .mapa-area-rotulo {
+    font-family: var(--f-ui);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    fill: var(--cor-bloco);
+    opacity: 0.62;
+  }
+
+  /* ---- setas ---- */
+  .mapa-aresta {
+    fill: none;
+    stroke: var(--grafite);
+    stroke-width: 1.4;
+    opacity: 0.32;
+  }
+  .mapa-aresta.acesa {
+    stroke: var(--tinta);
+    opacity: 1;
+    stroke-width: 2;
+  }
+  .mapa-aresta.apagada {
+    opacity: 0.06;
+  }
+
+  /* ---- módulos ---- */
+  .mapa-no {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    padding: 6px 10px 6px 12px;
+    box-sizing: border-box;
+    background: color-mix(in srgb, var(--cor-bloco) 6%, var(--papel));
+    border: 1px solid var(--linha);
+    border-left: 4px solid var(--cor-bloco);
+    border-radius: var(--raio);
+    text-decoration: none;
+    color: var(--tinta);
+    font-family: var(--f-ui);
+    box-shadow: var(--sombra);
+    transition: border-color 0.12s ease, transform 0.12s ease;
+  }
+  /* rascunho é tracejado e não cor: o amarelo colidiria com a paleta das áreas
+     e verde com vermelho não serve pra daltônico */
+  .mapa-no[data-revisado='nao'] {
+    border-top-style: dashed;
+    border-right-style: dashed;
+    border-bottom-style: dashed;
+  }
+  .mapa-no-titulo {
+    font-size: 0.76rem;
+    font-weight: 600;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .mapa-no:hover,
+  .mapa-no:focus-visible {
+    border-color: var(--tinta);
+    border-left-color: var(--cor-bloco);
+    transform: translateY(-1px);
+  }
+  .mapa-no.acesa {
+    border-color: var(--tinta);
+    z-index: 2;
+  }
+  .mapa-no.apagada {
+    opacity: 0.14;
+  }
+  .mapa-no[data-focado='sim'] {
+    border-color: var(--tinta);
+    border-width: 2px;
+    border-left-width: 4px;
+  }
+
+  /* ---- legenda ---- */
+  .mapa-legenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--u) * 0.6);
+    list-style: none;
+    padding: 0;
+    margin: calc(var(--u) * 0.5) 0 0;
+    font-family: var(--f-ui);
+    font-size: 0.74rem;
+    color: var(--tinta-media);
+  }
+  .mapa-legenda li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .mapa-legenda-cor {
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+    background: var(--cor-bloco);
+  }
+  .mapa-legenda-rascunho .mapa-legenda-cor {
+    background: var(--papel);
+    border: 1px dashed var(--tinta-fraca);
+  }
+
+  .mapa-vazio {
+    font-family: var(--f-ui);
+    font-size: 0.84rem;
+    color: var(--tinta-fraca);
+  }
+
+  [data-slot='0'] { --cor-bloco: var(--bloco-0); }
+  [data-slot='1'] { --cor-bloco: var(--bloco-1); }
+  [data-slot='2'] { --cor-bloco: var(--bloco-2); }
+  [data-slot='3'] { --cor-bloco: var(--bloco-3); }
+  [data-slot='4'] { --cor-bloco: var(--bloco-4); }
+  [data-slot='5'] { --cor-bloco: var(--bloco-5); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mapa-no {
+      transition: none;
+    }
+  }

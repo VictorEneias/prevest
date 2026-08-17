@@ -1,4 +1,5 @@
----
+import type { ReactNode } from 'react';
+
 /**
  * A teoria escrita, em texto corrido: sem caixa e sem clique no Modo Estudo, e
  * some no Modo Aula, pra sobrar só o esqueleto de títulos e gráficos na tela.
@@ -6,5 +7,6 @@
  *
  * Pra um aparte que abre no clique, use <Curiosidade>.
  */
----
-<div class="prosa"><slot /></div>
+export default function Explicacao({ children }: { children?: ReactNode }) {
+  return <div className="prosa">{children}</div>;
+}
