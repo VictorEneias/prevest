@@ -259,6 +259,39 @@ números certos. Fica FORA das camadas, então aparece também no Modo Aula.
 Quando o aluno precisa **mexer** (embaralhar, inverter, agrupar), aí sim é
 `<Juncao>`. Regra: exemplo pra ilustrar → `<Setas>`; exploração → `<Juncao>`.
 
+### `<Reta />` — a reta sozinha, congelada
+
+Mesma reta do `<Setas>`, só que sem conta em cima. É Astro puro, então aparece
+também no Modo Aula. Serve pra falar de escala: a mesma figura com passo grande
+cabe do 0 ao 100 e com passo pequeno mostra quem mora entre o 1 e o 2.
+
+```mdx
+<Reta
+  dominio={[0, 100]}
+  passo={10}          {/* distância entre as marcas que ganham rótulo */}
+  menores={10}        {/* opcional, marcas sem rótulo entre duas rotuladas */}
+  destacar={[1, 2]}   {/* opcional, marca mais alta e rótulo em negrito */}
+  titulo="Passo pequeno: cabe do 0 ao 100"
+  legenda="a mesma reta, com cada unidade valendo bem pouco espaço"
+/>
+```
+
+Rótulo decimal sai com vírgula, que é como se escreve em português.
+
+### `<RetaZoom />` — a reta com a escala na mão do aluno
+
+O interativo de escala: arrastar anda pelos números, o slider afasta e aproxima,
+e o passo entre as marcas fica escrito por extenso embaixo — senão o aluno olha
+só o desenho e não percebe que a escala mudou. Tem travar o centro (pra separar
+"andei" de "aproximei"), congelar a janela anterior, presets e as setas do
+teclado.
+
+```mdx
+<RetaZoom centro={0} janela={20} titulo="Afaste e aproxime" chaveUrl="rz" />
+```
+
+`janela` é quantos números cabem na tela de uma vez, de 0,4 a 400.
+
 ### `<Juncao />` — o primitivo de sinal
 
 Reta numérica com setas encadeadas. Prova comutatividade (embaralhar),

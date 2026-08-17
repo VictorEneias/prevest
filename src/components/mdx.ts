@@ -12,7 +12,10 @@ import Curiosidade from './camadas/Curiosidade.astro';
 import Questao from './Questao.astro';
 import Juncao from './viz/Juncao.astro';
 import Setas from './viz/Setas.astro';
+import Reta from './viz/Reta.astro';
+import RetaZoom from './viz/RetaZoom.astro';
 
 export const componentesMDX = {
-  C, Explicacao, Dica, Resolucao, Pensamento, Erros, Curiosidade, Questao, Juncao, Setas,
+  C, Explicacao, Dica, Resolucao, Pensamento, Erros, Curiosidade, Questao,
+  Juncao, Setas, Reta, RetaZoom,
 };

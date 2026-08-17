@@ -7,10 +7,16 @@ prereqs: [numeros-naturais]
 nivel: fundamento
 tempo_estimado: 25
 revisado: false
-resumo: Todo número é um ponto numa reta. Dessa imagem saem o negativo, o módulo, o oposto e a comparação.
+resumo: Todo número é um ponto numa reta. Dessa imagem saem a escala, o negativo, o módulo, o oposto e a comparação.
 ---
 
 <Explicacao>
+
+Antes de começarmos de fato a fazer contas, existe algo que devemos estudar que
+nos ajudará muito com nossas futuras matérias, isso é a **reta numérica**.
+
+A reta numérica será mais uma ferramenta que vai nos possibilitar enxergar melhor
+os números e como eles são distribuídos.
 
 Antes de fazer qualquer conta, a gente precisa combinar uma coisa: onde é que os
 números **moram**. Parece uma pergunta boba, e é justamente por parecer boba que
@@ -26,21 +32,26 @@ viu na quarta série e provavelmente nunca olhou com atenção: uma reta.
 
 <Explicacao>
 
-Desenha uma reta. Marca um ponto qualquer nela e chama esse ponto de **zero**.
-Agora escolhe um tamanho de passo — um centímetro, um quadradinho do caderno, tanto
+Vamos começar entendendo o que exatamente é essa reta numérica. Comece desenhando
+uma reta. Depois marque um ponto qualquer nela e chame esse ponto de **zero**.
+Agora escolha um tamanho de passo, um centímetro, um quadradinho do caderno, tanto
 faz, contanto que seja **sempre o mesmo passo**. Anda um passo pra direita e você
 chegou no $1$. Mais um, e você está no $2$. E assim segue.
 
-Duas coisas nascem daí, e nenhuma das duas é tão óbvia quanto parece.
+Três coisas nascem daí.
 
 A primeira é que **todo número tem um endereço só dele**. O $3$ não está "mais ou
-menos ali", ele está num ponto exato da reta, e entre o $3$ e o $4$ cabem infinitos
-outros endereços ($3{,}5$, $3{,}14$, e por aí vai). A reta está lotada.
+menos ali", ele está num ponto exato da reta, que está a $3$ unidades de distância
+do $0$.
 
 A segunda é que **a ordem dos números é a posição deles**. Quando você diz que
 $5 > 3$, você não está decorando pra que lado o símbolo aponta, você está dizendo
 que o $5$ mora **mais à direita** que o $3$. Guarda essa frase, porque daqui a
-pouco ela vai ser a única coisa que te salva.
+pouco ela vai ser bem útil.
+
+Por último, e o que pode vir a ser o mais complicado por agora, é que entre o $1$ e
+o $2$ cabem infinitos outros endereços ($1{,}1$, $1{,}2$, $1{,}3$ e por aí vai).
+**A reta está lotada.**
 
 </Explicacao>
 
@@ -51,21 +62,74 @@ pouco ela vai ser a única coisa que te salva.
   dominio={[-6, 6]}
 />
 
+## Escala
+
+<Explicacao>
+
+É importante dizer que a unidade de distância que você escolher entre os números
+realmente **não importa**, contanto que você mantenha esse padrão.
+
+Você pode usar um padrão de distância entre os números menor para conseguir ver
+números cada vez maiores usando cada vez menos espaço.
+
+</Explicacao>
+
+<Reta
+  dominio={[0, 100]}
+  passo={10}
+  menores={10}
+  titulo="Passo pequeno: cabe do 0 ao 100"
+  legenda="a mesma reta, com cada unidade valendo bem pouco espaço"
+/>
+
+<Explicacao>
+
+Além disso, obviamente podemos fazer o contrário, e aumentar a distância entre cada
+número para que possamos ver números cada vez menores entre os nossos
+<C id="numeros-naturais">números naturais</C>. Podemos ver que entre eles, por
+exemplo entre o $1$ e o $2$, existem vários números que moram ali, porém no momento
+não iremos nos preocupar com eles.
+
+</Explicacao>
+
+<Reta
+  dominio={[0, 2]}
+  passo={0.1}
+  destacar={[1, 2]}
+  titulo="Passo grande: cabe só do 0 ao 2"
+  legenda="a mesma reta de novo, agora com espaço pra ver quem mora entre os naturais"
+/>
+
+<Explicacao>
+
+Agora, para que você possa entender melhor, brinque com a reta abaixo e se
+familiarize com o conceito. Arraste pra andar pelos números e mexa na escala pra
+afastar e aproximar.
+
+</Explicacao>
+
+<RetaZoom centro={0} janela={20} titulo="Afaste e aproxime" chaveUrl="rz" />
+
 ## Do outro lado do zero
 
 <Explicacao>
 
-Agora uma pergunta honesta: se você consegue andar pra direita, **o que é que te
-impede de andar pro outro lado?**
+Mas assim… o que é que te impede de andar pro outro lado?
 
-Nada te impede, porque a reta não acaba no zero, ela só continua. Se dá pra dar três passos pra
-direita e chegar no $3$, então dá pra dar três passos pra esquerda e chegar em
-algum lugar também, e esse lugar precisa de um nome. O nome dele é $-3$.
+A resposta é **nada**! A reta não acaba no zero, ela só continua. Se dá pra dar
+três passos pra direita e chegar no $3$, então também podemos dar três passos pra
+esquerda e chegar em algum lugar, e esse lugar precisa de um nome. O nome dele é
+$-3$.
 
 E aqui está a parte que costuma passar batido na escola: o $-3$ **não é menos
 número** que o $3$, nem é um número quebrado, nem é um número "errado". Ele está
 exatamente à mesma distância do zero que o $3$ está. A única diferença entre os
 dois é **pra que lado** você andou.
+
+Em diferentes cenários isso irá significar coisas diferentes. Caso você pense em
+dinheiro, números negativos podem significar uma quantidade que alguém poderia
+estar devendo. Já num termômetro eles significam temperatura abaixo do ponto em que
+a água congela, que foi o lugar onde alguém resolveu cravar o zero da escala.
 
 </Explicacao>
 
@@ -94,7 +158,7 @@ vai estar dizendo essas duas coisas de uma vez: que ele anda a $20\ \text{m/s}$ 
 que ele vai pro lado que a gente combinou de chamar de negativo. Não é um carro
 devendo velocidade a ninguém.
 
-Um número com sinal já é, na prática, **um vetor de uma dimensão** — e é por isso
+Um número com sinal já é, na prática, **um vetor de uma dimensão**, e é por isso
 que vale a pena entender isso bem agora, e não daqui a três anos.
 
 </Explicacao>
@@ -231,7 +295,6 @@ lado negativo.
 
 ---
 
-*Falta nesta página: um interativo de arrastar o ponto pela reta e ver o módulo, o
-sinal e o oposto acompanharem ao vivo — é o que fecharia a comparação melhor que
-texto. Falta decidir também se distância entre dois pontos entra aqui ou vira
-página própria.*
+*Falta nesta página: decidir se distância entre dois pontos entra aqui ou vira
+página própria, e se a seção do módulo fica onde está ou volta pra dentro do "outro
+lado do zero".*
