@@ -77,7 +77,7 @@ eu; o texto fica pro aluno reler em casa.
 ## Estado
 
 Protótipo, com o currículo de Matemática desenhado inteiro e seis aulas escritas:
-reta numérica, conjuntos numéricos, o que cada operação faz, junção, esticamento
+reta numérica, conjuntos numéricos, o que cada operação faz, junção, escalamento
 e frações. As outras 78 são esqueleto honesto — dizem o que vão cobrir e o que
 falta decidir.
 

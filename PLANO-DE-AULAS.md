@@ -24,7 +24,7 @@
 
 Por nível declarado: **41 de base** (revisão de fundamental que trava o resto, 25h05) e **43 de médio** (26h05).
 
-Por estado: **6 escritas** (Conjuntos numéricos, Esticamento, Frações, Junção, O que cada operação faz, A reta numérica) e **78 esqueletos**, que já têm título, resumo, tópicos e prereqs, mas nenhum texto.
+Por estado: **6 escritas** (Conjuntos numéricos, Escalamento, Frações, Junção, O que cada operação faz, A reta numérica) e **78 esqueletos**, que já têm título, resumo, tópicos e prereqs, mas nenhum texto.
 
 ## Os gargalos
 
@@ -32,7 +32,7 @@ As aulas que mais destravam outras. Se o aluno chega no meio do ano, é por aqui
 
 | Aula | Destrava | Quem |
 |---|---:|---|
-| Esticamento | 6 | Combinações, Linguagem algébrica, Porcentagem, Potências, Primos e fatoração, Razão e proporção |
+| Escalamento | 6 | Combinações, Linguagem algébrica, Porcentagem, Potências, Primos e fatoração, Razão e proporção |
 | Função afim | 6 | A reta no plano, Função composta e inversa, Função exponencial, Função modular, Função quadrática, Sequências e PA |
 | Potências | 5 | Função exponencial, Juros simples e compostos, Monômios e polinômios, Notação científica, Radiciação |
 | Radiciação | 4 | Equação do 2º grau, Dispersão, Números reais, Teorema de Pitágoras |
@@ -67,7 +67,7 @@ O grafo declara dependência, não fila. Esta é uma ordem que respeita todos os
 | 12 | Junção | Aritmética | 3 | 30 | 8h00 |
 | 13 | Princípio multiplicativo | Dados e contagem | 3 | 35 | 8h35 |
 | 14 | Arranjos e permutações | Dados e contagem | 4 | 35 | 9h10 |
-| 15 | Esticamento | Aritmética | 4 | 30 | 9h40 |
+| 15 | Escalamento | Aritmética | 4 | 30 | 9h40 |
 | 16 | Poliedros | Geometria | 4 | 35 | 10h15 |
 | 17 | Potências | Aritmética | 5 | 35 | 10h50 |
 | 18 | Porcentagem | Aritmética | 5 | 25 | 11h15 |
@@ -228,10 +228,10 @@ As quatro operações vistas pelo significado, a ordem em que uma expressão se 
 
 A fração como divisão que ficou pendente, e tudo que você precisa pra operar com ela.
 
-`fracoes` · nível 3 · base · **50 min de aula** e 24 min de leitura em casa (medido na página) · 12 tópicos
+`fracoes` · nível 3 · base · **50 min de aula** e 25 min de leitura em casa (medido na página) · 12 tópicos
 
 **Precisa de:** O que cada operação faz  
-**Destrava:** Esticamento
+**Destrava:** Escalamento
 
 **O que a aula cobre:**
 
@@ -250,8 +250,6 @@ A fração como divisão que ficou pendente, e tudo que você precisa pra operar
 
 **Seções já escritas:** Uma fração é uma divisão que ficou pendente · O mesmo ponto com vários nomes · Divisibilidade: descobrir se corta sem fazer a conta · Simplificar: cortar até não dar mais · Quem é maior · Somar e subtrair: só junta pedaço do mesmo tamanho · Multiplicar é o mais fácil de todos · Dividir por uma fração: quantos cabem · Por que somar os algarismos funciona no 3 e no 9 · Onde o pessoal escorrega
 
-**Falta:** esta é a aula mais longa do curso, com 70 minutos, e ela cobre o que a escola divide em três. Se em aula ela não couber num encontro, o corte é tirar divisibilidade e MDC pra junto de primos e fatoração, que já existe e já cobre o método pelos primos. A divisão por fração é ensinada aqui pela contagem de "quantos cabem", de propósito, e a explicação pelo inverso fica com o esticamento: quem mexer nas duas, mexa nas duas juntas.
-
 #### 12. Junção
 
 *O óculos que muda o seu jeito de ver os números*
@@ -261,7 +259,7 @@ Parar de ver o sinal como parte da operação e passar a ver como característic
 `juncao` · nível 3 · base · **30 min de aula** e 16 min de leitura em casa (medido na página) · 7 tópicos
 
 **Precisa de:** O que cada operação faz  
-**Destrava:** Esticamento
+**Destrava:** Escalamento
 
 **O que a aula cobre:**
 
@@ -275,13 +273,13 @@ Parar de ver o sinal como parte da operação e passar a ver como característic
 
 **Seções já escritas:** Mas afinal, o que é junção? · Alguns exemplos · Exemplo 1 · Exemplo 2 · Exemplo 3 · Agora mexe você · O sinal na frente do parêntese · Não é pra complicar · Onde o pessoal escorrega
 
-#### 15. Esticamento
+#### 15. Escalamento
 
 *Por que a divisão não existe*
 
 Dividir por um número é multiplicar pelo inverso dele, então multiplicação e divisão são a mesma operação escrita de dois jeitos, e a regra de sinais sai junto.
 
-`esticamento` · nível 4 · base · **30 min de aula** e 15 min de leitura em casa (medido na página) · 6 tópicos
+`escalamento` · nível 4 · base · **30 min de aula** e 15 min de leitura em casa (medido na página) · 6 tópicos
 
 **Precisa de:** Frações, Junção  
 **Destrava:** Combinações, Linguagem algébrica, Porcentagem, Potências, Primos e fatoração, Razão e proporção
@@ -297,8 +295,6 @@ Dividir por um número é multiplicar pelo inverso dele, então multiplicação 
 
 **Seções já escritas:** Cada número tem um inverso · O zero é o único que fica de fora · Dividir é multiplicar pelo inverso · Multiplicar por negativo é virar a seta · Cortar em cima e embaixo é multiplicar por 1 · O ganho: a ordem parou de importar · Onde isso vai te salvar · O paralelo inteiro entre as duas aulas · Onde o pessoal escorrega
 
-**Falta:** decidir o nome. "Esticamento" continua provisório, é o meu jeito de espelhar a junção, e agora que a figura mostra a seta esticando, encolhendo e virando, o nome ficou mais defensável do que era. A divisão por fração é ensinada em frações pela contagem de "quantos cabem", e a explicação pelo inverso é desta aula: quem mexer numa das duas, mexa nas duas juntas.
-
 #### 17. Potências
 
 *Multiplicação repetida, e o que isso obriga*
@@ -307,7 +303,7 @@ As propriedades das potências saindo da definição, incluindo o que significa 
 
 `potencias` · nível 5 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
-**Precisa de:** Esticamento  
+**Precisa de:** Escalamento  
 **Destrava:** Função exponencial, Juros simples e compostos, Monômios e polinômios, Notação científica, Radiciação
 
 **O que a aula cobre:**
@@ -333,7 +329,7 @@ Toda porcentagem é uma fração disfarçada. Quem enxerga isso para de decorar 
 
 `porcentagem` · nível 5 · base · **25 min de aula** e 13 min de leitura em casa (planejado pelos tópicos) · 6 tópicos
 
-**Precisa de:** Esticamento  
+**Precisa de:** Escalamento  
 **Destrava:** Leitura de gráficos e tabelas, Aumentos e descontos
 
 **O que a aula cobre:**
@@ -357,7 +353,7 @@ Razão, proporção e as grandezas que andam juntas, com a regra de três como c
 
 `proporcionalidade` · nível 5 · base · **40 min de aula** e 20 min de leitura em casa (planejado pelos tópicos) · 11 tópicos
 
-**Precisa de:** Esticamento  
+**Precisa de:** Escalamento  
 **Destrava:** Teorema de Tales, Unidades de medida
 
 **O que a aula cobre:**
@@ -386,7 +382,7 @@ Todo número composto se desmonta em primos de um jeito só, e é daí que sai o
 
 `primos-e-fatoracao` · nível 5 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
-**Precisa de:** Esticamento  
+**Precisa de:** Escalamento  
 **Destrava:** Radiciação
 
 **O que a aula cobre:**
@@ -601,7 +597,7 @@ O que uma letra representa, a diferença entre incógnita, variável e parâmetr
 
 `linguagem-algebrica` · nível 5 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
-**Precisa de:** Esticamento  
+**Precisa de:** Escalamento  
 **Destrava:** Equação do 1º grau, Monômios e polinômios
 
 **O que a aula cobre:**
@@ -2251,7 +2247,7 @@ Escolher três pessoas de dez não depende da ordem, e é dividir o arranjo pela
 
 `combinacoes` · nível 5 · medio · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
-**Precisa de:** Arranjos e permutações, Esticamento  
+**Precisa de:** Arranjos e permutações, Escalamento  
 **Destrava:** Binômio de Newton, Probabilidade
 
 **O que a aula cobre:**
@@ -2542,7 +2538,7 @@ Todo tópico de toda aula, em ordem alfabética. É o mesmo conteúdo da página
 
 - calcular porcentagem de um valor → Porcentagem (#18)
 - calota esférica → Esfera (#64)
-- cancelamento → Esticamento (#15)
+- cancelamento → Escalamento (#15)
 - capacidade e litro → Unidades de medida (#26)
 - capital → Juros simples e compostos (#37)
 - caso AA → Semelhança de triângulos (#33)
@@ -2665,7 +2661,7 @@ Todo tópico de toda aula, em ordem alfabética. É o mesmo conteúdo da página
 - distância na reta → Função modular (#57)
 - distribuição binomial → Probabilidade condicional (#40)
 - distributiva → Monômios e polinômios (#30)
-- divisão como multiplicação → Esticamento (#15)
+- divisão como multiplicação → Escalamento (#15)
 - divisão de frações → Frações (#11)
 - divisão de polinômios → Polinômios (#70)
 - divisão de segmento → Teorema de Tales (#31)
@@ -2689,7 +2685,7 @@ Todo tópico de toda aula, em ordem alfabética. É o mesmo conteúdo da página
 - eixo menor → Cônicas (#80)
 - eixo truncado → Leitura de gráficos e tabelas (#23)
 - elemento de um conjunto → Conjuntos numéricos (#4)
-- elemento neutro → Esticamento (#15)
+- elemento neutro → Escalamento (#15)
 - elementos juntos → Arranjos e permutações (#14)
 - elementos separados → Arranjos e permutações (#14)
 - elipse → Cônicas (#80)
@@ -2854,7 +2850,7 @@ Todo tópico de toda aula, em ordem alfabética. É o mesmo conteúdo da página
 - intervalo fechado → Conjuntos e intervalos (#49)
 - inversão do sinal → Equações e inequações exponenciais (#67)
 - inversão do sinal → Inequações do 1º grau (#53)
-- inverso de um número → Esticamento (#15)
+- inverso de um número → Escalamento (#15)
 
 **J**
 
@@ -2900,7 +2896,7 @@ Todo tópico de toda aula, em ordem alfabética. É o mesmo conteúdo da página
 - mediatriz → Triângulos (#3)
 - medida em graus → Ângulos (#2)
 - meia-vida → Função exponencial (#54)
-- menos com menos dá mais → Esticamento (#15)
+- menos com menos dá mais → Escalamento (#15)
 - método da adição → Sistemas do 1º grau (#35)
 - método da chave → Polinômios (#70)
 - método da substituição → Sistemas do 1º grau (#35)
@@ -3106,7 +3102,7 @@ Todo tópico de toda aula, em ordem alfabética. É o mesmo conteúdo da página
 - regra de Cramer → Sistemas lineares (#71)
 - regra de Sarrus → Determinantes (#51)
 - regra de sinais na adição → Junção (#12)
-- regra de sinais na multiplicação → Esticamento (#15)
+- regra de sinais na multiplicação → Escalamento (#15)
 - regra de três composta → Razão e proporção (#19)
 - regra de três simples → Razão e proporção (#19)
 - relação de Euler → Poliedros (#16)

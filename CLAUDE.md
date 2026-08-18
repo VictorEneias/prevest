@@ -18,7 +18,7 @@ aula de armar conta) e o tom (nada de falar com ele como se fosse criança, nem 
 assuntos mais simples).
 
 O que fica do fundamental é o que ele executa sem entender e que trava o resto:
-junção, esticamento, fração. O que sai é o que ele já faz sozinho.
+junção, escalamento, fração. O que sai é o que ele já faz sozinho.
 
 **O site é ~5% do trabalho. Os outros 95% são o conteúdo.** Toda decisão técnica
 é julgada por uma pergunta só: *isso reduz o atrito de escrever conteúdo?* Se a
