@@ -108,6 +108,7 @@ O que era `<Curiosidade rotulo="X">` hoje é `### X`. O que era `<Erros>` hoje �
 | `npm run dev` | **é isso que roda na casa do aluno**, na porta 4321 |
 | `npm run grafo` | frontmatter inválido, elo morto, ciclo, prereq redundante, teto de 5 áreas |
 | `npm run paginas` | renderiza as 86 páginas no node e diz qual quebrou |
+| `npm run plano` | reescreve o `PLANO-DE-AULAS.md` a partir do frontmatter |
 | `npm run check` | `tsc --noEmit` |
 | `npm run build` | gera `dist/` — só serve pra publicar na nuvem |
 
@@ -115,6 +116,24 @@ O que era `<Curiosidade rotulo="X">` hoje é `### X`. O que era `<Erros>` hoje �
 `content/` ou em componente.** Juntos eles são o que o build do Astro fazia de
 graça: um confere o frontmatter e o grafo, o outro confere que toda página ainda
 renderiza. Sem eles, componente escrito errado no MDX só aparece na hora da aula.
+
+### 2.1 `PLANO-DE-AULAS.md` é a referência do currículo
+
+É o documento que eu uso pra planejar a aula longe do site: panorama por área, os
+gargalos do grafo, uma ordem linear possível, a ficha de cada aula (resumo,
+prereqs, quem ela destrava, os tópicos, o que falta decidir) e o índice remissivo
+dos 762 tópicos.
+
+**Leia ele antes de mexer no currículo**, que é onde está o estado atual de tudo,
+e **rode `npm run plano` no fim de toda sessão que mexer em `content/`**, junto
+com `grafo` e `paginas`. Ele é gerado: editar o `.md` à mão é trabalho perdido,
+porque o script sobrescreve. O que muda o documento é o frontmatter da aula, e a
+linha `*Falta: …*` do fim do `.mdx` é o que vira o "Falta" da ficha.
+
+O mesmo comando escreve um `PLANO-DE-AULAS.html` com busca, que fica fora do git
+e mora em <https://claude.ai/code/artifact/6dc79f40-c45f-4239-a8f1-7e5a6dae8a26>.
+Pra atualizar a página, republique passando essa URL, senão nasce um artifact
+novo em vez de atualizar o que já existe.
 
 ---
 
@@ -187,8 +206,8 @@ nota de "falta" no fim da página diz que aquela parte ainda não foi escrita.
    desenha só o elo essencial, e `npm run grafo` avisa quando um elo é redundante.
    Vale pra qualquer quantidade de caminhos, não só dois.
 4. Sem ciclos. `npm run grafo` detecta.
-5. Rode `npm run grafo` e `npm run paginas` depois de **toda** sessão que mexer em
-   `content/`.
+5. Rode `npm run grafo`, `npm run paginas` e `npm run plano` depois de **toda**
+   sessão que mexer em `content/`.
 
 ### 3.1 Não existe divisão por ano escolar
 
