@@ -47,6 +47,12 @@ try {
       if (semSvg.includes('$')) {
         quebradas.push([rota, 'sobrou cifrão no texto — LaTeX desbalanceado?']);
       }
+      /* Linha de tabela que virou parágrafo, que foi como as tabelas de cinco
+         aulas ficaram quebradas sem ninguém ver: o Astro ligava o GFM sozinho e o
+         Vite não, e markdown inválido não quebra build, vira texto. */
+      if (/<p>[^<]*\|\s*-{3}/.test(semSvg)) {
+        quebradas.push([rota, 'tabela virou parágrafo — falta o remark-gfm?']);
+      }
     } catch (e) {
       quebradas.push([rota, e.message.split('\n')[0]]);
     }

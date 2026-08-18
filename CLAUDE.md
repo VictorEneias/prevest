@@ -833,6 +833,7 @@ esqueleto honesto não é conteúdo pra revisar.
 | Página em branco e *"Expected component X to be defined"* no console | componente usado no MDX que não está em `src/components/mdx.tsx`. `npm run paginas` acusa sem abrir o navegador |
 | Elo `<C>` aparece vermelho | o id não existe. `npm run grafo` lista |
 | LaTeX aparece cru | cifrão desbalanceado, ou `\$` escapado sem querer |
+| Tabela virou um parágrafo cheio de `\|` | falta o `remark-gfm` no `vite.config.ts`. `npm run paginas` acusa |
 | Fórmula de bloco sai pequena, no meio do parágrafo | escreveu `$$x$$` numa linha só. Os `$$` têm que ficar em linhas próprias (seção 5) |
 | O texto colou no fechamento do frontmatter | falta a linha em branco depois do `---` |
 | `npm run grafo` reclama de "falta topicos" | aula sem índice remissivo. Sem ele, ninguém acha o assunto pela busca |

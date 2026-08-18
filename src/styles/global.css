@@ -600,6 +600,12 @@ th {
   color: var(--tinta-media);
   border-bottom-color: var(--grade-forte);
 }
+/* Metade das tabelas do conteúdo não tem cabeçalho de verdade, e o markdown
+   obriga a escrever a linha do mesmo jeito. Some com ela em vez de obrigar cada
+   aula a inventar um título de coluna. */
+thead:not(:has(th:not(:empty))) {
+  display: none;
+}
 
 /* ---------- código / expressões ---------- */
 
