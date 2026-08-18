@@ -76,6 +76,7 @@ src/
       MapaConceitos.tsx    o grafo desenhado
   lib/
     layout-grafo.ts        o Sugiyama, TS puro, roda em node sem o app
+    metricas-grafo.ts      mede o desenho (cruzamento, seta por cima de módulo)
     curriculo.ts           áreas, rótulos e cores
   pages/
     Home.tsx               as duas portas de entrada e o mapa inteiro
@@ -462,8 +463,14 @@ conceito (`src/pages/Conceito.tsx`). Está documentado aqui porque é onde o
 - **Rascunho é contorno tracejado**, nunca cor: o amarelo colidiria com a paleta
   das áreas, e verde/vermelho não serve pra daltônico.
 - O layout mora em `src/lib/layout-grafo.ts`, separado do desenho, e recebe objeto
-  simples em vez de `CollectionEntry` — assim dá pra rodar em node puro num teste
-  de escala sem subir o app.
+  simples em vez do registro do conteúdo — assim dá pra rodar em node puro num
+  teste de escala sem subir o app. O arquivo é uma seção por etapa, na ordem em
+  que rodam: fileira de cada aula, fila de cada fileira, ordem dentro da fila,
+  coluna de cada item, rota das setas.
+- **As contas que dizem se o desenho melhorou** estão em `src/lib/metricas-grafo.ts`,
+  e nada ali roda quando o site abre. São elas que sustentam os números destas
+  notas; sem elas "ficou melhor" vira opinião, e já teve ideia bonita que mediu
+  bem numa conta e destruiu o desenho na outra.
 - **Se um dia virar novelo**, a volta pra árvore é dentro desse arquivo só:
   escolher um pai primário por nó e desenhar só aquela aresta. Nem o componente,
   nem a home, nem a página de conceito mudam.
