@@ -13,7 +13,9 @@
 import type { ComponentType } from 'react';
 
 export type Materia = 'matematica' | 'fisica';
-export type Nivel = 'fundamento' | 'basico' | 'medio' | 'avancado';
+/** `base` é revisão de fundamental que ficou porque trava o resto; `medio` é
+ *  conteúdo de ensino médio. Quem usa o site já está no ensino médio. */
+export type Nivel = 'base' | 'medio';
 
 export interface Conceito {
   id: string;
@@ -28,6 +30,13 @@ export interface Conceito {
    */
   prereqs: string[];
   nivel: Nivel;
+  /**
+   * O que esta aula cobre por dentro, em linguagem de aluno. É o índice
+   * remissivo do site: o grafo mostra 84 aulas, e é por aqui que alguém com
+   * dúvida em "distância de ponto a reta" chega na aula certa sem que cada
+   * assunto vire um nó no mapa.
+   */
+  topicos: string[];
   tempo_estimado?: number;
   /** Marca o rascunho na página. Só o Victor troca pra true, e só depois de
    *  refazer a conta linha por linha. */
@@ -64,6 +73,7 @@ export const conceitos: Conceito[] = carregar(modulosConceitos).map(({ id, fm, C
   bloco: (fm.bloco as string) ?? 'aritmetica',
   prereqs: (fm.prereqs as string[]) ?? [],
   nivel: (fm.nivel as Nivel) ?? 'medio',
+  topicos: (fm.topicos as string[]) ?? [],
   tempo_estimado: fm.tempo_estimado as number | undefined,
   revisado: fm.revisado === true,
   itens_fuvest: fm.itens_fuvest as number | undefined,

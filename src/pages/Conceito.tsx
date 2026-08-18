@@ -6,10 +6,8 @@ import C from '../components/C';
 import MapaConceitos from '../components/viz/MapaConceitos';
 
 const NIVEL: Record<string, string> = {
-  fundamento: 'Fundamento',
-  basico: 'Básico',
-  medio: 'Médio',
-  avancado: 'Avançado',
+  base: 'Base',
+  medio: 'Ensino médio',
 };
 
 /** A rota /conceitos/:id. O título da aba sai daqui e não do <Conceito>, senão
@@ -95,6 +93,17 @@ export default function Conceito({
             </span>
           )}
         </div>
+
+        {c.topicos.length > 0 && (
+          <>
+            <p className="rotulo-secao">O que tem nesta aula</p>
+            <ul className="topicos">
+              {c.topicos.map((t) => (
+                <li key={t}>{t}</li>
+              ))}
+            </ul>
+          </>
+        )}
 
         {c.prereqs.length > 0 && (
           <>

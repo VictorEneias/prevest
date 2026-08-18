@@ -474,6 +474,29 @@ html[data-modo='aula'] .aula > pre {
   margin: 0;
 }
 
+/* ---------- tópicos da aula ----------
+   O índice remissivo da aula, em chip: a lista é longa e o aluno lê batendo o
+   olho, procurando o assunto que ele veio buscar. */
+
+.topicos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  list-style: none;
+  margin: 0 0 var(--u);
+  padding: 0;
+}
+.topicos li {
+  margin: 0;
+  font-family: var(--f-ui);
+  font-size: 0.76rem;
+  color: var(--tinta-media);
+  background: var(--papel-fundo);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 2px 8px;
+}
+
 /* ---------- tabelas ---------- */
 
 table {

@@ -26,9 +26,17 @@ function frontmatter(txt) {
   const m = txt.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!m) return {};
   const out = {};
+  let lista = null;
   for (const linha of m[1].split(/\r?\n/)) {
+    /* item de lista em bloco, que é como os tópicos são escritos */
+    const item = linha.match(/^\s+-\s+(.*)$/);
+    if (item && lista) {
+      out[lista].push(item[1].trim().replace(/^["']|["']$/g, ''));
+      continue;
+    }
     const kv = linha.match(/^(\w+):\s*(.*)$/);
     if (!kv) continue;
+    lista = null;
     const [, k, v] = kv;
     if (v.startsWith('[')) {
       out[k] = v
@@ -36,6 +44,9 @@ function frontmatter(txt) {
         .split(',')
         .map((s) => s.trim().replace(/^["']|["']$/g, ''))
         .filter(Boolean);
+    } else if (v === '') {
+      out[k] = [];
+      lista = k;
     } else {
       out[k] = v.replace(/^["']|["']$/g, '');
     }
@@ -67,7 +78,9 @@ const avisos = [];
    booleano também. Confiro forma e vocabulário, que é onde dá errado de verdade
    (materia escrita errado deixa o módulo cinza no mapa sem avisar ninguém). */
 const MATERIAS = ['matematica', 'fisica'];
-const NIVEIS = ['fundamento', 'basico', 'medio', 'avancado'];
+/* base é revisão de fundamental que ficou porque trava o resto; medio é
+   conteúdo de ensino médio. O público do site já está no ensino médio. */
+const NIVEIS = ['base', 'medio'];
 
 const ehInteiroPositivo = (v) => /^\d+$/.test(String(v)) && Number(v) > 0;
 
@@ -95,6 +108,9 @@ for (const [, { fm, arquivo }] of conceitos) {
   }
   if (fm.prereqs === undefined) {
     erros.push(`${arquivo}: falta o campo "prereqs" (use [] se for raiz do grafo)`);
+  }
+  if (!(fm.topicos ?? []).length) {
+    erros.push(`${arquivo}: falta "topicos" — é por ele que o aluno acha o assunto na busca`);
   }
 }
 
