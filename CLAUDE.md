@@ -292,9 +292,10 @@ O modelo tem duas taxas, e elas vêm de fora:
 | **130 palavras por minuto** | a leitura do aluno em casa, a mesma tabela com objetivo de **entender** |
 
 Como a aula roda na metade da taxa da leitura, **a aula sempre dá o dobro do tempo
-que o aluno leva pra ler a página sozinho**. Os dois números ficam no frontmatter e
-os dois aparecem com rótulo na ficha da página, porque um "~30 min" pelado é lido
-pelo aluno como se fosse o tempo dele, e o tempo dele é a metade.
+que o aluno leva pra ler a página sozinho**. Os dois ficam no frontmatter, e qual
+deles aparece na ficha depende do modo: em **Estudo** o aluno vê só o tempo de
+leitura dele, e em **Aula** aparece o tempo da aula, que é meu. Um "45 min" na
+frente do aluno desencoraja quem ia sentar pra ler 23.
 
 Fórmula, tabela, figura e interativo entram como palavra equivalente (12, 8, 30 e
 200), e esses quatro pesos são escolha, não medida: saem de estimar quanto cada
@@ -954,6 +955,9 @@ tamanho de fonte.
 | `Esc` | fecha o painel do topo da pilha |
 
 O modo escolhido vale também dentro dos painéis.
+
+A ficha do topo também obedece o modo: em Estudo ela mostra o tempo de leitura do
+aluno e em Aula mostra o tempo da aula, e quem troca é o CSS, como todo o resto.
 
 **Só existem dois modos.** Existiu um terceiro, o Modo Prova, que escondia tudo
 menos o enunciado; foi removido porque na prática o Modo Aula já fazia isso e

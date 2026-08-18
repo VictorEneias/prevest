@@ -432,6 +432,20 @@ html[data-modo='aula'] .aula > pre {
   display: none;
 }
 
+/* O tempo da ficha muda de dono junto com o modo. Em estudo o aluno vê só quanto
+   ele leva pra ler a página, e em aula eu vejo quanto a aula toma. Mostrar os
+   dois pro aluno desencoraja: ele lê "45 min de aula" na aula de conjuntos e
+   acha que é o tempo dele, quando o dele é 23. */
+.tempo-aula {
+  display: none;
+}
+html[data-modo='aula'] .tempo-leitura {
+  display: none;
+}
+html[data-modo='aula'] .tempo-aula {
+  display: inline;
+}
+
 /* ---------- barra de modo ---------- */
 
 .barra-modo {
