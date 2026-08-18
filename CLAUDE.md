@@ -476,6 +476,29 @@ dois vai pro miolo; no `aninhados`, quem é só do de fora fica no anel. Então 
 mexer na lista de elementos no `.mdx` sem recalcular desenho nenhum. Em `aninhados`
 o primeiro conjunto é o de fora.
 
+Ele tem duas geometrias, uma para a largura inteira e uma para dentro do `<Par>`, e
+a segunda não é a primeira encolhida: na metade da largura o círculo precisa ser
+proporcionalmente maior, senão as bolinhas não cabem e o texto de 14px vira 7px na
+tela. Quem liga a segunda é o `<Par>`, e não o `.mdx`.
+
+### `<Par>` — duas figuras na mesma linha
+
+```mdx
+<Par>
+  <Conjunto layout="separados" ... />
+  <Conjunto layout="aninhados" ... />
+</Par>
+```
+
+Para quando o mesmo assunto é desenhado de dois jeitos e o argumento **é** a
+comparação: empilhar as duas obriga o aluno a rolar entre uma e outra justamente
+na hora de comparar, e faz a página parecer o dobro do que ela é. Vira uma coluna
+só abaixo de 900px.
+
+**Só use com componente que entende `compacto`**, que hoje é o `<Conjunto>`. O
+`<Par>` avisa o filho que ele agora tem metade da largura; quem não escuta esse
+aviso só encolhe junto com o viewBox, e aí o rótulo fica ilegível.
+
 ### `<MapaConceitos />` — o grafo desenhado
 
 Não se usa em `.mdx`; é da home (`src/pages/Home.tsx`) e do rodapé de cada

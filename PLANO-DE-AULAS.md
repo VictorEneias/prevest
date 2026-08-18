@@ -1,6 +1,6 @@
 # Plano de aulas — Matemática
 
-84 aulas, 768 tópicos declarados, 60h20 de aula. Gerado por `npm run plano` a partir do frontmatter de `content/conceitos/`; **não edite este arquivo à mão**, edite a aula e rode o script de novo.
+84 aulas, 768 tópicos declarados, 60h05 de aula. Gerado por `npm run plano` a partir do frontmatter de `content/conceitos/`; **não edite este arquivo à mão**, edite a aula e rode o script de novo.
 
 ## Como ler uma ficha
 
@@ -14,14 +14,14 @@
 
 | Área | Aulas | Tópicos | Tempo |
 |---|---:|---:|---:|
-| Aritmética | 17 | 147 | 12h30 |
+| Aritmética | 17 | 147 | 12h15 |
 | Álgebra | 16 | 135 | 11h45 |
 | Funções | 17 | 160 | 12h50 |
 | Geometria | 25 | 247 | 16h50 |
 | Dados e contagem | 9 | 79 | 6h25 |
-| **Total** | **84** | **768** | **60h20** |
+| **Total** | **84** | **768** | **60h05** |
 
-Por nível declarado: **41 de base** (revisão de fundamental que trava o resto, 29h25) e **43 de médio** (30h55).
+Por nível declarado: **41 de base** (revisão de fundamental que trava o resto, 29h10) e **43 de médio** (30h55).
 
 Por estado: **6 escritas** (Conjuntos numéricos, Esticamento, Frações, Junção, O que cada operação faz, A reta numérica) e **78 esqueletos**, que já têm título, resumo, tópicos e prereqs, mas nenhum texto.
 
@@ -55,93 +55,93 @@ O grafo declara dependência, não fila. Esta é uma ordem que respeita todos os
 | 1 | A reta numérica | Aritmética | 0 | 25 | 0h25 |
 | 2 | Ângulos | Geometria | 0 | 30 | 0h55 |
 | 3 | Triângulos | Geometria | 1 | 45 | 1h40 |
-| 4 | Conjuntos numéricos | Aritmética | 1 | 65 | 2h45 |
-| 5 | O que cada operação faz | Aritmética | 2 | 55 | 3h40 |
-| 6 | Circunferência e círculo | Geometria | 2 | 40 | 4h20 |
-| 7 | Plano cartesiano | Geometria | 2 | 30 | 4h50 |
-| 8 | Polígonos | Geometria | 2 | 35 | 5h25 |
-| 9 | Quadriláteros | Geometria | 2 | 40 | 6h05 |
-| 10 | Retas e planos no espaço | Geometria | 3 | 35 | 6h40 |
-| 11 | Frações | Aritmética | 3 | 70 | 7h50 |
-| 12 | Junção | Aritmética | 3 | 50 | 8h40 |
-| 13 | Princípio multiplicativo | Dados e contagem | 3 | 40 | 9h20 |
-| 14 | Arranjos e permutações | Dados e contagem | 4 | 45 | 10h05 |
-| 15 | Esticamento | Aritmética | 4 | 55 | 11h00 |
-| 16 | Poliedros | Geometria | 4 | 35 | 11h35 |
-| 17 | Potências | Aritmética | 5 | 45 | 12h20 |
-| 18 | Porcentagem | Aritmética | 5 | 35 | 12h55 |
-| 19 | Razão e proporção | Aritmética | 5 | 50 | 13h45 |
-| 20 | Primos e fatoração | Aritmética | 5 | 40 | 14h25 |
-| 21 | Linguagem algébrica | Álgebra | 5 | 40 | 15h05 |
-| 22 | Combinações | Dados e contagem | 5 | 45 | 15h50 |
-| 23 | Leitura de gráficos e tabelas | Dados e contagem | 6 | 35 | 16h25 |
-| 24 | Probabilidade | Dados e contagem | 6 | 50 | 17h15 |
-| 25 | Radiciação | Aritmética | 6 | 45 | 18h00 |
-| 26 | Unidades de medida | Aritmética | 6 | 30 | 18h30 |
-| 27 | Aumentos e descontos | Aritmética | 6 | 35 | 19h05 |
-| 28 | Notação científica | Aritmética | 6 | 25 | 19h30 |
-| 29 | Equação do 1º grau | Álgebra | 6 | 45 | 20h15 |
-| 30 | Monômios e polinômios | Álgebra | 6 | 45 | 21h00 |
-| 31 | Teorema de Tales | Geometria | 6 | 35 | 21h35 |
-| 32 | Áreas de polígonos | Geometria | 7 | 45 | 22h20 |
-| 33 | Semelhança de triângulos | Geometria | 7 | 45 | 23h05 |
-| 34 | Produtos notáveis | Álgebra | 7 | 40 | 23h45 |
-| 35 | Sistemas do 1º grau | Álgebra | 7 | 45 | 24h30 |
-| 36 | Números reais | Aritmética | 7 | 40 | 25h10 |
-| 37 | Juros simples e compostos | Aritmética | 7 | 45 | 25h55 |
-| 38 | O que é uma função | Funções | 7 | 45 | 26h40 |
-| 39 | Média, moda e mediana | Dados e contagem | 7 | 40 | 27h20 |
-| 40 | Probabilidade condicional | Dados e contagem | 7 | 45 | 28h05 |
-| 41 | Binômio de Newton | Dados e contagem | 8 | 40 | 28h45 |
-| 42 | Dispersão | Dados e contagem | 8 | 45 | 29h30 |
-| 43 | Função afim | Funções | 8 | 45 | 30h15 |
-| 44 | Fatoração | Álgebra | 8 | 50 | 31h05 |
-| 45 | Matrizes | Álgebra | 8 | 45 | 31h50 |
-| 46 | Prismas | Geometria | 8 | 45 | 32h35 |
-| 47 | Teorema de Pitágoras | Geometria | 8 | 40 | 33h15 |
-| 48 | Comprimento e área do círculo | Geometria | 8 | 35 | 33h50 |
-| 49 | Conjuntos e intervalos | Aritmética | 8 | 40 | 34h30 |
-| 50 | Equação do 2º grau | Álgebra | 9 | 55 | 35h25 |
-| 51 | Determinantes | Álgebra | 9 | 40 | 36h05 |
-| 52 | Frações algébricas | Álgebra | 9 | 40 | 36h45 |
-| 53 | Inequações do 1º grau | Álgebra | 9 | 35 | 37h20 |
-| 54 | Função exponencial | Funções | 9 | 45 | 38h05 |
-| 55 | Função composta e inversa | Funções | 9 | 45 | 38h50 |
-| 56 | Sequências e PA | Funções | 9 | 45 | 39h35 |
-| 57 | Função modular | Funções | 9 | 40 | 40h15 |
-| 58 | O ponto no plano | Geometria | 9 | 40 | 40h55 |
-| 59 | Cilindro e cone | Geometria | 9 | 45 | 41h40 |
-| 60 | Pirâmides | Geometria | 9 | 45 | 42h25 |
-| 61 | Relações métricas no triângulo retângulo | Geometria | 9 | 40 | 43h05 |
-| 62 | Trigonometria no triângulo retângulo | Geometria | 10 | 45 | 43h50 |
-| 63 | A reta no plano | Geometria | 10 | 50 | 44h40 |
-| 64 | Esfera | Geometria | 10 | 35 | 45h15 |
-| 65 | Função quadrática | Funções | 10 | 55 | 46h10 |
-| 66 | Logaritmos | Funções | 10 | 50 | 47h00 |
-| 67 | Equações e inequações exponenciais | Funções | 10 | 40 | 47h40 |
-| 68 | Progressão geométrica | Funções | 10 | 45 | 48h25 |
-| 69 | Números complexos | Álgebra | 10 | 45 | 49h10 |
-| 70 | Polinômios | Álgebra | 10 | 45 | 49h55 |
-| 71 | Sistemas lineares | Álgebra | 10 | 50 | 50h45 |
-| 72 | Equações polinomiais | Álgebra | 11 | 45 | 51h30 |
-| 73 | Círculo trigonométrico | Funções | 11 | 50 | 52h20 |
-| 74 | Função logarítmica | Funções | 11 | 40 | 53h00 |
-| 75 | Transformações de gráfico | Funções | 11 | 40 | 53h40 |
-| 76 | Inequações e estudo do sinal | Funções | 11 | 45 | 54h25 |
-| 77 | A circunferência no plano | Geometria | 11 | 45 | 55h10 |
-| 78 | Lei dos senos e dos cossenos | Geometria | 11 | 45 | 55h55 |
-| 79 | Sólidos inscritos e circunscritos | Geometria | 11 | 40 | 56h35 |
-| 80 | Cônicas | Geometria | 12 | 45 | 57h20 |
-| 81 | Funções trigonométricas | Funções | 12 | 50 | 58h10 |
-| 82 | Equações e inequações logarítmicas | Funções | 12 | 40 | 58h50 |
-| 83 | Complexos na forma trigonométrica | Álgebra | 12 | 40 | 59h30 |
-| 84 | Identidades e equações trigonométricas | Funções | 13 | 50 | 60h20 |
+| 4 | Conjuntos numéricos | Aritmética | 1 | 50 | 2h30 |
+| 5 | O que cada operação faz | Aritmética | 2 | 55 | 3h25 |
+| 6 | Circunferência e círculo | Geometria | 2 | 40 | 4h05 |
+| 7 | Plano cartesiano | Geometria | 2 | 30 | 4h35 |
+| 8 | Polígonos | Geometria | 2 | 35 | 5h10 |
+| 9 | Quadriláteros | Geometria | 2 | 40 | 5h50 |
+| 10 | Retas e planos no espaço | Geometria | 3 | 35 | 6h25 |
+| 11 | Frações | Aritmética | 3 | 70 | 7h35 |
+| 12 | Junção | Aritmética | 3 | 50 | 8h25 |
+| 13 | Princípio multiplicativo | Dados e contagem | 3 | 40 | 9h05 |
+| 14 | Arranjos e permutações | Dados e contagem | 4 | 45 | 9h50 |
+| 15 | Esticamento | Aritmética | 4 | 55 | 10h45 |
+| 16 | Poliedros | Geometria | 4 | 35 | 11h20 |
+| 17 | Potências | Aritmética | 5 | 45 | 12h05 |
+| 18 | Porcentagem | Aritmética | 5 | 35 | 12h40 |
+| 19 | Razão e proporção | Aritmética | 5 | 50 | 13h30 |
+| 20 | Primos e fatoração | Aritmética | 5 | 40 | 14h10 |
+| 21 | Linguagem algébrica | Álgebra | 5 | 40 | 14h50 |
+| 22 | Combinações | Dados e contagem | 5 | 45 | 15h35 |
+| 23 | Leitura de gráficos e tabelas | Dados e contagem | 6 | 35 | 16h10 |
+| 24 | Probabilidade | Dados e contagem | 6 | 50 | 17h00 |
+| 25 | Radiciação | Aritmética | 6 | 45 | 17h45 |
+| 26 | Unidades de medida | Aritmética | 6 | 30 | 18h15 |
+| 27 | Aumentos e descontos | Aritmética | 6 | 35 | 18h50 |
+| 28 | Notação científica | Aritmética | 6 | 25 | 19h15 |
+| 29 | Equação do 1º grau | Álgebra | 6 | 45 | 20h00 |
+| 30 | Monômios e polinômios | Álgebra | 6 | 45 | 20h45 |
+| 31 | Teorema de Tales | Geometria | 6 | 35 | 21h20 |
+| 32 | Áreas de polígonos | Geometria | 7 | 45 | 22h05 |
+| 33 | Semelhança de triângulos | Geometria | 7 | 45 | 22h50 |
+| 34 | Produtos notáveis | Álgebra | 7 | 40 | 23h30 |
+| 35 | Sistemas do 1º grau | Álgebra | 7 | 45 | 24h15 |
+| 36 | Números reais | Aritmética | 7 | 40 | 24h55 |
+| 37 | Juros simples e compostos | Aritmética | 7 | 45 | 25h40 |
+| 38 | O que é uma função | Funções | 7 | 45 | 26h25 |
+| 39 | Média, moda e mediana | Dados e contagem | 7 | 40 | 27h05 |
+| 40 | Probabilidade condicional | Dados e contagem | 7 | 45 | 27h50 |
+| 41 | Binômio de Newton | Dados e contagem | 8 | 40 | 28h30 |
+| 42 | Dispersão | Dados e contagem | 8 | 45 | 29h15 |
+| 43 | Função afim | Funções | 8 | 45 | 30h00 |
+| 44 | Fatoração | Álgebra | 8 | 50 | 30h50 |
+| 45 | Matrizes | Álgebra | 8 | 45 | 31h35 |
+| 46 | Prismas | Geometria | 8 | 45 | 32h20 |
+| 47 | Teorema de Pitágoras | Geometria | 8 | 40 | 33h00 |
+| 48 | Comprimento e área do círculo | Geometria | 8 | 35 | 33h35 |
+| 49 | Conjuntos e intervalos | Aritmética | 8 | 40 | 34h15 |
+| 50 | Equação do 2º grau | Álgebra | 9 | 55 | 35h10 |
+| 51 | Determinantes | Álgebra | 9 | 40 | 35h50 |
+| 52 | Frações algébricas | Álgebra | 9 | 40 | 36h30 |
+| 53 | Inequações do 1º grau | Álgebra | 9 | 35 | 37h05 |
+| 54 | Função exponencial | Funções | 9 | 45 | 37h50 |
+| 55 | Função composta e inversa | Funções | 9 | 45 | 38h35 |
+| 56 | Sequências e PA | Funções | 9 | 45 | 39h20 |
+| 57 | Função modular | Funções | 9 | 40 | 40h00 |
+| 58 | O ponto no plano | Geometria | 9 | 40 | 40h40 |
+| 59 | Cilindro e cone | Geometria | 9 | 45 | 41h25 |
+| 60 | Pirâmides | Geometria | 9 | 45 | 42h10 |
+| 61 | Relações métricas no triângulo retângulo | Geometria | 9 | 40 | 42h50 |
+| 62 | Trigonometria no triângulo retângulo | Geometria | 10 | 45 | 43h35 |
+| 63 | A reta no plano | Geometria | 10 | 50 | 44h25 |
+| 64 | Esfera | Geometria | 10 | 35 | 45h00 |
+| 65 | Função quadrática | Funções | 10 | 55 | 45h55 |
+| 66 | Logaritmos | Funções | 10 | 50 | 46h45 |
+| 67 | Equações e inequações exponenciais | Funções | 10 | 40 | 47h25 |
+| 68 | Progressão geométrica | Funções | 10 | 45 | 48h10 |
+| 69 | Números complexos | Álgebra | 10 | 45 | 48h55 |
+| 70 | Polinômios | Álgebra | 10 | 45 | 49h40 |
+| 71 | Sistemas lineares | Álgebra | 10 | 50 | 50h30 |
+| 72 | Equações polinomiais | Álgebra | 11 | 45 | 51h15 |
+| 73 | Círculo trigonométrico | Funções | 11 | 50 | 52h05 |
+| 74 | Função logarítmica | Funções | 11 | 40 | 52h45 |
+| 75 | Transformações de gráfico | Funções | 11 | 40 | 53h25 |
+| 76 | Inequações e estudo do sinal | Funções | 11 | 45 | 54h10 |
+| 77 | A circunferência no plano | Geometria | 11 | 45 | 54h55 |
+| 78 | Lei dos senos e dos cossenos | Geometria | 11 | 45 | 55h40 |
+| 79 | Sólidos inscritos e circunscritos | Geometria | 11 | 40 | 56h20 |
+| 80 | Cônicas | Geometria | 12 | 45 | 57h05 |
+| 81 | Funções trigonométricas | Funções | 12 | 50 | 57h55 |
+| 82 | Equações e inequações logarítmicas | Funções | 12 | 40 | 58h35 |
+| 83 | Complexos na forma trigonométrica | Álgebra | 12 | 40 | 59h15 |
+| 84 | Identidades e equações trigonométricas | Funções | 13 | 50 | 60h05 |
 
 ## As fichas
 
 ### Aritmética
 
-17 aulas, 12h30.
+17 aulas, 12h15.
 
 #### 1. A reta numérica
 
@@ -173,7 +173,7 @@ Todo número é um ponto numa reta. Dessa imagem saem a escala, o negativo, o m�
 
 A sintaxe dos conjuntos, e depois os moradores: naturais, inteiros e racionais, com a regra de entrada de cada um e o encaixe entre eles.
 
-`conjuntos-numericos` · nível 1 · base · 65 min · escrita · 13 tópicos
+`conjuntos-numericos` · nível 1 · base · 50 min · escrita · 13 tópicos
 
 **Precisa de:** A reta numérica  
 **Destrava:** Plano cartesiano, O que cada operação faz
@@ -195,8 +195,6 @@ A sintaxe dos conjuntos, e depois os moradores: naturais, inteiros e racionais, 
 - N Z Q
 
 **Seções já escritas:** O que é um conjunto · A sintaxe: os símbolos que você vai ler pelo resto da vida · Os três conjuntos que eu vou usar em tudo · $\in$ e $\notin$: pertence e não pertence · $\subset$ e $\supset$: está contido e contém · $\not\subset$ e $\not\supset$: não está contido e não contém · $\cup$ e $\cap$: união e interseção · Três que aparecem sem aviso: para todo, existe e portanto · Os naturais: os números de contar · Os inteiros: os naturais mais os opostos deles · Os racionais: quem dá pra escrever como fração · Um dentro do outro · E será que sobrou alguém de fora?
-
-**Falta:** o interativo da sintaxe, que seria o aluno jogando elemento em cada região de dois conjuntos e vendo a união, a interseção e o vazio mudarem junto, que é o único jeito de ele testar hipótese sozinho em vez de só ler figura pronta.
 
 #### 5. O que cada operação faz
 

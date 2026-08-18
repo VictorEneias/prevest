@@ -5,7 +5,7 @@ materia: matematica
 bloco: aritmetica
 prereqs: [reta-numerica]
 nivel: base
-tempo_estimado: 65
+tempo_estimado: 50
 revisado: false
 resumo: "A sintaxe dos conjuntos, e depois os moradores: naturais, inteiros e racionais, com a regra de entrada de cada um e o encaixe entre eles."
 topicos:
@@ -113,14 +113,6 @@ $$
 
 pode ser lida como "o número 2 pertence ao conjunto A".
 
-<Conjunto
-  layout="um"
-  conjuntos={[{ nome: 'A', elementos: [1, 2, 3, 4, 5, 6] }]}
-  destacar={[2]}
-  titulo="2 ∈ A"
-  legenda="o 2 está lá dentro, no meio dos outros moradores"
-/>
-
 Tendo entendido o $\in$, a gente também tem o oposto dele, o $\notin$, que vai ser lido
 como "**não pertence**". Então uma frase escrita
 
@@ -130,13 +122,22 @@ $$
 
 pode ser lida como "o número 2 não pertence ao conjunto B".
 
-<Conjunto
-  layout="um"
-  conjuntos={[{ nome: 'B', elementos: [5, 6, 7, 8] }]}
-  fora={[2]}
-  titulo="2 ∉ B"
-  legenda="o B tem quatro moradores, e nenhum deles é o 2"
-/>
+<Par>
+  <Conjunto
+    layout="um"
+    conjuntos={[{ nome: 'A', elementos: [1, 2, 3, 4, 5, 6] }]}
+    destacar={[2]}
+    titulo="2 ∈ A"
+    legenda="o 2 está lá dentro, no meio dos outros moradores"
+  />
+  <Conjunto
+    layout="um"
+    conjuntos={[{ nome: 'B', elementos: [5, 6, 7, 8] }]}
+    fora={[2]}
+    titulo="2 ∉ B"
+    legenda="o B tem quatro moradores, e nenhum deles é o 2"
+  />
+</Par>
 
 E olha uma coisa que vale pra todos os símbolos daqui pra frente: **o corte em cima do
 símbolo é a negação dele**. Se você sabe ler o símbolo, você sabe ler o símbolo cortado,
@@ -168,31 +169,32 @@ que a frase anterior, porém numa espécie de ordem trocada.
 No fim das contas, as duas maneiras querem dizer a mesma coisa: **todos os elementos de
 C também fazem parte de A**, ou em outras palavras, C é um **subconjunto** de A.
 
-<Conjunto
-  layout="separados"
-  conjuntos={[
-    { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
-    { nome: 'C', elementos: [2, 4] },
-  ]}
-  destacar={[2, 4]}
-  titulo="C ⊂ A, com os dois desenhados separados"
-  legenda="cada morador do C aparece de novo lá no A, e é isso que a frase quer dizer"
-/>
-
-<Conjunto
-  layout="aninhados"
-  conjuntos={[
-    { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
-    { nome: 'C', elementos: [2, 4] },
-  ]}
-  destacar={[2, 4]}
-  titulo="A ⊃ C, com o C desenhado dentro do A"
-  legenda="é a mesma informação do desenho de cima, com o C circulado por dentro"
-/>
+<Par>
+  <Conjunto
+    layout="separados"
+    conjuntos={[
+      { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
+      { nome: 'C', elementos: [2, 4] },
+    ]}
+    destacar={[2, 4]}
+    titulo="C ⊂ A, desenhado separado"
+    legenda="cada morador do C aparece de novo lá no A"
+  />
+  <Conjunto
+    layout="aninhados"
+    conjuntos={[
+      { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
+      { nome: 'C', elementos: [2, 4] },
+    ]}
+    destacar={[2, 4]}
+    titulo="A ⊃ C, com o C por dentro"
+    legenda="a mesma informação, com o C circulado dentro do A"
+  />
+</Par>
 
 **As duas figuras dizem exatamente a mesma coisa**, e é bom você se acostumar com as
-duas, porque a prova usa as duas. A de cima é a que a definição descreve, e a de baixo é
-a que aparece quando o exercício quer que você enxergue o encaixe de olho.
+duas, porque a prova usa as duas. A da esquerda é a que a definição descreve, e a da
+direita é a que aparece quando o exercício quer que você enxergue o encaixe de olho.
 
 ### $\not\subset$ e $\not\supset$: não está contido e não contém
 
@@ -250,24 +252,25 @@ vai ser lida como "o conjunto D é a união de A e B". E isso significa exatamen
 parece: D vai ser um conjunto que contém todos os elementos tanto de A quanto de B (olha
 o paralelo, sem querer falei $D \supset A$ e $D \supset B$).
 
-<Conjunto
-  layout="venn"
-  conjuntos={[
-    { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
-    { nome: 'B', elementos: [5, 6, 7, 8] },
-  ]}
-  regiao="uniao"
-  envolver="D"
-  titulo="D = A ∪ B, com o D em volta dos dois"
-  legenda="a união é tudo que está pintado: o A inteiro mais o B inteiro"
-/>
-
-<Conjunto
-  layout="um"
-  conjuntos={[{ nome: 'D', elementos: [1, 2, 3, 4, 5, 6, 7, 8] }]}
-  titulo="D = A ∪ B, escrito como um conjunto só"
-  legenda="mesma informação da figura de cima, agora sem lembrar de onde cada um veio"
-/>
+<Par>
+  <Conjunto
+    layout="venn"
+    conjuntos={[
+      { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
+      { nome: 'B', elementos: [5, 6, 7, 8] },
+    ]}
+    regiao="uniao"
+    envolver="D"
+    titulo="D em volta dos dois"
+    legenda="a união é tudo que está pintado"
+  />
+  <Conjunto
+    layout="um"
+    conjuntos={[{ nome: 'D', elementos: [1, 2, 3, 4, 5, 6, 7, 8] }]}
+    titulo="D como um conjunto só"
+    legenda="a mesma coisa, sem lembrar de onde cada um veio"
+  />
+</Par>
 
 $$
 D = \{1,\, 2,\, 3,\, 4,\, 5,\, 6,\, 7,\, 8\}
@@ -294,25 +297,26 @@ a mesma coisa de dois jeitos.
 Pra você ver a interseção com trabalho de verdade, eu troco o $C$ pelo $B$, que cruza o
 $A$ sem estar dentro dele:
 
-<Conjunto
-  layout="venn"
-  conjuntos={[
-    { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
-    { nome: 'B', elementos: [5, 6, 7, 8] },
-  ]}
-  regiao="intersecao"
-  destacar={[5, 6]}
-  titulo="A ∩ B é só o miolo"
-  legenda="a parte pintada é onde os dois conjuntos se cruzam"
-/>
-
-<Conjunto
-  layout="um"
-  conjuntos={[{ nome: 'E', elementos: [5, 6] }]}
-  destacar={[5, 6]}
-  titulo="E = A ∩ B, escrito como um conjunto só"
-  legenda="sobraram os dois que estavam nos dois lados"
-/>
+<Par>
+  <Conjunto
+    layout="venn"
+    conjuntos={[
+      { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
+      { nome: 'B', elementos: [5, 6, 7, 8] },
+    ]}
+    regiao="intersecao"
+    destacar={[5, 6]}
+    titulo="A ∩ B é só o miolo"
+    legenda="a parte pintada é onde os dois se cruzam"
+  />
+  <Conjunto
+    layout="um"
+    conjuntos={[{ nome: 'E', elementos: [5, 6] }]}
+    destacar={[5, 6]}
+    titulo="E como um conjunto só"
+    legenda="sobraram os dois que estavam nos dois lados"
+  />
+</Par>
 
 $$
 E = A \cap B = \{5,\, 6\}
@@ -513,23 +517,3 @@ ainda deixa gente na rua. Se você escrever $\sqrt{2}$ no campo do interativo l�
 cima, o ponto sai das três caixas e fica na área de fora, que é exatamente o lugar
 onde esse pessoal mora.
 
-
----
-
-*Falta nesta página: o interativo da sintaxe, que seria o aluno jogando elemento em
-cada região de dois conjuntos e vendo a união, a interseção e o vazio mudarem junto, que
-é o único jeito de ele testar hipótese sozinho em vez de só ler figura pronta.*
-
-*E falta uma decisão de tamanho. Com a sintaxe dentro a aula foi de 35 pra 65 minutos,
-e passou do teto de 55: pela contagem de palavras por minuto das outras aulas, a sintaxe
-sozinha é uns 25 a 30 minutos. Se ela não couber num encontro, o corte pronto é este:
-"o que é um conjunto" mais as cinco seções de símbolo viram uma aula chamada sintaxe
-matemática, e sobra aqui uma aula de 35 minutos só com os naturais, os inteiros, os
-racionais e o encaixe entre eles, que passa a ter a sintaxe como pré-requisito. Eu não
-fiz o corte porque você pediu a sintaxe nesta aula, e porque a página inteira é honesta
-do jeito que está.*
-
-*E o recorte com as outras aulas é este: aqui você aprende a **ler** os símbolos; quem
-resolve problema com dois e três conjuntos, diferença, complementar e notação de
-intervalo é a aula de conjuntos e intervalos; e os irracionais ficam com a de números
-reais.*

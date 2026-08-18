@@ -28,11 +28,50 @@ export interface ConjuntoProps {
   regiao?: 'intersecao' | 'uniao';
   /** Desenha um contorno em volta de tudo, com este nome. */
   envolver?: string;
+  /** Metade da largura, dentro de um <Par>. Quem passa é o <Par>, não o .mdx. */
+  compacto?: boolean;
   titulo?: string;
   legenda?: string;
 }
 
-const L = 720;
+/* Duas geometrias, e não uma escalada da outra: na metade da largura o desenho
+   precisa de círculo proporcionalmente maior, senão as bolinhas não cabem e o
+   texto de 14px vira 7px na tela. */
+const GEO = {
+  larga: {
+    L: 720,
+    um: { cx: 360, cy: 128, r: 108, altura: 252 },
+    sep2: [
+      { cx: 205, cy: 132, r: 100 },
+      { cx: 515, cy: 132, r: 100 },
+    ],
+    sep3: [
+      { cx: 132, cy: 128, r: 92 },
+      { cx: 360, cy: 128, r: 92 },
+      { cx: 588, cy: 128, r: 92 },
+    ],
+    sepAltura: 258,
+    venn: { r: 120, cx1: 292, cx2: 428, cy: 148, rot: 74, desvio: 46, miolo: 62, altura: 300 },
+    ani: { fx: 360, fy: 158, fr: 142, dx: 404, dy: 190, dr: 68, altura: 330 },
+  },
+  compacta: {
+    L: 380,
+    um: { cx: 190, cy: 142, r: 122, altura: 285 },
+    sep2: [
+      { cx: 102, cy: 140, r: 86 },
+      { cx: 278, cy: 140, r: 86 },
+    ],
+    sep3: [
+      { cx: 68, cy: 132, r: 58 },
+      { cx: 190, cy: 132, r: 58 },
+      { cx: 312, cy: 132, r: 58 },
+    ],
+    sepAltura: 268,
+    venn: { r: 92, cx1: 144, cx2: 236, cy: 148, rot: 56, desvio: 34, miolo: 42, altura: 300 },
+    ani: { fx: 190, fy: 156, fr: 124, dx: 214, dy: 186, dr: 58, altura: 300 },
+  },
+};
+
 const R_ELEM = 15;
 
 type Ponto = [number, number];
@@ -70,7 +109,10 @@ export default function Conjunto({
   envolver,
   titulo,
   legenda,
+  compacto = false,
 }: ConjuntoProps) {
+  const g = compacto ? GEO.compacta : GEO.larga;
+  const L = g.L;
   const [a, b] = conjuntos;
   const ehDestaque = (e: Elemento) => destacar.some((d) => String(d) === String(e));
 
@@ -80,27 +122,17 @@ export default function Conjunto({
   let altura = 250;
 
   if (layout === 'um') {
-    const c = { cx: L / 2, cy: 128, r: 108 };
+    const c = g.um;
     circulos.push({ ...c, nome: a.nome, rotX: c.cx, rotY: c.cy - c.r - 12 });
     espalhar(a.elementos.length, c.cx, c.cy, c.r, dentroDe(c.cx, c.cy, c.r)).forEach((p, i) =>
       postos.push({ e: a.elementos[i], p }),
     );
-    altura = 252;
+    altura = c.altura;
   }
 
   if (layout === 'separados') {
     /* dois cabem grandes; três só cabem se encolherem, e três é o teto */
-    const cs =
-      conjuntos.length >= 3
-        ? [
-            { cx: 132, cy: 128, r: 92 },
-            { cx: 360, cy: 128, r: 92 },
-            { cx: 588, cy: 128, r: 92 },
-          ]
-        : [
-            { cx: 205, cy: 132, r: 100 },
-            { cx: 515, cy: 132, r: 100 },
-          ];
+    const cs = conjuntos.length >= 3 ? g.sep3 : g.sep2;
     conjuntos.slice(0, 3).forEach((cj, k) => {
       const c = cs[k];
       circulos.push({ ...c, nome: cj.nome, rotX: c.cx, rotY: c.cy - c.r - 12 });
@@ -108,16 +140,17 @@ export default function Conjunto({
         postos.push({ e: cj.elementos[i], p }),
       );
     });
-    altura = 258;
+    altura = g.sepAltura;
   }
 
   if (layout === 'venn') {
-    const rA = 120;
-    const rB = 120;
-    const cA = { cx: 292, cy: 148, r: rA };
-    const cB = { cx: 428, cy: 148, r: rB };
-    circulos.push({ ...cA, nome: a.nome, rotX: cA.cx - 74, rotY: cA.cy - rA - 12 });
-    circulos.push({ ...cB, nome: b.nome, rotX: cB.cx + 74, rotY: cB.cy - rB - 12 });
+    const v = g.venn;
+    const rA = v.r;
+    const rB = v.r;
+    const cA = { cx: v.cx1, cy: v.cy, r: rA };
+    const cB = { cx: v.cx2, cy: v.cy, r: rB };
+    circulos.push({ ...cA, nome: a.nome, rotX: cA.cx - v.rot, rotY: cA.cy - rA - 12 });
+    circulos.push({ ...cB, nome: b.nome, rotX: cB.cx + v.rot, rotY: cB.cy - rB - 12 });
 
     const noA = (e: Elemento) => a.elementos.some((x) => String(x) === String(e));
     const noB = (e: Elemento) => b.elementos.some((x) => String(x) === String(e));
@@ -134,21 +167,21 @@ export default function Conjunto({
       Math.hypot(p[0] - cA.cx, p[1] - cA.cy) <= rA - R_ELEM - 10 &&
       Math.hypot(p[0] - cB.cx, p[1] - cB.cy) <= rB - R_ELEM - 10;
 
-    espalhar(soA.length, cA.cx - 46, cA.cy, rA - 40, (p) => emA(p) && !emB(p)).forEach((p, i) =>
-      postos.push({ e: soA[i], p }),
+    espalhar(soA.length, cA.cx - v.desvio, cA.cy, rA - 40, (p) => emA(p) && !emB(p)).forEach(
+      (p, i) => postos.push({ e: soA[i], p }),
     );
-    espalhar(soB.length, cB.cx + 46, cB.cy, rB - 40, (p) => emB(p) && !emA(p)).forEach((p, i) =>
-      postos.push({ e: soB[i], p }),
+    espalhar(soB.length, cB.cx + v.desvio, cB.cy, rB - 40, (p) => emB(p) && !emA(p)).forEach(
+      (p, i) => postos.push({ e: soB[i], p }),
     );
-    espalhar(nos2.length, (cA.cx + cB.cx) / 2, cA.cy, 62, noMiolo).forEach((p, i) =>
+    espalhar(nos2.length, (cA.cx + cB.cx) / 2, cA.cy, v.miolo, noMiolo).forEach((p, i) =>
       postos.push({ e: nos2[i], p }),
     );
-    altura = 300;
+    altura = v.altura;
   }
 
   if (layout === 'aninhados') {
-    const cFora = { cx: L / 2, cy: 158, r: 142 };
-    const cDentro = { cx: L / 2 + 44, cy: 190, r: 68 };
+    const cFora = { cx: g.ani.fx, cy: g.ani.fy, r: g.ani.fr };
+    const cDentro = { cx: g.ani.dx, cy: g.ani.dy, r: g.ani.dr };
     circulos.push({ ...cFora, nome: a.nome, rotX: cFora.cx, rotY: cFora.cy - cFora.r - 12 });
     circulos.push({
       ...cDentro,
@@ -173,7 +206,7 @@ export default function Conjunto({
       cDentro.r,
       dentroDe(cDentro.cx, cDentro.cy, cDentro.r),
     ).forEach((p, i) => postos.push({ e: b.elementos[i], p }));
-    altura = 330;
+    altura = g.ani.altura;
   }
 
   /* os de fora ficam numa fileira no rodapé, que é onde sobra espaço em todo layout */
