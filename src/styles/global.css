@@ -794,6 +794,23 @@ pre code {
   border: 1px solid var(--tinta);
 }
 
+/* ---------- abertura da home ----------
+   A conversa com o aluno antes do mapa. Fica na serifada e um pouco maior que o
+   corpo, porque é a única parte do site em que eu falo com ele sem ser sobre
+   conta nenhuma. */
+
+.abertura {
+  max-width: 62ch;
+  font-size: 1.06rem;
+  margin-bottom: calc(var(--u) * 1.25);
+}
+.abertura p:last-child {
+  margin-bottom: 0;
+}
+.abertura i {
+  color: var(--tinta-media);
+}
+
 /* ---------- rótulo de seção da página de conceito ---------- */
 
 .rotulo-secao {
