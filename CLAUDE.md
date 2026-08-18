@@ -198,7 +198,11 @@ dezenas de páginas pra achar o que precisa. Com o público no ensino médio o
 argumento fica mais forte ainda: ele não vem cursar uma série, vem tapar um buraco.
 
 **Um assunto mora numa aula só.** A ordem do mapa é a ordem de DEPENDÊNCIA: a
-profundidade de uma aula é quantas aulas você precisa atravessar até chegar nela.
+profundidade de uma aula é quantas aulas você precisa atravessar até chegar nela,
+ou o lugar onde ela coube na fileira, o que for mais fundo — ver o teto de oito
+na seção 4. Quem desce por causa do teto nunca fica acima de um prereq, então a
+ordem de estudo continua verdadeira; o que se perde é ler a distância exata pela
+altura.
 Se um assunto for grande demais pra uma aula, ele se divide por *conteúdo*
 (círculo trigonométrico ≠ funções trigonométricas), nunca por série. Se o assunto
 couber numa aula mas tiver muita coisa dentro, quem resolve é `topicos`, não uma
@@ -379,10 +383,22 @@ conceito (`src/pages/Conceito.tsx`). Está documentado aqui porque é onde o
 
 - **y = profundidade no grafo, x = só pra desembaraçar.** É Sugiyama: camadas por
   profundidade, **nós-ponte** pras setas que pulam camadas, ordenação por mediana
-  com transposição e dezesseis partidas embaralhadas, e coordenadas por
-  regressão isotônica, cada módulo mirando na mediana dos vizinhos dos dois
-  lados. O sorteio é semeado e a lista de conceitos chega ordenada por id,
-  então o mapa sai idêntico a cada carga.
+  com transposição e 64 partidas embaralhadas, e coordenadas por regressão
+  isotônica, cada módulo mirando na mediana dos vizinhos dos dois lados. O
+  sorteio é semeado e a lista de conceitos chega ordenada por id, então o mapa
+  sai idêntico a cada carga.
+- **Nenhuma fileira passa de oito aulas.** É a fileira mais cheia que manda na
+  largura do mapa inteiro, e o mapa abre enquadrado pela largura, então cada aula
+  a mais naquela fileira encolhe o texto de todas as outras. O excedente desce
+  uma camada e quem depende dele desce junto; alto não custa nada, porque a
+  página rola. Desce quem sai mais barato, e a conta pesa 4 pro pai que fica pra
+  trás (ele vira uma seta que pula camada, e é isso que embola o desenho) contra
+  3 pro filho que desce junto. Com o teto: largura 2450 → 2112, trecho torto
+  64 → 31, e a fileira mais cheia de 12 pra 8.
+- **Camada estreita não é centrada.** Já foi, por estética, e era o que mais
+  entortava seta: uma fileira de dois módulos ia pro meio dos 2450px sem olhar
+  onde estavam os filhos dela. Tirar isso custou 43px de largura e derrubou os
+  trechos tortos de 46 pra 28.
 - **Nó-ponte é o que impede a seta de passar por cima de um módulo.** A seta longa
   ganha um ponto em cada camada intermediária, esse ponto reserva um corredor na
   fila, e a linha atravessa a fileira **na vertical** dentro dele — todo o desvio
@@ -671,10 +687,10 @@ esqueleto honesto não é conteúdo pra revisar.
 | `npm run grafo` reclama de "falta topicos" | aula sem índice remissivo. Sem ele, ninguém acha o assunto pela busca |
 | Área do mapa saiu cinza | é o 6º bloco da matéria — a paleta só tem 5 (seção 3.2). Funda dois |
 | Declarei um prereq e a seta não apareceu | ele é redundante, já vem por outro caminho. `npm run grafo` diz por qual |
-| Aula caiu fundo demais no mapa | a profundidade é a cadeia de prereqs. Provavelmente há um prereq exagerado na corrente |
+| Aula caiu fundo demais no mapa | ou há um prereq exagerado na corrente, ou a fileira dela encheu e o teto de oito a empurrou pra baixo |
 | Uma aula virou folha do grafo sem ser fim de currículo | alguém que dependia dela foi fundido ou removido. Já aconteceu com a junção |
 | Em Modo Aula sobrou um monte de título sem sentido | os títulos estão ruins: eles precisam contar a história sozinhos |
-| Primeira carga ficou lenta depois de muitas aulas | é a transposição do layout, que é quadrática. Há teto de partidas em `layout-grafo.ts` — abaixe se precisar |
+| Primeira carga ficou lenta depois de muitas aulas | é a transposição do layout, que é quadrática no número de trechos. Há escala de partidas por tamanho em `layout-grafo.ts` — abaixe se precisar (84 aulas levam 0,11 s; 600 levariam 4,5 s) |
 | CSS de um componente vazou pra outro | sem Astro não existe mais escopo. Prefixe o seletor (seção 6) |
 | Rota direta dá 404 na nuvem | é SPA: o host precisa devolver `index.html` pra qualquer caminho. Em `npm run dev` e `npm run preview` isso já funciona |
 

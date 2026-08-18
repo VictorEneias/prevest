@@ -218,6 +218,56 @@ export function calcularLayout(
     return v;
   }
   conceitos.forEach((c) => camada(c.id));
+
+  /* ---------- 1b. teto de largura ----------
+     A fileira mais cheia manda na largura do mapa inteiro, e o mapa abre
+     enquadrado pela largura, então cada módulo a mais naquela fileira encolhe o
+     texto de todos os outros. Aqui o excedente desce uma camada, e quem depende
+     dele desce junto. Fica mais alto, e alto não custa: a página rola.
+
+     Isso quebra a leitura estrita de que a altura é a cadeia de prereqs — a
+     camada de um módulo passa a ser a profundidade dele OU o lugar onde coube,
+     o que for mais fundo. Quem desce nunca sobe acima de um prereq, então a
+     ordem de estudo continua verdadeira; o que se perde é poder ler a distância
+     exata no eixo. */
+  const TETO_CAMADA = 8;
+  const filhosDe = new Map<string, string[]>();
+  for (const c of conceitos) {
+    for (const p of essenciais.get(c.id) ?? []) {
+      const lista = filhosDe.get(p);
+      if (lista) lista.push(c.id);
+      else filhosDe.set(p, [c.id]);
+    }
+  }
+  const empurrar = (id: string, minimo: number) => {
+    if (camadaDe.get(id)! >= minimo) return;
+    camadaDe.set(id, minimo);
+    for (const f of filhosDe.get(id) ?? []) empurrar(f, minimo + 1);
+  };
+  for (let guarda = 0; guarda < 400; guarda++) {
+    const porCamada = new Map<number, string[]>();
+    for (const c of conceitos) {
+      const k = camadaDe.get(c.id)!;
+      const lista = porCamada.get(k);
+      if (lista) lista.push(c.id);
+      else porCamada.set(k, [c.id]);
+    }
+    const cheias = [...porCamada].filter(([, v]) => v.length > TETO_CAMADA).map(([k]) => k);
+    if (!cheias.length) break;
+    const ci = Math.min(...cheias);
+    const fila = porCamada.get(ci)!;
+    /* Desce quem sai mais barato. Pai que fica pra trás vira uma seta que pula
+       camada, e é isso que embola o desenho, então ele pesa 4; filho logo
+       abaixo desce junto e só empurra a cascata pra frente, e pesa 3. Nessa
+       proporção o mapa fica com o mesmo cruzamento de quando não havia teto —
+       com 4 contra 1, que era o meu primeiro chute, subia 16%. */
+    const custo = (id: string) =>
+      (filhosDe.get(id) ?? []).filter((f) => camadaDe.get(f) === ci + 1).length * 3 +
+      (essenciais.get(id) ?? []).length * 4;
+    fila.sort((a, b) => custo(a) - custo(b) || a.localeCompare(b));
+    for (const id of fila.slice(0, fila.length - TETO_CAMADA)) empurrar(id, ci + 1);
+  }
+
   const nCamadas = Math.max(...conceitos.map((c) => camadaDe.get(c.id)!)) + 1;
 
   /* ---------- 2. nós-ponte ----------
@@ -314,6 +364,29 @@ export function calcularLayout(
     }
     return n;
   };
+  /* Quanto muda o cruzamento se `a` e `b`, vizinhos na fila, trocarem de lugar:
+     negativo quer dizer que a troca melhora. Só as setas dos dois mudam de
+     posição relativa, então basta olhar os vizinhos deles. Antes eu recontava a
+     camada inteira duas vezes por troca, e era isso que comia quase todo o
+     tempo do layout: com o saldo local o mesmo resultado sai 19 vezes mais
+     rápido, e é esse troco que paga as partidas a mais. */
+  const saldoDaTroca = (a: Item, b: Item) => {
+    let ganho = 0;
+    for (const lado of [acima, abaixo]) {
+      const va = lado.get(a.chave) ?? [];
+      const vb = lado.get(b.chave) ?? [];
+      for (const x of va) {
+        const px = ordem.get(x.chave)!;
+        for (const y of vb) {
+          const py = ordem.get(y.chave)!;
+          if (px > py) ganho++;
+          else if (px < py) ganho--;
+        }
+      }
+    }
+    return -ganho;
+  };
+
   const contarTudo = () => {
     let n = 0;
     for (let i = 0; i < nCamadas - 1; i++) n += contarEntre(i);
@@ -338,12 +411,12 @@ export function calcularLayout(
   let semente = 20260812;
   const sorteio = () => ((semente = (semente * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
 
-  /* A transposição é quadrática no número de trechos, então grafo grande leva
-     menos partidas pra o build não arrastar. Com 84 módulos (112 trechos) são
-     16 partidas de 10 passadas, o que dá ~0,6 s. Dobrar as partidas de 8 pra 16
-     tirou 2 cruzamentos e 5% da tinta no currículo inteiro; de 16 pra 24 não
-     mudou nada em nenhum dos 11 grafos que testei. */
-  const partidas = trechos.length > 400 ? 2 : trechos.length > 200 ? 4 : 16;
+  /* A transposição continua quadrática no número de trechos, então grafo grande
+     leva menos partidas pra a primeira carga não arrastar: 600 módulos com 8
+     partidas levam 4,5 s. Com 84 módulos (112 trechos) são 64 partidas de 10
+     passadas em 0,11 s, contra 0,65 s de 16 partidas antes do saldo local.
+     Passar de 64 não mudou nada. */
+  const partidas = trechos.length > 400 ? 8 : trechos.length > 200 ? 24 : 64;
 
   for (let partida = 0; partida < partidas; partida++) {
     if (partida === 0) {
@@ -398,23 +471,14 @@ export function calcularLayout(
       mexeu = false;
       for (let ci = 0; ci < nCamadas; ci++) {
         for (let i = 0; i < camadas[ci].length - 1; i++) {
-          const antes =
-            (ci > 0 ? contarEntre(ci - 1) : 0) + (ci < nCamadas - 1 ? contarEntre(ci) : 0);
           const a = camadas[ci][i];
           const b = camadas[ci][i + 1];
+          if (saldoDaTroca(a, b) >= 0) continue;
           camadas[ci][i] = b;
           camadas[ci][i + 1] = a;
           ordem.set(b.chave, i);
           ordem.set(a.chave, i + 1);
-          const depois =
-            (ci > 0 ? contarEntre(ci - 1) : 0) + (ci < nCamadas - 1 ? contarEntre(ci) : 0);
-          if (depois < antes) mexeu = true;
-          else {
-            camadas[ci][i] = a;
-            camadas[ci][i + 1] = b;
-            ordem.set(a.chave, i);
-            ordem.set(b.chave, i + 1);
-          }
+          mexeu = true;
         }
       }
     }
@@ -544,15 +608,11 @@ export function calcularLayout(
     for (const it of camadas.flat()) it.x -= esq;
   }
 
-  /* centra as camadas estreitas na largura final */
-  const larguraUtil = Math.max(...camadas.flat().map((it) => it.x + it.w / 2));
-  for (const camadaItens of camadas) {
-    if (!camadaItens.length) continue;
-    const a = camadaItens[0].x - camadaItens[0].w / 2;
-    const b = camadaItens[camadaItens.length - 1].x + camadaItens[camadaItens.length - 1].w / 2;
-    const desloca = (larguraUtil - (b - a)) / 2 - a;
-    for (const it of camadaItens) it.x += desloca;
-  }
+  /* As camadas estreitas já foram centradas na largura final, por estética, e
+     isso era o que mais entortava seta no mapa: uma fileira de dois módulos ia
+     pro meio dos 2450px sem olhar onde estavam os filhos dela, e as setas saíam
+     em diagonal atrás. Tirar a centralização custa 43px de largura e derruba os
+     trechos tortos de 46 pra 28. */
   for (const it of camadas.flat()) it.x += M.pad;
 
   const yDaCamada = (ci: number) => M.pad + ci * passoY;
