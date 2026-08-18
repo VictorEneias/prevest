@@ -36,6 +36,25 @@ const CTX: Record<Contexto, { unid: string; pos: string; neg: string; resultado:
   forca: { unid: ' N', pos: 'pra direita', neg: 'pra esquerda', resultado: 'Resultante' },
 };
 
+/* Os casos que eu chamo na lousa toda aula, a um clique. Cada contexto tem os
+   seus, senão em Física apareceria "dois negativos" pra falar de força. */
+const PRESETS: Record<Contexto, { nome: string; parcelas: number[] }[]> = {
+  numero: [
+    { nome: 'Positivo com negativo', parcelas: [3, -5] },
+    { nome: 'Dois negativos', parcelas: [-3, -5] },
+    { nome: 'Volta pro zero', parcelas: [7, -7] },
+    { nome: 'Atravessa o zero', parcelas: [5, -9, 2] },
+  ],
+  deslocamento: [
+    { nome: 'Ida e volta', parcelas: [40, -40] },
+    { nome: 'Anda mais do que volta', parcelas: [50, -35, 20, -5] },
+  ],
+  forca: [
+    { nome: 'Em equilíbrio', parcelas: [30, -30] },
+    { nome: 'Resultante pra direita', parcelas: [50, -20] },
+  ],
+};
+
 const L = 720;
 const A = 246;
 const Y = 178;
@@ -64,12 +83,6 @@ export default function Juncao({
   const proximoId = useRef(iniciais.length);
   const [itens, setItens] = useState(() => iniciais.map((v, i) => ({ id: i, v })));
   const parcelas = useMemo(() => itens.map((it) => it.v), [itens]);
-  const setParcelas = useCallback((f: (a: number[]) => number[]) => {
-    setItens((atual) => {
-      const novos = f(atual.map((it) => it.v));
-      return novos.map((v, i) => ({ id: atual[i]?.id ?? proximoId.current++, v }));
-    });
-  }, []);
   const [notacao, setNotacao] = useState(notacaoInicial);
   const [passo, setPasso] = useState(iniciais.length); // quantas setas exibir
   const [arrastando, setArrastando] = useState<number | null>(null);
@@ -89,7 +102,7 @@ export default function Juncao({
     if (!bruto) return;
     const vals = bruto.split(',').map(Number).filter(Number.isFinite);
     if (vals.length) {
-      setItens(vals.map((v, i) => ({ id: proximoId.current++, v })));
+      setItens(vals.map((v) => ({ id: proximoId.current++, v })));
       setPasso(vals.length);
     }
   }, [chaveUrl]);
@@ -188,6 +201,27 @@ export default function Juncao({
     setTimeout(() => setPulsando(false), 550);
   };
 
+  /* Trocar a ordem só existia no arrasto, então quem usa teclado não conseguia
+     ver a comutatividade acontecer, que é o ponto da figura. As setas só movem
+     quando o foco está no chip: dentro do <input> elas são do campo. */
+  const aoTeclarNoChip = (e: React.KeyboardEvent, i: number) => {
+    if (e.target !== e.currentTarget) return;
+    if (!permitirReordenar || agrupando) return;
+    if (e.key === 'ArrowLeft' && i > 0) mover(i, i - 1);
+    else if (e.key === 'ArrowRight' && i < parcelas.length - 1) mover(i, i + 1);
+    else return;
+    e.preventDefault();
+  };
+
+  const recomecar = (novas = iniciais) => {
+    setItens(novas.map((v) => ({ id: proximoId.current++, v })));
+    setPasso(novas.length);
+    setGrupo(null);
+    setAgrupando(false);
+    setFantasma(null);
+    setNotacao(notacaoInicial);
+  };
+
   const editar = (i: number, v: number) => {
     setItens((atual) => atual.map((it, k) => (k === i ? { ...it, v } : it)));
     setGrupo(null);
@@ -255,7 +289,15 @@ export default function Juncao({
               setAlvoSolta(i);
             }}
             onClick={() => clicarChip(i)}
-            title={permitirReordenar && !agrupando ? 'Arraste pra trocar de lugar' : undefined}
+            onKeyDown={(e) => aoTeclarNoChip(e, i)}
+            tabIndex={permitirReordenar && !agrupando ? 0 : undefined}
+            role={permitirReordenar && !agrupando ? 'button' : undefined}
+            aria-label={
+              permitirReordenar && !agrupando
+                ? `Parcela ${i + 1} de ${parcelas.length}: ${p < 0 ? 'menos' : 'mais'} ${Math.abs(p)}. Setas esquerda e direita trocam de lugar.`
+                : undefined
+            }
+            title={permitirReordenar && !agrupando ? 'Arraste ou use ← → pra trocar de lugar' : undefined}
           >
             <span className="jc-chip-sinal">{sinal(p)}</span>
             {permitirEditar ? (
@@ -487,6 +529,9 @@ export default function Juncao({
               {agrupando ? 'Sair do agrupar' : 'Agrupar'}
             </button>
           )}
+          <button onClick={() => recomecar()} className="jc-btn">
+            Recomeçar
+          </button>
           {chaveUrl && (
             <button onClick={copiarLink} className="jc-btn sutil" title="Copiar link com esta configuração">
               Copiar link
@@ -494,6 +539,16 @@ export default function Juncao({
           )}
         </div>
       </div>
+
+      {permitirEditar && (
+        <div className="jc-presets">
+          {PRESETS[contexto].map((pr) => (
+            <button key={pr.nome} className="jc-btn sutil" onClick={() => recomecar(pr.parcelas)}>
+              {pr.nome}
+            </button>
+          ))}
+        </div>
+      )}
 
       {agrupando && (
         <p className="jc-nota">Clique nas parcelas pra montar um grupo. Clique dentro do grupo pra desfazer.</p>
@@ -547,6 +602,7 @@ export default function Juncao({
         .jc-chip.alvo { transform: translateX(5px); box-shadow: -3px 0 0 var(--tinta); }
         .jc-chip.no-grupo { outline: 2px dashed var(--tinta); outline-offset: 3px; }
         .jc-chip.oculto { opacity: .28; }
+        .jc-chip:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
         .jc-chip-sinal { font-weight: 700; font-size: 1.02rem; }
         .jc-chip-num {
           width: 3.1ch; border: 0; background: transparent; color: inherit;
@@ -593,6 +649,10 @@ export default function Juncao({
         .jc-btn.destaque { border-color: var(--azul); color: var(--azul); font-weight: 600; }
         .jc-btn.destaque:hover { background: var(--azul-fraco); }
         .jc-btn.sutil { color: var(--tinta-fraca); }
+        .jc-presets {
+          display: flex; gap: 6px; flex-wrap: wrap;
+          margin-top: calc(var(--u) * 0.4);
+        }
         .jc-nota {
           font-family: var(--f-ui); font-size: 0.74rem; color: var(--tinta-fraca);
           margin: calc(var(--u) * 0.4) 0 0;
