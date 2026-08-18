@@ -13,7 +13,7 @@
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { BLOCOS, ROTULO_BLOCO } from './blocos.mjs';
-import { medirPagina, tempoDeLeitura, ehEsqueleto } from './tempo-aula.mjs';
+import { ehEsqueleto } from './tempo-aula.mjs';
 
 const DIR = 'content/conceitos';
 const SAIDA = 'PLANO-DE-AULAS.md';
@@ -58,7 +58,7 @@ for (const nome of (await readdir(DIR)).filter((n) => n.endsWith('.mdx')).sort()
     prereqs: fm.prereqs ?? [],
     topicos: fm.topicos ?? [],
     esqueleto,
-    leitura: tempoDeLeitura(medirPagina(corpo)),
+    leitura: Number(fm.tempo_leitura ?? 0),
     /* o parágrafo "Quando for, ela vai cobrir…" e a linha de falta da seção 8.3 */
     previsao: (corpo.match(/Quando for, ela vai cobrir ([\s\S]*?)\n\n/) || [, ''])[1]
       .replace(/\s+/g, ' ').trim(),
@@ -176,7 +176,8 @@ for (const b of BLOCOS) {
     if (a.subtitulo) p(`*${a.subtitulo}*`, '');
     p(a.resumo, '');
     p(`\`${a.id}\` · nível ${a.prof} · ${a.nivel} · **${a.tempo} min de aula** ` +
-      `(${a.esqueleto ? 'planejado pelos tópicos' : `medido na página, ${a.leitura} min de leitura em casa`}) · ` +
+      `e ${a.leitura} min de leitura em casa ` +
+      `(${a.esqueleto ? 'planejado pelos tópicos' : 'medido na página'}) · ` +
       `${a.topicos.length} tópicos`, '');
     p(`**Precisa de:** ${a.prereqs.length ? a.prereqs.map(t).join(', ') : 'nada, é porta de entrada'}  `);
     p(`**Destrava:** ${a.filhos.length ? a.filhos.map(t).join(', ') : 'ninguém, é fim de linha'}`, '');

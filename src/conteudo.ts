@@ -38,6 +38,7 @@ export interface Conceito {
    */
   topicos: string[];
   tempo_estimado?: number;
+  tempo_leitura?: number;
   /** Marca o rascunho na página. Só o Victor troca pra true, e só depois de
    *  refazer a conta linha por linha. */
   revisado: boolean;
@@ -75,6 +76,7 @@ export const conceitos: Conceito[] = carregar(modulosConceitos).map(({ id, fm, C
   nivel: (fm.nivel as Nivel) ?? 'medio',
   topicos: (fm.topicos as string[]) ?? [],
   tempo_estimado: fm.tempo_estimado as number | undefined,
+  tempo_leitura: fm.tempo_leitura as number | undefined,
   revisado: fm.revisado === true,
   itens_fuvest: fm.itens_fuvest as number | undefined,
   resumo: fm.resumo as string | undefined,

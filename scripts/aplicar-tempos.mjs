@@ -41,6 +41,7 @@ for (const nome of arquivos) {
     topicos,
     antes,
     esqueleto: ehEsqueleto(corpo),
+    antesLeitura: Number((fm.match(/^tempo_leitura:\s*(\d+)/m) || [])[1] ?? 0),
     medida: medirPagina(corpo),
   });
 }
@@ -56,16 +57,25 @@ aulas
   .filter((a) => a.esqueleto)
   .forEach((a) => {
     a.depois = regua(a.topicos);
+    /* esqueleto não tem página pra medir a leitura, e as duas taxas do modelo são
+       uma o dobro da outra, então a leitura dele é metade do tempo planejado */
+    a.leitura = Math.max(1, Math.round(a.depois / 2));
   });
 
 let mexidas = 0;
 for (const a of aulas) {
-  if (a.antes === a.depois) continue;
+  if (a.antes === a.depois && a.antesLeitura === a.leitura) continue;
   mexidas++;
-  await writeFile(
-    join(DIR, a.nome),
-    a.bruto.replace(/^tempo_estimado:\s*\d+/m, `tempo_estimado: ${a.depois}`),
-  );
+  const comAula = a.bruto.replace(/^tempo_estimado:\s*\d+/m, `tempo_estimado: ${a.depois}`);
+  /* o tempo_leitura entra logo abaixo do de aula, e é escrito por aqui do mesmo
+     jeito: os dois saem da mesma conta e não fazia sentido manter um à mão */
+  const comLeitura = /^tempo_leitura:/m.test(comAula)
+    ? comAula.replace(/^tempo_leitura:\s*\d+/m, `tempo_leitura: ${a.leitura}`)
+    : comAula.replace(
+        /^(tempo_estimado:\s*\d+)$/m,
+        `$1\ntempo_leitura: ${a.leitura}`,
+      );
+  await writeFile(join(DIR, a.nome), comLeitura);
 }
 
 console.log('');

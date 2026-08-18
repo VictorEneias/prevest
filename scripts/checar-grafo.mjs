@@ -103,6 +103,9 @@ for (const [, { fm, arquivo }] of conceitos) {
   if (fm.tempo_estimado !== undefined && !ehInteiroPositivo(fm.tempo_estimado)) {
     erros.push(`${arquivo}: tempo_estimado tem que ser minuto inteiro positivo`);
   }
+  if (fm.tempo_leitura !== undefined && !ehInteiroPositivo(fm.tempo_leitura)) {
+    erros.push(`${arquivo}: tempo_leitura tem que ser minuto inteiro positivo`);
+  }
   if (fm.itens_fuvest !== undefined && !/^\d+$/.test(String(fm.itens_fuvest))) {
     erros.push(`${arquivo}: itens_fuvest tem que ser número inteiro`);
   }

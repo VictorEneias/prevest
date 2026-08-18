@@ -155,9 +155,10 @@ bloco: geometria                               # a ÁREA do mapa. Máx. 5 por ma
 prereqs: [analitica-ponto, funcao-afim]        # ids que o aluno precisa ANTES. Só isto — não
                                                # existe campo inverso; os filhos são calculados
 nivel: medio                                   # base | medio — ver abaixo
-tempo_estimado: 50                             # minutos de aula. NÃO escreva à
-                                               # mão: quem preenche é o
-                                               # `npm run tempos` — ver 3.3
+tempo_estimado: 50                             # minutos de aula, e
+tempo_leitura: 25                              # minutos do aluno lendo em casa.
+                                               # NÃO escreva os dois à mão: quem
+                                               # preenche é `npm run tempos` — 3.3
 revisado: false                                # ← SEMPRE false ao criar. Ver seção 8.
 itens_fuvest: 58                               # opcional, do Raio X FUVEST
 resumo: Uma frase. Aparece na busca e no cartão do painel.
@@ -291,7 +292,9 @@ O modelo tem duas taxas, e elas vêm de fora:
 | **130 palavras por minuto** | a leitura do aluno em casa, a mesma tabela com objetivo de **entender** |
 
 Como a aula roda na metade da taxa da leitura, **a aula sempre dá o dobro do tempo
-que o aluno leva pra ler a página sozinho**, e o plano mostra os dois números.
+que o aluno leva pra ler a página sozinho**. Os dois números ficam no frontmatter e
+os dois aparecem com rótulo na ficha da página, porque um "~30 min" pelado é lido
+pelo aluno como se fosse o tempo dele, e o tempo dele é a metade.
 
 Fórmula, tabela, figura e interativo entram como palavra equivalente (12, 8, 30 e
 200), e esses quatro pesos são escolha, não medida: saem de estimar quanto cada

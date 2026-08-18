@@ -86,7 +86,10 @@ export default function Conceito({
             <b>{ROTULO_MATERIA[c.materia]}</b> · {rotuloBloco(c.bloco)}
           </span>
           <span>{NIVEL[c.nivel]}</span>
-          {c.tempo_estimado && <span>~{c.tempo_estimado} min</span>}
+          {c.tempo_estimado && <span>{c.tempo_estimado} min de aula</span>}
+          {/* o número de leitura é do aluno em casa, e sem ele o de aula era lido
+              como se fosse o tempo dele */}
+          {c.tempo_leitura && <span>{c.tempo_leitura} min de leitura</span>}
           {c.itens_fuvest !== undefined && (
             <span>
               <b>{c.itens_fuvest}</b> itens FUVEST
