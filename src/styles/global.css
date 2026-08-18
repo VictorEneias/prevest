@@ -379,14 +379,23 @@ th {
   color: var(--tinta);
 }
 
-/* ---------- a porta de entrada da home ---------- */
+/* ---------- as duas portas de entrada da home ----------
+   Uma pra quem vai começar do começo e outra pra quem chegou com uma dúvida com
+   nome. As duas juntas porque são a mesma pergunta feita de dois jeitos. */
+
+.portas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--u) * 13)), 1fr));
+  gap: var(--u);
+  margin-bottom: calc(var(--u) * 1.25);
+}
 
 .comecar {
   display: flex;
   flex-direction: column;
   gap: 3px;
   max-width: 62ch;
-  margin: 0 0 calc(var(--u) * 1.25);
+  margin: 0;
 }
 .comecar a {
   align-self: flex-start;
@@ -472,6 +481,80 @@ html[data-modo='aula'] .aula > pre {
 }
 .prereq-lista li {
   margin: 0;
+}
+
+/* ---------- índice de assuntos ----------
+   A lista do fim do livro. Três colunas por linha: o assunto procurado, a aula
+   que cobre ele, e a área, que é o que dá o contexto sem precisar clicar. */
+
+.indice-busca {
+  width: 100%;
+  max-width: calc(var(--u) * 22);
+  font-size: 1rem;
+  padding: 8px 12px;
+  margin-bottom: calc(var(--u) * 0.5);
+}
+
+.indice-grupo {
+  margin-bottom: calc(var(--u) * 1.25);
+}
+.indice-letra {
+  font-size: 0.86rem;
+  letter-spacing: 0.14em;
+  color: var(--tinta-fraca);
+  border-bottom: 1px solid var(--grade-forte);
+  padding-bottom: 3px;
+  margin: 0 0 calc(var(--u) * 0.4);
+}
+.indice-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  columns: 2;
+  column-gap: calc(var(--u) * 1.5);
+}
+.indice-lista li {
+  margin: 0;
+  break-inside: avoid;
+}
+.indice-lista a {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--u) * 0.4);
+  padding: 3px 6px;
+  border-radius: var(--raio);
+  text-decoration: none;
+  color: var(--tinta);
+  font-family: var(--f-ui);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+.indice-lista a:hover {
+  background: var(--azul-fraco);
+}
+.indice-topico {
+  flex: 1;
+}
+.indice-aula {
+  color: var(--tinta-media);
+  font-size: 0.76rem;
+  text-align: right;
+}
+.indice-area {
+  flex: none;
+  width: calc(var(--u) * 4);
+  color: var(--tinta-fraca);
+  font-size: 0.7rem;
+  text-align: right;
+}
+
+@media (max-width: 720px) {
+  .indice-lista {
+    columns: 1;
+  }
+  .indice-area {
+    display: none;
+  }
 }
 
 /* ---------- tópicos da aula ----------
@@ -677,6 +760,9 @@ pre code {
     gap: 3px;
   }
   .mapa-botoes button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-family: var(--f-ui);
     font-size: 0.72rem;
     border: 1px solid var(--linha);

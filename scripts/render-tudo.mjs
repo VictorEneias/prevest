@@ -34,7 +34,7 @@ try {
   const { ProvedorAula } = await vite.ssrLoadModule('/src/estado.tsx');
   const { conceitos } = await vite.ssrLoadModule('/src/conteudo.ts');
 
-  const rotas = ['/', ...conceitos.map((c) => `/conceitos/${c.id}`)];
+  const rotas = ['/', '/indice', ...conceitos.map((c) => `/conceitos/${c.id}`)];
 
   console.log('');
   for (const rota of rotas) {

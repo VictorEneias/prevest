@@ -43,14 +43,25 @@ export default function Home() {
         </p>
       </div>
 
-      {comeco && (
+      <div className="portas">
+        {comeco && (
+          <p className="comecar">
+            <Link to={`/conceitos/${comeco.id}`}>
+              Começar por {comeco.titulo} <span aria-hidden="true">→</span>
+            </Link>
+            {comeco.resumo && <span>{comeco.resumo}</span>}
+          </p>
+        )}
         <p className="comecar">
-          <Link to={`/conceitos/${comeco.id}`}>
-            Começar por {comeco.titulo} <span aria-hidden="true">→</span>
+          <Link to="/indice">
+            Procurar um assunto <span aria-hidden="true">→</span>
           </Link>
-          {comeco.resumo && <span>{comeco.resumo}</span>}
+          <span>
+            Se você já sabe o nome do que está travando, o índice leva direto na aula que
+            cobre.
+          </span>
         </p>
-      )}
+      </div>
 
       <p className="nota-secao" style={{ maxWidth: '62ch' }}>
         Cada caixa é um módulo e cada seta é um pré-requisito. Quanto mais embaixo, mais coisa

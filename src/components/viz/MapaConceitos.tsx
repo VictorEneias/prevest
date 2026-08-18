@@ -2,7 +2,11 @@ import { useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { conceitos } from '../../conteudo';
 import { calcularLayout, vizinhanca, type ConceitoBruto } from '../../lib/layout-grafo';
-import { ROTULO_MATERIA, type Materia } from '../../lib/curriculo';
+import type { Materia } from '../../lib/curriculo';
+
+/** O aluno digita "distancia de ponto a reta", sem acento e em minúscula. */
+const semAcento = (s: string) =>
+  s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
 /**
  * <MapaConceitos /> — o grafo de conceitos desenhado. Sem `foco` sai o
@@ -37,7 +41,7 @@ export default function MapaConceitos({
   const telaRef = useRef<HTMLDivElement>(null);
   const buscaRef = useRef<HTMLInputElement>(null);
 
-  const { mapa, rotulosArea, materias, caixas, pais, filhos } = useMemo(() => {
+  const { mapa, rotulosArea, caixas, pais, filhos, buscavel } = useMemo(() => {
     const todos: ConceitoBruto[] = conceitos.map((c) => ({
       id: c.id,
       titulo: c.titulo,
@@ -68,12 +72,12 @@ export default function MapaConceitos({
       return { ...a, rx: x, ry: topo - 16 };
     });
 
-    /* Caixa de cada matéria, pros botões de enquadrar. */
-    const materias = [...new Set(mapa.nos.map((n) => n.materia))] as Materia[];
+    /* Caixa de cada área, pros botões de enquadrar. */
     const caixas: Record<string, { x0: number; x1: number; y0: number; y1: number }> = {};
-    for (const m of materias) {
-      const seus = mapa.nos.filter((n) => n.materia === m);
-      caixas[m] = {
+    for (const a of mapa.areas) {
+      const seus = mapa.nos.filter((n) => n.materia === a.materia && n.bloco === a.bloco);
+      if (!seus.length) continue;
+      caixas[`${a.materia}/${a.bloco}`] = {
         x0: Math.min(...seus.map((n) => n.x)) - 30,
         x1: Math.max(...seus.map((n) => n.x + n.w)) + 30,
         y0: Math.min(...seus.map((n) => n.y)) - 40,
@@ -81,7 +85,15 @@ export default function MapaConceitos({
       };
     }
 
-    return { mapa, rotulosArea, materias, caixas, pais, filhos };
+    /* O que a busca varre. Os tópicos são o motivo de isso existir: sem eles a
+       busca só acha quem tem a palavra no título, e "distância de ponto a reta"
+       não é título de aula nenhuma. */
+    const buscavel: Record<string, string> = {};
+    for (const c of conceitos) {
+      buscavel[c.id] = semAcento([c.titulo, c.resumo ?? '', ...c.topicos].join(' · '));
+    }
+
+    return { mapa, rotulosArea, caixas, pais, filhos, buscavel };
   }, [foco, raio]);
 
   const vazio = mapa.nos.length === 0;
@@ -216,7 +228,7 @@ export default function MapaConceitos({
     /* ---------- busca ---------- */
     const busca = buscaRef.current;
     const aoBuscar = () => {
-      const q = (busca?.value ?? '').trim().toLowerCase();
+      const q = semAcento((busca?.value ?? '').trim());
       if (!q) {
         nos.forEach((n) => n.classList.remove('apagada', 'acesa'));
         abertura();
@@ -224,7 +236,7 @@ export default function MapaConceitos({
       }
       const casam: HTMLElement[] = [];
       nos.forEach((n) => {
-        const casa = (n.textContent ?? '').toLowerCase().includes(q);
+        const casa = (buscavel[n.dataset.no!] ?? '').includes(q);
         n.classList.toggle('apagada', !casa);
         n.classList.toggle('acesa', casa);
         if (casa) casam.push(n);
@@ -279,7 +291,7 @@ export default function MapaConceitos({
       clearTimeout(redim);
       observador.disconnect();
     };
-  }, [mapa, pais, filhos, caixas, vazio]);
+  }, [mapa, pais, filhos, caixas, buscavel, vazio]);
 
   return (
     <div
@@ -295,13 +307,22 @@ export default function MapaConceitos({
             placeholder="Buscar módulo…"
             aria-label="Buscar módulo no mapa"
           />
-          <div className="mapa-botoes" role="group" aria-label="Enquadrar">
+          {/* Os botões de área são a legenda também: a bolinha diz a cor e o
+              clique enquadra. Com 84 aulas, ver uma área de cada vez é o que
+              torna o mapa navegável. */}
+          <div className="mapa-botoes" role="group" aria-label="Enquadrar uma área">
             <button type="button" data-enquadrar="tudo">
               Tudo
             </button>
-            {materias.map((m) => (
-              <button key={m} type="button" data-enquadrar={m}>
-                {ROTULO_MATERIA[m]}
+            {mapa.areas.map((a) => (
+              <button
+                key={`${a.materia}-${a.bloco}`}
+                type="button"
+                data-enquadrar={`${a.materia}/${a.bloco}`}
+                data-slot={a.slotCor}
+              >
+                <span className="mapa-legenda-cor" aria-hidden="true" />
+                {a.rotulo}
               </button>
             ))}
           </div>
@@ -397,15 +418,9 @@ export default function MapaConceitos({
 
           {controles && (
             <ul className="mapa-legenda">
-              {mapa.areas.map((a) => (
-                <li key={`${a.materia}-${a.bloco}`} data-slot={a.slotCor}>
-                  <span className="mapa-legenda-cor" aria-hidden="true" />
-                  {a.rotulo}
-                </li>
-              ))}
               <li className="mapa-legenda-rascunho">
                 <span className="mapa-legenda-cor" aria-hidden="true" />
-                rascunho
+                contorno tracejado é aula em rascunho
               </li>
             </ul>
           )}

@@ -5,6 +5,7 @@ import { componentesMDX } from './components/mdx';
 import { useAula, type ItemPilha } from './estado';
 import Conceito, { PaginaConceito } from './pages/Conceito';
 import Home from './pages/Home';
+import Indice from './pages/Indice';
 
 /**
  * O cromo da aula: topo com os modos, as rotas, e a pilha de painéis por cima.
@@ -27,6 +28,7 @@ export default function App() {
         <Link to="/" className="marca">
           Pré-vestibular
         </Link>
+        <Link to="/indice">Índice de assuntos</Link>
         <span className="espaco" />
         <div className="barra-modo" role="group" aria-label="Modo de exibição">
           <button onClick={() => trocarModo('estudo')} aria-pressed={modo === 'estudo'}>
@@ -44,6 +46,7 @@ export default function App() {
       <main id="conteudo">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/indice" element={<Indice />} />
           <Route path="/conceitos/:id" element={<PaginaConceito />} />
           <Route path="*" element={<NaoAchei />} />
         </Routes>
