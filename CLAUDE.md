@@ -10,6 +10,16 @@ qualquer arquivo em `content/`.
 Material de aula presencial 1-a-1 para pré-vestibular (FUVEST), Matemática e
 Física. Roda em localhost num notebook levado à casa do aluno.
 
+**O aluno está no ensino médio.** Ou prestando vestibular, ou tentando acompanhar
+a escola. Isso é premissa de projeto e não frase pra escrever na página: nada de
+"isso cai muito em vestibular" nem de "agora que você está no ensino médio". O que
+a premissa decide é o que entra no currículo (ele já arma conta, então não existe
+aula de armar conta) e o tom (nada de falar com ele como se fosse criança, nem nos
+assuntos mais simples).
+
+O que fica do fundamental é o que ele executa sem entender e que trava o resto:
+junção, esticamento, fração. O que sai é o que ele já faz sozinho.
+
 **O site é ~5% do trabalho. Os outros 95% são o conteúdo.** Toda decisão técnica
 é julgada por uma pergunta só: *isso reduz o atrito de escrever conteúdo?* Se a
 resposta for não, não faça.
@@ -46,21 +56,18 @@ material de aula 1-a-1 em localhost isso não muda nada.
 
 ```
 content/                 ← O ATIVO. Fora de src/ de propósito.
-  conceitos/*.mdx          Se um dia trocar de stack, esta pasta migra intacta.
-  exercicios/*.mdx
+  conceitos/*.mdx          Uma aula = um arquivo. Se um dia trocar de stack,
+                           esta pasta migra intacta.
 index.html               ← a casca; o app monta em #raiz
 vite.config.ts           ← MDX + KaTeX na compilação, e o providerImportSource
 src/
   main.tsx                 entrypoint: BrowserRouter + ProvedorAula
   App.tsx                  topo, rotas, pilha de painéis, MDXProvider
-  estado.tsx               modo, tamanho da fonte, pilha, atalhos de teclado
+  estado.tsx               modo, tamanho da fonte, pilha, atalhos, título da aba
   conteudo.ts            ← o índice: import.meta.glob dos .mdx + frontmatter
   components/
     C.tsx                  elo de pré-requisito
-    Questao.tsx            múltipla escolha com correção na hora
     mdx.tsx                a lista do que o MDX pode usar sem import
-    camadas/*.tsx          Explicacao (prosa), Curiosidade, Dica, Resolucao,
-                           Pensamento, Erros
     viz/
       Juncao.tsx           interativo de sinal
       RetaZoom.tsx         interativo de escala
@@ -71,14 +78,27 @@ src/
     layout-grafo.ts        o Sugiyama, TS puro, roda em node sem o app
     curriculo.ts           áreas, rótulos e cores
   pages/
-    Home.tsx               o mapa inteiro
+    Home.tsx               as duas portas de entrada e o mapa inteiro
+    Indice.tsx             o índice remissivo: todo tópico de toda aula
     Conceito.tsx           serve de página e de conteúdo de painel
-    Exercicio.tsx
   styles/global.css      ← todo o CSS do site, sem escopo
 scripts/
   checar-grafo.mjs       ← npm run grafo
   render-tudo.mjs        ← npm run paginas
 ```
+
+### Uma aula é um arquivo de prosa
+
+Não existe componente de camada. A aula é markdown: parágrafo, título, tabela,
+fórmula, e os componentes de visualização soltos no meio. Existiu uma estrutura
+de blocos (`<Explicacao>`, `<Curiosidade>`, `<Resolucao>`, `<Pensamento>`,
+`<Erros>`, `<Questao>`) e ela saiu em agosto de 2026, porque obrigava o texto a
+saber em que caixa morava: pra escrever um parágrafo eu tinha que decidir antes
+se aquilo era explicação ou curiosidade, e cada decisão dessas era uma chance de
+empacotar errado.
+
+O que era `<Curiosidade rotulo="X">` hoje é `### X`. O que era `<Erros>` hoje é
+`### Onde o pessoal escorrega`. O conteúdo é o mesmo.
 
 ### Comandos
 
@@ -86,7 +106,7 @@ scripts/
 |---|---|
 | `npm run dev` | **é isso que roda na casa do aluno**, na porta 4321 |
 | `npm run grafo` | frontmatter inválido, elo morto, ciclo, prereq redundante, teto de 5 áreas |
-| `npm run paginas` | renderiza as 76 páginas no node e diz qual quebrou |
+| `npm run paginas` | renderiza as 86 páginas no node e diz qual quebrou |
 | `npm run check` | `tsc --noEmit` |
 | `npm run build` | gera `dist/` — só serve pra publicar na nuvem |
 
@@ -102,23 +122,57 @@ renderiza. Sem eles, componente escrito errado no MDX só aparece na hora da aul
 Cada conceito atômico é um `.mdx` em `content/conceitos/`. O nome do arquivo é o
 `id`. Sempre kebab-case, sem acento: `juncao.mdx`, `geometria-plana-areas.mdx`.
 
-### Frontmatter de conceito
+### Frontmatter de aula
 
 ```yaml
 ---
-titulo: Junção
-subtitulo: Por que a subtração não existe   # opcional, uma linha
-materia: matematica                          # matematica | fisica
-bloco: aritmetica                            # a ÁREA do mapa. Máx. 5 por matéria — ver 3.1
-prereqs: [reta-numerica]                     # ids que o aluno precisa ANTES. Só isto — não
-                                             # existe campo inverso; os filhos são calculados
-nivel: fundamento                            # fundamento | basico | medio | avancado
-tempo_estimado: 45                           # minutos de aula
-revisado: false                              # ← SEMPRE false ao criar. Ver seção 8.
-itens_fuvest: 58                             # opcional, do Raio X FUVEST
+titulo: A reta no plano
+subtitulo: Toda reta cabe numa equação        # opcional, uma linha
+materia: matematica                            # matematica | fisica
+bloco: geometria                               # a ÁREA do mapa. Máx. 5 por matéria — ver 3.2
+prereqs: [analitica-ponto, funcao-afim]        # ids que o aluno precisa ANTES. Só isto — não
+                                               # existe campo inverso; os filhos são calculados
+nivel: medio                                   # base | medio — ver abaixo
+tempo_estimado: 50                             # minutos de aula
+revisado: false                                # ← SEMPRE false ao criar. Ver seção 8.
+itens_fuvest: 58                               # opcional, do Raio X FUVEST
 resumo: Uma frase. Aparece na busca e no cartão do painel.
+topicos:                                       # ← o índice remissivo. Obrigatório.
+  - coeficiente angular
+  - distância de ponto a reta
+  - retas perpendiculares
 ---
 ```
+
+**`nivel` tem dois valores.** `base` é revisão de fundamental que ficou no
+currículo porque trava o resto; `medio` é conteúdo de ensino médio. Não existe
+mais fundamento/basico/medio/avancado: com o público definido, o que o aluno
+precisa saber é se está tapando buraco ou aprendendo coisa nova.
+
+### `topicos` é o que faz o aluno achar o assunto
+
+Este campo resolve o problema que o grafo sozinho não resolve. O mapa tem 84
+aulas e serve pra ver como o curso se encaixa; ele não serve pra quem chega com
+uma dúvida com nome. Quem procura "distância de ponto a reta" ia percorrer a
+linha de geometria, não achar nada com esse nome e sair fora.
+
+A saída foi separar as duas granularidades:
+
+- **o nó do grafo** é uma aula de 25 a 55 minutos, e são 84;
+- **os tópicos** são o que cada aula cobre por dentro, e são 754.
+
+Os tópicos viram a página `/indice` (ordem alfabética, filtro que ignora acento),
+a busca do mapa e a lista "o que tem nesta aula" no topo da página. É a mesma
+distinção entre o sumário e o índice remissivo de um livro.
+
+Escreva o tópico **como o aluno diria**, não como o livro escreveu o capítulo:
+"menos com menos dá mais" é um tópico legítimo, e é assim que alguém procura.
+Entre 6 e 13 por aula. Termo genérico demais (`grau`, `mediana`, `condição de
+existência`) precisa de qualificação, senão o índice fica ambíguo: use "grau do
+polinômio", "mediana do triângulo".
+
+**Tópico declarado é promessa.** Se a aula não cobre aquilo, ou o tópico sai ou a
+nota de "falta" no fim da página diz que aquela parte ainda não foi escrita.
 
 **Regras do grafo:**
 
@@ -140,12 +194,19 @@ resumo: Uma frase. Aparece na busca e no cartão do painel.
 Foi tentado e **descartado de propósito**. A escola ensina fração no 6º ano e de
 novo, mais fundo, no 8º; dividir por ano obrigaria a criar módulos incrementais do
 mesmo assunto, e o aluno adiantado que vem tapar um buraco teria que atravessar
-dezenas de páginas pra achar o que precisa.
+dezenas de páginas pra achar o que precisa. Com o público no ensino médio o
+argumento fica mais forte ainda: ele não vem cursar uma série, vem tapar um buraco.
 
-**Um assunto mora num módulo só.** A ordem do mapa é a ordem de DEPENDÊNCIA:
-a profundidade de um módulo é quantos módulos você precisa atravessar até chegar
-nele. Se um assunto for grande demais pra uma página, ele se divide por *conteúdo*
-(círculo trigonométrico ≠ funções trigonométricas), nunca por série.
+**Um assunto mora numa aula só.** A ordem do mapa é a ordem de DEPENDÊNCIA: a
+profundidade de uma aula é quantas aulas você precisa atravessar até chegar nela.
+Se um assunto for grande demais pra uma aula, ele se divide por *conteúdo*
+(círculo trigonométrico ≠ funções trigonométricas), nunca por série. Se o assunto
+couber numa aula mas tiver muita coisa dentro, quem resolve é `topicos`, não uma
+aula nova.
+
+**O corte de tamanho é 25 a 55 minutos.** Passou muito disso, divide. A aula de
+frações tem 70 e é a exceção conhecida: ela junta divisibilidade, MMC e MDC de
+propósito, porque esses três existem pra você conseguir mexer com fração.
 
 ### 3.2 `bloco` é a área, e ela tem teto de cinco
 
@@ -200,7 +261,7 @@ escreva `import` em arquivo de conteúdo. Nunca.
 ### `<C id="...">texto</C>` — elo de pré-requisito
 
 ```mdx
-Logaritmo é a pergunta invertida da <C id="potenciacao">potenciação</C>.
+Logaritmo é a pergunta invertida da <C id="potencias">potência</C>.
 ```
 
 Não navega: abre um painel por cima, e os painéis **empilham**. Serve pro momento
@@ -211,58 +272,24 @@ Use quando o texto menciona um conceito que é pré-requisito real. **Não** enc
 texto de elos — 3 a 6 por página é o razoável. Elo demais vira ruído e o aluno
 para de clicar.
 
-### Camadas — o que some no Modo Aula
+### O Modo Aula, sem componente nenhum
 
-| Componente | Retrátil? | Some em aula? | Serve pra |
-|---|---|---|---|
-| `<Explicacao>` | **não** — prosa estática | sim, sempre | a teoria escrita |
-| `<Curiosidade rotulo="...">` | sim, nasce fechada | sim | um aparte opcional: a demonstração / o *porquê* que o aluno abre só se quiser |
-| `<Dica n={1\|2\|3}>` | sim, sempre fechada | sempre fechada | a escada de dicas |
-| `<Resolucao>` | sim | sim | as contas |
-| `<Pensamento>` | sim | sim | o raciocínio antes da conta |
-| `<Erros>` | sim | sim | as armadilhas |
+Em Modo Aula o site esconde `p`, `ul`, `ol`, `table`, `blockquote` e `pre` que
+estejam dentro de `.aula`. Sobram os títulos, as fórmulas em bloco e as figuras,
+que é o esqueleto que eu quero projetado enquanto explico. O texto continua no
+arquivo pro aluno reler em casa.
 
-**`<Explicacao>` NÃO é mais uma caixa retrátil.** É texto corrido: no Modo Estudo
-aparece como prosa normal, sem rótulo e sem clique; no Modo Aula some inteiro.
-Nada de empilhar "Exemplo 2" como rótulo de camada — pra rotular um exemplo, use
-um título de verdade (`### Exemplo 2`), que sobrevive no Modo Aula.
+Isso é CSS puro, em `global.css`. O `.mdx` não sabe que existem dois modos, e é
+por isso que escrever conteúdo ficou mais simples: escreve parágrafo e pronto.
 
-As outras camadas continuam retráteis (`<details>`). Em página **não revisada**
-elas somem no Modo Aula (portão da seção 8.1); em página revisada, colapsam pro
-rótulo. `<Explicacao>`, por ser prosa, some no Modo Aula sempre — revisada ou não.
+**A consequência prática pra quem escreve:** título e figura sobrevivem em aula,
+prosa não. Então a estrutura de títulos de uma aula tem que fazer sentido sozinha,
+lida de cima a baixo, sem o texto no meio. Se ao esconder a prosa a página vira
+uma lista de títulos que não conta história nenhuma, os títulos estão ruins.
 
-**Regra de ouro da estrutura de página:** títulos (`##`, `###`) e componentes
-(o interativo `<Juncao>`, a figura estática `<Setas>`) ficam FORA das camadas; a
-prosa fica DENTRO de `<Explicacao>`. Assim, em Modo Aula a página vira o esqueleto
-de títulos + gráficos, e quem explica é o Victor. O texto continua ali pro aluno
-reler em casa no Modo Estudo.
-
-```mdx
-## O primeiro ganho: a ordem parou de importar
-
-<Explicacao>
-Prosa aqui — some em Modo Aula.
-</Explicacao>
-
-<Juncao parcelas={[5, -8, 3, 2]} titulo="Comutatividade" />
-
-<Explicacao>
-Mais prosa comentando o que acabou de acontecer no gráfico.
-</Explicacao>
-```
-
-### `<Curiosidade rotulo="...">` — o aparte que abre se quiser
-
-O único bloco de texto que continua retrátil de propósito. Serve pra demonstração,
-dedução ou "de onde vem isso" — coisa que enriquece mas não pode travar quem só
-quer seguir o fio. Nasce fechada nos dois modos; o aluno clica pra abrir. Como
-é camada, respeita o portão de revisão (some no Modo Aula de página não revisada).
-
-```mdx
-<Curiosidade rotulo="Curiosidade — de onde vem o truque">
-A dedução completa aqui. Pode ter LaTeX, $$bloco$$, o que precisar.
-</Curiosidade>
-```
+Uma consequência que vale saber: o portão da seção 8.1 agia escondendo as camadas
+em Modo Aula, e sem camadas ele deixou de existir como mecanismo. O que sobrou é
+o selo de rascunho na página. A regra de nunca marcar `revisado: true` continua.
 
 ### `<Setas />` — a figura ESTÁTICA de junção
 
@@ -385,40 +412,6 @@ conceito (`src/pages/Conceito.tsx`). Está documentado aqui porque é onde o
   escolher um pai primário por nó e desenhar só aquela aresta. Nem o componente,
   nem a home, nem a página de conceito mudam.
 
-### `<Questao />` — múltipla escolha com correção na hora
-
-Fecha o módulo de um conceito. O aluno clica numa alternativa: acertou fica verde
-com ✓, errou fica vermelho com ✗ e a correta é apontada com uma seta tracejada. Nos
-dois casos o gabarito abre embaixo.
-
-```mdx
-<Questao n={1} correta="b" alternativas={["$-11$", "$-3$", "$3$", "$11$"]}>
-
-Qual é o resultado de $-7 + 4$ ?
-
-<div slot="gabarito">
-
-O passo a passo aqui. Markdown normal, LaTeX, e pode chamar <Setas /> dentro.
-
-</div>
-
-</Questao>
-```
-
-- **`correta`** é a letra (`"a"`..`"e"`). Se apontar pra alternativa que não existe,
-  a questão é trocada por uma **caixa vermelha de defeito** e o `npm run paginas`
-  falha. Gabarito errado em aula é o pior defeito possível, então ele grita em vez
-  de passar batido.
-- **`alternativas`** aceita de 2 a 5. Trechos entre `$...$` viram LaTeX; o resto é
-  texto (`"Nenhuma das anteriores"` funciona).
-- O **enunciado é o slot padrão**; o gabarito vai num `<div slot="gabarito">`, com
-  linha em branco depois da abertura pra o Markdown de dentro ser parseado.
-- O gabarito respeita o **portão da seção 8.1**: some no Modo Aula enquanto a página
-  for `revisado: false`.
-- Verde/vermelho é o par que daltônico deutan/protan **não** distingue, por isso
-  todo estado carrega glifo (✓ ✗ ←) e uma frase no veredito. Se mexer no
-  componente, a cor continua sendo reforço — nunca a informação sozinha.
-
 ---
 
 ## 5. Como escrever conteúdo — a voz
@@ -492,22 +485,25 @@ Quando o Victor mandar o texto cru dele, **aproveite as frases literais** e mexa
 só no necessário pra caber na estrutura de camadas. Reescrever o que já estava na
 voz certa é retrabalho que piora.
 
-### A seção `<Pensamento>` é o ativo mais valioso do projeto
+### O raciocínio antes da conta é o ativo mais valioso do projeto
 
 Todo cursinho tem resolução. Quase nenhum tem o raciocínio **antes** da conta.
 
-Escreva em primeira pessoa, como o Victor pensando em voz alta:
+Quando ele aparecer numa aula, escreva em primeira pessoa, como o Victor pensando
+em voz alta:
 - o que olhei primeiro no enunciado
 - o que eu descartei, e por quê
 - como eu soube que esse era o caminho
 - o que eu faria se o aluno errasse *desse* jeito específico
 
-Não é resumo da resolução. Se o `<Pensamento>` só reconta os passos, está errado.
+Não é resumo da resolução. Se ele só reconta os passos, está errado.
 
-### `<Erros>`
+### `### Onde o pessoal escorrega`
 
-Escreva o erro **do jeito que o aluno comete**, não do jeito certo. Mostre a linha
-errada. Depois diga qual conceito está faltando — não qual regra foi violada.
+A seção de erros de uma aula. Escreva o erro **do jeito que o aluno comete**, não
+do jeito certo: mostre a linha errada, com a conta que ela dá. Depois diga qual
+conceito está faltando, não qual regra foi violada. A aula de junção tem o
+exemplo calibrado.
 
 ### 5.1 Comentário de código é escrito na mesma voz
 
@@ -553,15 +549,13 @@ visual, e não de um componente, mora em `global.css`.
 
 **Texto com LaTeX só chega montado se vier como children.** `$...$` vira fórmula no
 pipeline do MDX, então prop de string **não** passa por ele. Se o componente precisa
-receber texto matemático, receba `children` (é o que o `<Questao>` faz com o
-enunciado e com o gabarito). Quando a string é inevitável, como nas alternativas do
-`<Questao>`, aí o componente chama o KaTeX na mão — e é o único lugar do site que
-faz isso.
+receber texto matemático, receba `children`. Quando a string for inevitável, o
+componente tem que chamar o KaTeX na mão, o que é chato e vale evitar: o `<Questao>`
+fazia isso nas alternativas e era o único lugar do site que precisava.
 
-**Slot nomeado não existe em React**, e o `<Questao>` precisava de um pro gabarito.
-A saída foi filtrar `children` por `props.slot === 'gabarito'`, então o MDX continua
-escrevendo `<div slot="gabarito">` igual antes. Se precisar de um segundo bloco
-nomeado em outro componente, siga esse mesmo caminho em vez de inventar prop.
+**Slot nomeado não existe em React.** Se um componente precisar de um segundo bloco
+nomeado, o caminho é filtrar `children` por `props.slot === 'nome'`, e o MDX escreve
+`<div slot="nome">`. Era assim que o gabarito do `<Questao>` entrava.
 
 ### Checklist de todo componente de visualização
 
@@ -590,126 +584,50 @@ quadrática, exponencial, logaritmo, modular e trigonometria — e a mesma estru
 
 ---
 
-## 7. Exercícios
+## 7. Exercícios (fora do ar por enquanto)
 
-Arquivo em `content/exercicios/`. Nome: `{conceito}-{nivel}{n}.mdx` →
-`juncao-a01.mdx`, `geometria-plana-b03.mdx`.
+Não existe exercício no site. `content/exercicios/`, a rota, a página e o
+`<Questao>` foram removidos em agosto de 2026, junto com as camadas, porque o
+projeto precisava de estrutura simples enquanto o currículo era refeito.
 
-```yaml
----
-fonte: FUVEST 2019 — 1ª fase, Q42     # ou "Autoral"
-assuntos: [juncao, termos-semelhantes] # ids de conceitos, o primeiro é o principal
-nivel: B                               # A=mecânica | B=vestibular | C=integração
-tempo_alvo: 4                          # minutos
-revisado: false
-gabarito: "-4"
----
-```
+Quando voltarem, o formato de resolução a retomar é este, que funcionou nos três
+exercícios de junção que existiram:
 
-Estrutura fixa do corpo, nesta ordem:
+1. **Reler** — o que o enunciado está pedindo, antes de qualquer conta.
+2. **Onde olhar** — aponta um dado específico, sem dizer o que fazer com ele.
+3. **Qual ferramenta** — nomeia o que usar, sem aplicar.
+4. **Resolução** — as contas, no padrão da seção 7.1.
+5. **Como eu penso** — o raciocínio *antes* da conta: o que olhei primeiro, o que
+   descartei e por quê. É a parte que ninguém publica.
+6. **Erros comuns** — o erro do jeito que o aluno comete, com a linha errada.
 
-```mdx
-## Enunciado
-...
+**Nem todo exercício merece os seis degraus.** Exercício de junção é simples
+demais pra tanta cerimônia: ali cabe enunciado, resposta e talvez o erro comum.
+Os seis são pro exercício que aguenta, que é o de vestibular e o de integração.
 
-<Dica n={1}>relê o enunciado / o que o problema está pedindo</Dica>
-<Dica n={2}>aponta um dado específico, sem dizer o que fazer com ele</Dica>
-<Dica n={3}>nomeia a ferramenta, sem aplicar</Dica>
-
-<Resolucao>as contas</Resolucao>
-<Pensamento>o raciocínio antes das contas</Pensamento>
-<Erros>as armadilhas</Erros>
-```
-
-**Nenhuma dica pode entregar a resposta.** As três dicas são a escada que o Victor
-usa em aula, materializada: nem ele nem o aluno consegue pular direto pro fim,
-porque tem que clicar em cada degrau. Isso vira disciplina estrutural em vez de
-força de vontade.
-
-Os níveis:
-- **A** — mecânica pura, 5–8 por conceito, fixa o procedimento
-- **B** — vestibular padrão, o corpo do treino
-- **C** — 1–2 por conceito, combina com algo anterior. É o que separa quem passa
-  de quem quase passa; a FUVEST raramente cobra um tópico isolado.
-
-### 7.1 Como se escreve um gabarito — o padrão
-
-Vale pro `slot="gabarito"` do `<Questao>` e pra toda `<Resolucao>`. Calibrado
-contra sete páginas do caderno do Victor (EDO, convolução, modelagem de tanques).
-
-**O ritmo é rótulo curto + conta. Alternando apertado.** Não é parágrafo de prosa
-com a fórmula no meio — esse é o erro clássico, e ele deixa o gabarito com cara de
-apostila.
-
-```
-Reescrevendo cada número com o sinal que é dele:      ← rótulo, 6 palavras, dois-pontos
-
-$$
--7 + 4 \;=\; (-7) + (+4)                              ← a conta, em bloco
-$$
-
-Como o 4 é menor que o 7, eu não chego no zero:       ← só o passo que não é óbvio
-
-$$
-(-7) + (+4) = -3
-$$
-```
-
-Os movimentos que ele faz, em ordem de importância:
-
-1. **Rótulo antes de cada conta, terminado em dois-pontos.** Diz o que ele está
-   prestes a fazer, não o que a conta significa. É curto: *"logo nossa eq.
-   característica:"*, *"Multiplicando por $Ce^{\sigma t}$:"*, *"Trocando $\tau$ por
-   $t-\tau$:"*, *"Então substituindo nas equações temos:"*, *"Ou seja:"*, *"Com:"*.
-2. **Modelo em palavras antes do símbolo**, quando a questão é de modelagem.
-   Ele escreveu literalmente `Água no tanque = Água que entrou − Água que saiu`
-   e só depois virou integral. Faça isso sempre que der: é o passo que o aluno
-   nunca vê em lugar nenhum.
-3. **Anuncia a estratégia antes de executar**, quando o caminho não é óbvio:
-   *"por sabermos que $y(t)$ tem o formato $c\,e^{\lambda t}$, trocamos o `c` por
-   uma função genérica $v(t)$, jogamos isso na EDO e vemos o que ela nos devolve"*.
-4. **Justifica só o passo que trava**, em meia linha, e segue: *"Como uma
-   exponencial nunca é 0, então $v''=0$"*. Não justifique o que é mecânico.
-5. **Orienta no meio do caminho** quando a resolução é longa: *"Mas ainda não
-   acabamos."*
-6. **Reaproveita em vez de repetir**: *"Similarmente, para o segundo tanque:"*,
-   *"E usando a mesma lógica para os itens b) e c)"*.
-7. **Encadeia com `→` na mesma linha** quando o passo é puramente mecânico:
-   $h_1 = 5r_1 \to \frac{dh_1}{dt} = 5\frac{dr_1}{dt}$.
-8. **Destaca o resultado final** com uma linha própria e um rótulo curto
-   (ele desenha uma caixa no caderno).
-
-**Primeira pessoa, mas econômica.** Ele escreve "trocamos", "jogamos", "vemos",
-"eu paro". Não é narração de cada respiração — é um colega apontando pro papel.
-
-**Não é `<Pensamento>`.** O `<Pensamento>` é a estratégia *antes* de escolher o
-caminho (o que descartei e por quê). O gabarito é a execução, com o mínimo de
-narração pra ela não virar uma parede de fórmulas.
-
-**Calibre o tamanho pelo assunto.** Conta de duas linhas → gabarito de duas linhas.
-**Não encha linguiça onde não precisa**: texto longo em questão simples ensina o
-aluno a pular o gabarito, e aí ele pula também o das questões que importam.
-
-Quando ajudar a ver, chame `<Setas />` (ou outro componente) dentro do próprio
-gabarito. A figura fecha melhor que mais um parágrafo.
-
----
+A escada de dicas tem uma regra que vale registrar porque eu já errei: ela tem que
+subir de degrau em degrau. Na primeira versão do `juncao-a01` a dica 1 já mandava
+reescrever tudo em forma de junção e a dica 3 entregava o procedimento inteiro, o
+que faz o aluno copiar em vez de resolver.
 
 ## 8. Regras invioláveis
 
 ### 8.1 `revisado: false` ao criar. Sempre.
 
-Todo conteúdo novo nasce em rascunho e o Modo Aula se recusa a exibir camadas de
-conteúdo não revisado.
+Todo conteúdo novo nasce em rascunho.
 
 Isso não é burocracia. **Conteúdo de matemática e física gerado por IA contém
 erros** — não grosseiros, sutis: sinal trocado numa passagem, condição de
-existência omitida, caso particular tratado como geral. Em resolução de exercício
-a taxa é maior. O Victor ensinando com um erro desses causa dano real e demora
-pra ser detectado.
+existência omitida, caso particular tratado como geral. O Victor ensinando com um
+erro desses causa dano real e demora pra ser detectado.
 
 **Nunca marque `revisado: true`.** Só o Victor faz isso, depois de ler linha por
 linha e refazer a conta.
+
+Até agosto de 2026 o Modo Aula se recusava a exibir as camadas de conteúdo não
+revisado, e esse era o portão. Sem camadas, o portão deixou de existir como
+mecanismo: hoje o que marca a página é o selo de rascunho. A regra de nunca
+marcar `true` sozinho continua valendo igual.
 
 ### 8.2 Não invente conteúdo factual
 
@@ -729,10 +647,14 @@ falta decidir. Termine com uma linha em itálico listando o que falta.
 Não escreva meia página plausível pra parecer completo. Página pela metade que
 parece inteira é pior que página vazia — ela some do radar.
 
-### 8.4 Uma sessão, um tópico
+### 8.4 Uma sessão, uma aula
 
-Não gere dez conceitos de uma vez. O gargalo é a revisão do Victor, não a
-geração. Dez páginas não revisadas é dívida, não progresso.
+Não escreva dez aulas de uma vez. O gargalo é a revisão do Victor, não a geração:
+dez páginas não revisadas é dívida, não progresso.
+
+Isso vale pra *escrever aula*. Mexer no currículo inteiro (criar esqueleto, ligar
+prereq, declarar tópico) é outra coisa e pode ser feito de uma vez, porque
+esqueleto honesto não é conteúdo pra revisar.
 
 ---
 
@@ -741,16 +663,17 @@ geração. Dez páginas não revisadas é dívida, não progresso.
 | Sintoma | Causa |
 |---|---|
 | Página em branco e *"Expected component X to be defined"* no console | componente usado no MDX que não está em `src/components/mdx.tsx`. `npm run paginas` acusa sem abrir o navegador |
-| Caixa vermelha "Questão com defeito" no lugar da questão | `correta` aponta pra alternativa que não existe, ou tem menos de 2 alternativas |
 | Elo `<C>` aparece vermelho | o id não existe. `npm run grafo` lista |
 | LaTeX aparece cru | cifrão desbalanceado, ou `\$` escapado sem querer |
 | Fórmula de bloco sai pequena, no meio do parágrafo | escreveu `$$x$$` numa linha só. Os `$$` têm que ficar em linhas próprias (seção 5) |
-| Alternativa do `<Questao>` mostra `$-3$` literal | faltou o `$` de fechamento na string, ou usou aspas simples dentro do array |
-| Gabarito não abre no Modo Aula | a página está `revisado: false`. É o portão da 8.1 funcionando |
+| O texto colou no fechamento do frontmatter | falta a linha em branco depois do `---` |
+| `npm run grafo` reclama de "falta topicos" | aula sem índice remissivo. Sem ele, ninguém acha o assunto pela busca |
 | Área do mapa saiu cinza | é o 6º bloco da matéria — a paleta só tem 5 (seção 3.2). Funda dois |
 | Declarei um prereq e a seta não apareceu | ele é redundante, já vem por outro caminho. `npm run grafo` diz por qual |
-| Módulo caiu fundo demais no mapa | a profundidade é a cadeia de prereqs. Provavelmente há um prereq exagerado na corrente |
-| Primeira carga ficou lenta depois de muitos módulos | é a transposição do layout, que é quadrática. Há teto de partidas em `layout-grafo.ts` — abaixe se precisar |
+| Aula caiu fundo demais no mapa | a profundidade é a cadeia de prereqs. Provavelmente há um prereq exagerado na corrente |
+| Uma aula virou folha do grafo sem ser fim de currículo | alguém que dependia dela foi fundido ou removido. Já aconteceu com a junção |
+| Em Modo Aula sobrou um monte de título sem sentido | os títulos estão ruins: eles precisam contar a história sozinhos |
+| Primeira carga ficou lenta depois de muitas aulas | é a transposição do layout, que é quadrática. Há teto de partidas em `layout-grafo.ts` — abaixe se precisar |
 | CSS de um componente vazou pra outro | sem Astro não existe mais escopo. Prefixe o seletor (seção 6) |
 | Rota direta dá 404 na nuvem | é SPA: o host precisa devolver `index.html` pra qualquer caminho. Em `npm run dev` e `npm run preview` isso já funciona |
 
