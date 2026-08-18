@@ -42,7 +42,7 @@ Cada aula declara no frontmatter os **tópicos** que cobre. São duas
 granularidades de propósito:
 
 - o **mapa** tem 84 aulas e mostra como o curso se encaixa;
-- o **índice** (`/indice`) tem 754 tópicos e serve pra quem chega com uma dúvida
+- o **índice** (`/indice`) tem 762 tópicos e serve pra quem chega com uma dúvida
   que já tem nome.
 
 Quem procura "distância de ponto a reta" acha pelo índice, sem que esse assunto

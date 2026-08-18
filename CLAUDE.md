@@ -159,7 +159,7 @@ linha de geometria, não achar nada com esse nome e sair fora.
 A saída foi separar as duas granularidades:
 
 - **o nó do grafo** é uma aula de 25 a 55 minutos, e são 84;
-- **os tópicos** são o que cada aula cobre por dentro, e são 754.
+- **os tópicos** são o que cada aula cobre por dentro, e são 762.
 
 Os tópicos viram a página `/indice` (ordem alfabética, filtro que ignora acento),
 a busca do mapa e a lista "o que tem nesta aula" no topo da página. É a mesma

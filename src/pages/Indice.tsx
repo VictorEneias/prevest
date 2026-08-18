@@ -10,7 +10,7 @@ import { useTitulo } from '../estado';
  * O mapa tem 84 aulas e serve pra ver como o curso se encaixa. Ele não serve
  * pra quem chega com uma dúvida específica: quem quer distância de ponto a reta
  * ia percorrer a linha de geometria, não achar nada com esse nome e sair fora.
- * Aqui estão os 754 tópicos que as aulas declaram cobrir, cada um levando pra
+ * Aqui estão os 762 tópicos que as aulas declaram cobrir, cada um levando pra
  * aula que cobre. É a lista do fim do livro, não o sumário.
  */
 
