@@ -423,6 +423,13 @@ conceito (`src/pages/Conceito.tsx`). Está documentado aqui porque é onde o
   - **O canal é escolhido por busca local**, trocando dois trechos de altura
     enquanto isso desfizer cruzamento. Só a ordem gulosa deixava cruzamento que
     some com uma troca: 132 contra 106 no mesmo desenho.
+  - **Seta que ia cortar o caminho de uma irmã entra junto com ela.** Se a
+    descida cruza o trecho de lado de outra seta que vai pro MESMO módulo, ela
+    passa a descer até aquele canal e entrar pela mesma porta, mesmo que o
+    desvio dela seja curto (é a única exceção à regra do degrau de 44px). Antes
+    ela cortava a irmã pra chegar sozinha, num traço paralelo ao lado.
+  - **Junção em T não conta como cruzamento** em `contarCruzamentos`. Depois que
+    as setas passaram a se fundir, metade do número era isso: 113 viraram 61.
   - **A corrente longa desce numa coluna só** pelo maior trecho que couber. A
     ponte não precisa ficar no vão onde a ordenação a pôs, e a linha ainda tem
     12px de manobra dentro do corredor, então olho todos os vãos livres de cada

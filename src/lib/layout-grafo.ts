@@ -795,6 +795,9 @@ export function calcularLayout(
      usar a MESMA porta e se juntam antes de entrar — que é como o olho lê
      "essas duas vão pro mesmo lugar". É o tronco da saída, do lado de cá. */
   const portaDe = new Map<string, number>();
+  /* Setas que precisam do degrau mesmo com desvio curto, porque estão entrando
+     por uma porta que não é a coluna delas pra se juntar a uma irmã. */
+  const forcaDegrau = new Set<string>();
   {
     const porDestino = new Map<string, { chave: string; vemDe: number }[]>();
     for (const corrente of correntes) {
@@ -815,6 +818,38 @@ export function calcularLayout(
          convergindo. */
       for (const e of lista) {
         portaDe.set(e.chave, Math.min(Math.max(e.vemDe - centro, -limite), limite));
+      }
+
+      /* Fusão na chegada: se a seta desce cortando o trecho de lado de uma irmã
+         que vai pro MESMO módulo, ela passa a entrar pela porta da irmã e a
+         dividir o canal. Antes ela cruzava a irmã pra chegar sozinha na porta
+         do lado — dois traços paralelos entrando no mesmo lugar, com um
+         cruzamento no meio do caminho que não precisava existir. */
+      const comCanal = lista
+        .map((e) => ({ e, porta: centro + portaDe.get(e.chave)! }))
+        .filter((c) => Math.abs(c.e.vemDe - c.porta) >= M.degrauMinimo)
+        .sort((a, b) => Math.abs(b.e.vemDe - b.porta) - Math.abs(a.e.vemDe - a.porta));
+      for (const b of comCanal) {
+        const de = Math.min(b.e.vemDe, b.porta);
+        const ate = Math.max(b.e.vemDe, b.porta);
+        const sentido = Math.sign(b.porta - b.e.vemDe);
+        for (const e of lista) {
+          if (e === b.e) continue;
+          const porta = centro + portaDe.get(e.chave)!;
+          /* Mesma porta e mesmo sentido: a irmã já anda de lado até ali, então
+             esta desce até o canal dela e entra junto, em vez de cortar o
+             caminho dela em curva pra chegar sozinha no mesmo ponto. */
+          if (porta === b.porta && Math.sign(porta - e.vemDe) === sentido) {
+            forcaDegrau.add(e.chave);
+            continue;
+          }
+          /* Porta diferente, mas a descida corta o trecho de lado da irmã: vale
+             mudar de porta e entrar junto, que apaga o cruzamento. */
+          if (porta !== b.porta && e.vemDe > de + 0.5 && e.vemDe < ate - 0.5) {
+            portaDe.set(e.chave, b.porta - centro);
+            forcaDegrau.add(e.chave);
+          }
+        }
       }
     }
   }
@@ -860,10 +895,11 @@ export function calcularLayout(
     const porVao = new Map<number, Trecho[]>();
     for (const corrente of correntes) {
       const pontos = rotaBruta(corrente);
+      const forcado = forcaDegrau.has(`${corrente.de}»${corrente.para}`);
       for (let i = 1; i < pontos.length; i++) {
         const [x0, y0] = pontos[i - 1];
         const [x1] = pontos[i];
-        if (Math.abs(x1 - x0) < M.degrauMinimo) continue;
+        if (Math.abs(x1 - x0) < M.degrauMinimo && !(forcado && i === pontos.length - 1)) continue;
         const ci = Math.floor((y0 - M.pad) / passoY);
         const chave = chaveDoCanal(ci, x0, x1);
         const lista = porVao.get(ci) ?? [];
@@ -984,6 +1020,7 @@ export function calcularLayout(
        ponto só, no centro, o trecho varria na diagonal por dentro da fileira e
        raspava os módulos vizinhos. */
     const bruta = rotaBruta(corrente);
+    const chaveDaAresta = `${corrente.de}»${corrente.para}`;
     const pontos: [number, number][] = [bruta[0]];
     const n = (v: number) => v.toFixed(1);
     let d = `M ${n(bruta[0][0])} ${n(bruta[0][1])}`;
@@ -997,7 +1034,7 @@ export function calcularLayout(
       }
       /* Degrau curto não vira canto: dois cantos separados por 20px de reta
          parecem defeito de desenho, e uma curva curta lê melhor. */
-      if (Math.abs(x1 - x0) < M.degrauMinimo) {
+      if (Math.abs(x1 - x0) < M.degrauMinimo && !(forcaDegrau.has(chaveDaAresta) && i === bruta.length - 1)) {
         const c = (y1 - y0) * 0.42;
         d += ` C ${n(x0)} ${n(y0 + c)}, ${n(x1)} ${n(y1 - c)}, ${n(x1)} ${n(y1)}`;
         pontos.push([x1, y1]);
@@ -1092,6 +1129,22 @@ function segmentosDe(mapa: Mapa) {
 
 const perto = (a: number, b: number) => Math.abs(a - b) < 0.6;
 
+/** O ponto está em cima do segmento (ponta de um encostando no meio do outro). */
+function noSegmento(
+  s: { x1: number; y1: number; x2: number; y2: number },
+  x: number,
+  y: number,
+) {
+  const dx = s.x2 - s.x1;
+  const dy = s.y2 - s.y1;
+  const comprimento = Math.hypot(dx, dy);
+  if (comprimento < 0.6) return false;
+  const distancia = Math.abs(dy * (x - s.x1) - dx * (y - s.y1)) / comprimento;
+  if (distancia > 0.6) return false;
+  const t = ((x - s.x1) * dx + (y - s.y1) * dy) / (comprimento * comprimento);
+  return t >= -0.01 && t <= 1.01;
+}
+
 /** Cruzamentos entre setas. */
 export function contarCruzamentos(mapa: Mapa): number {
   const seg = segmentosDe(mapa);
@@ -1104,13 +1157,21 @@ export function contarCruzamentos(mapa: Mapa): number {
       const q = seg[j];
       /* Encostar não é cruzar: dois trechos que saem do mesmo ponto, seja a
          bifurcação do tronco ou dois trechos seguidos da mesma seta, se tocam
-         de propósito. */
+         de propósito. O mesmo vale pro T, que é uma seta entrando no canal de
+         outra pra chegarem juntas no mesmo módulo — desde que a rota passou a
+         fundir na chegada, contar isso como cruzamento inflava o número. */
       const toca =
         (perto(p.x1, q.x1) && perto(p.y1, q.y1)) ||
         (perto(p.x1, q.x2) && perto(p.y1, q.y2)) ||
         (perto(p.x2, q.x1) && perto(p.y2, q.y1)) ||
         (perto(p.x2, q.x2) && perto(p.y2, q.y2));
       if (toca) continue;
+      const emT =
+        noSegmento(q, p.x1, p.y1) ||
+        noSegmento(q, p.x2, p.y2) ||
+        noSegmento(p, q.x1, q.y1) ||
+        noSegmento(p, q.x2, q.y2);
+      if (emT) continue;
       if (
         lado(p.x1, p.y1, p.x2, p.y2, q.x1, q.y1) !== lado(p.x1, p.y1, p.x2, p.y2, q.x2, q.y2) &&
         lado(q.x1, q.y1, q.x2, q.y2, p.x1, p.y1) !== lado(q.x1, q.y1, q.x2, q.y2, p.x2, p.y2)
