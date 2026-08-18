@@ -7,6 +7,7 @@
     "dev": "vite --port 4321",
     "build": "vite build",
     "paginas": "node scripts/render-tudo.mjs",
+    "plano": "node scripts/plano-de-aulas.mjs",
     "preview": "vite preview --port 4321",
     "check": "tsc --noEmit",
     "grafo": "node scripts/checar-grafo.mjs"
