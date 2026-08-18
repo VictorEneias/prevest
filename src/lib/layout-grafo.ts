@@ -339,9 +339,11 @@ export function calcularLayout(
   const sorteio = () => ((semente = (semente * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
 
   /* A transposição é quadrática no número de trechos, então grafo grande leva
-     menos partidas pra o build não arrastar. Com 71 módulos (93 trechos) são
-     8 partidas e ~0,6 s. */
-  const partidas = trechos.length > 400 ? 2 : trechos.length > 200 ? 4 : 8;
+     menos partidas pra o build não arrastar. Com 84 módulos (112 trechos) são
+     16 partidas de 10 passadas, o que dá ~0,6 s. Dobrar as partidas de 8 pra 16
+     tirou 2 cruzamentos e 5% da tinta no currículo inteiro; de 16 pra 24 não
+     mudou nada em nenhum dos 11 grafos que testei. */
+  const partidas = trechos.length > 400 ? 2 : trechos.length > 200 ? 4 : 16;
 
   for (let partida = 0; partida < partidas; partida++) {
     if (partida === 0) {
@@ -362,7 +364,10 @@ export function calcularLayout(
   restaurar(melhor);
 
   function otimizarOrdem() {
-  for (let passada = 0; passada < 24; passada++) {
+  /* Eram 24 passadas e as 14 últimas não mexiam em nada: com a mediana, o
+     resultado dos 11 grafos é igual com 8. Deixo 10 de folga, e o corte é o que
+     paga as partidas a mais. */
+  for (let passada = 0; passada < 10; passada++) {
     /* mediana */
     const paraBaixo = passada % 2 === 0;
     const indices = paraBaixo
@@ -429,8 +434,10 @@ export function calcularLayout(
      direita e nada puxa de volta, e o acumulado deixou o desenho três vezes
      mais largo do que precisava.
 
-     Corrente de ponte pesa mais que módulo, que é o que mantém a seta longa
-     reta em vez de serpenteando entre as camadas. */
+     A corrente de ponte já pesou 2,5 vezes um módulo, pra seta longa não
+     serpentear entre as camadas. Com o alvo dos dois lados isso deixou de ser
+     preciso, e o peso extra só atrapalhava: em 1 o desenho tem menos tinta e
+     menos trecho torto que em 1,5 ou em 2,5. */
   const folga = (a: Item, b: Item) =>
     a.real && b.real ? M.gapX : !a.real && !b.real ? 12 : 18;
   const sep = (a: Item, b: Item) => (a.w + b.w) / 2 + folga(a, b);
@@ -474,7 +481,9 @@ export function calcularLayout(
        0.60    2097        118px            35212
 
      Cruzamento e sobreposição não mudam com esse peso, porque a ordem já foi
-     fixada na etapa anterior, então dá pra escolher só por largura e retidão. */
+     fixada na etapa anterior, então dá pra escolher só por largura e retidão.
+     Retestei 0,2 a 0,5 depois que o alvo passou a ser a mediana dos dois lados:
+     estreitam menos de 1% e desalinham mais, então 0,15 continua. */
   const PESO_COMPACTA = 0.15;
 
   const compactar = (camadaItens: Item[], desejado: Map<string, number>) => {
@@ -493,9 +502,7 @@ export function calcularLayout(
       const junto = acumulado[i] + deslocaPacote;
       return (1 - PESO_COMPACTA) * ideal + PESO_COMPACTA * junto - acumulado[i];
     });
-    const w = camadaItens.map((it) =>
-      desejado.has(it.chave) ? (it.real ? 1 : 2.5) : 0.05,
-    );
+    const w = camadaItens.map((it) => (desejado.has(it.chave) ? 1 : 0.05));
     const z = isotonica(d, w);
     camadaItens.forEach((it, i) => (it.x = z[i] + acumulado[i]));
   };
@@ -515,11 +522,20 @@ export function calcularLayout(
       ? [...camadas.keys()].slice(1)
       : [...camadas.keys()].slice(0, -1).reverse();
     for (const ci of indices) {
-      const vizinhos = paraBaixo ? acima : abaixo;
       const desejado = new Map<string, number>();
       for (const it of camadas[ci]) {
-        const vs = vizinhos.get(it.chave) ?? [];
-        if (vs.length) desejado.set(it.chave, vs.reduce((s, v) => s + v.x, 0) / vs.length);
+        /* O alvo é a mediana dos vizinhos dos DOIS lados. Olhando só o lado de
+           onde a varredura vem, o item alinha com os pais e fica torto com os
+           filhos, e a volta seguinte desfaz; com os dois lados ele para no
+           lugar. E a mediana, no lugar da média, impede que um módulo com seis
+           filhos arraste o pai pro meio deles. Medido em 11 grafos (o currículo
+           e dez recortes dele): 4,8% menos largura, 6,8% menos tinta, 7% menos
+           desvio horizontal e 15% menos trecho torto, com o mesmo cruzamento. */
+        const vs = [...(acima.get(it.chave) ?? []), ...(abaixo.get(it.chave) ?? [])];
+        if (!vs.length) continue;
+        const xs = vs.map((v) => v.x).sort((a, b) => a - b);
+        const m = xs.length >> 1;
+        desejado.set(it.chave, xs.length % 2 ? xs[m] : (xs[m - 1] + xs[m]) / 2);
       }
       compactar(camadas[ci], desejado);
     }

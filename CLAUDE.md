@@ -379,8 +379,9 @@ conceito (`src/pages/Conceito.tsx`). Está documentado aqui porque é onde o
 
 - **y = profundidade no grafo, x = só pra desembaraçar.** É Sugiyama: camadas por
   profundidade, **nós-ponte** pras setas que pulam camadas, ordenação por mediana
-  com transposição e oito partidas embaralhadas, e coordenadas por regressão
-  isotônica. O sorteio é semeado e a lista de conceitos chega ordenada por id,
+  com transposição e dezesseis partidas embaralhadas, e coordenadas por
+  regressão isotônica, cada módulo mirando na mediana dos vizinhos dos dois
+  lados. O sorteio é semeado e a lista de conceitos chega ordenada por id,
   então o mapa sai idêntico a cada carga.
 - **Nó-ponte é o que impede a seta de passar por cima de um módulo.** A seta longa
   ganha um ponto em cada camada intermediária, esse ponto reserva um corredor na
