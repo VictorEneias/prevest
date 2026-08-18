@@ -108,6 +108,7 @@ O que era `<Curiosidade rotulo="X">` hoje é `### X`. O que era `<Erros>` hoje �
 | `npm run dev` | **é isso que roda na casa do aluno**, na porta 4321 |
 | `npm run grafo` | frontmatter inválido, elo morto, ciclo, prereq redundante, teto de 5 áreas |
 | `npm run paginas` | renderiza as 86 páginas no node e diz qual quebrou |
+| `npm run tempos` | recalcula o `tempo_estimado` das 84 aulas |
 | `npm run plano` | reescreve o `PLANO-DE-AULAS.md` a partir do frontmatter |
 | `npm run check` | `tsc --noEmit` |
 | `npm run build` | gera `dist/` — só serve pra publicar na nuvem |
@@ -125,8 +126,9 @@ prereqs, quem ela destrava, os tópicos, o que falta decidir) e o índice remiss
 dos 762 tópicos.
 
 **Leia ele antes de mexer no currículo**, que é onde está o estado atual de tudo,
-e **rode `npm run plano` no fim de toda sessão que mexer em `content/`**, junto
-com `grafo` e `paginas`. Ele é gerado: editar o `.md` à mão é trabalho perdido,
+e **rode `npm run tempos` e depois `npm run plano` no fim de toda sessão que mexer
+em `content/`**, junto com `grafo` e `paginas`. Nessa ordem, porque o plano lê o
+tempo que o outro acabou de escrever. Ele é gerado: editar o `.md` à mão é trabalho perdido,
 porque o script sobrescreve. O que muda o documento é o frontmatter da aula, e a
 linha `*Falta: …*` do fim do `.mdx` é o que vira o "Falta" da ficha.
 
@@ -153,7 +155,9 @@ bloco: geometria                               # a ÁREA do mapa. Máx. 5 por ma
 prereqs: [analitica-ponto, funcao-afim]        # ids que o aluno precisa ANTES. Só isto — não
                                                # existe campo inverso; os filhos são calculados
 nivel: medio                                   # base | medio — ver abaixo
-tempo_estimado: 50                             # minutos de aula
+tempo_estimado: 50                             # minutos de aula. NÃO escreva à
+                                               # mão: quem preenche é o
+                                               # `npm run tempos` — ver 3.3
 revisado: false                                # ← SEMPRE false ao criar. Ver seção 8.
 itens_fuvest: 58                               # opcional, do Raio X FUVEST
 resumo: Uma frase. Aparece na busca e no cartão do painel.
@@ -228,9 +232,10 @@ Se um assunto for grande demais pra uma aula, ele se divide por *conteúdo*
 couber numa aula mas tiver muita coisa dentro, quem resolve é `topicos`, não uma
 aula nova.
 
-**O corte de tamanho é 25 a 55 minutos.** Passou muito disso, divide. A aula de
-frações tem 70 e é a exceção conhecida: ela junta divisibilidade, MMC e MDC de
-propósito, porque esses três existem pra você conseguir mexer com fração.
+**O corte de tamanho é 25 a 55 minutos.** Passou muito disso, divide. Hoje nenhuma
+aula escrita passa de 50, e a mais longa é frações, que junta divisibilidade, MMC e
+MDC de propósito, porque esses três existem pra você conseguir mexer com fração.
+
 
 ### 3.2 `bloco` é a área, e ela tem teto de cinco
 
@@ -267,6 +272,42 @@ geometria (razão entre lados); no círculo é função (algo que se repete). N�
 pra caber no teto — é a divisão honesta do assunto.
 
 A **ordem** da lista hoje só define a ordem da legenda e dos rótulos.
+
+### 3.3 O tempo da aula é calculado, e não chutado
+
+`tempo_estimado` sai do `npm run tempos`, e quem manda é `scripts/tempo-aula.mjs`.
+**Não edite o campo à mão**, porque o script sobrescreve.
+
+Antes os 84 números eram chute meu, um por um, e chute não dá pra revisar: ninguém
+olha "45 min" e sabe dizer se está certo. Pior, eu já usei um chute pra calibrar
+outro e apresentei como conta, o que é o jeito mais rápido de um número errado virar
+verdade no projeto.
+
+O modelo tem duas taxas, e elas vêm de fora:
+
+| | |
+|---|---|
+| **65 palavras por minuto** | a aula. É a taxa de "muitos conceitos novos" com objetivo de **engajar** no estimador de carga do Wake Forest (Barre e Esarey), que é ler discutindo e respondendo, que é o que uma aula 1-a-1 é |
+| **130 palavras por minuto** | a leitura do aluno em casa, a mesma tabela com objetivo de **entender** |
+
+Como a aula roda na metade da taxa da leitura, **a aula sempre dá o dobro do tempo
+que o aluno leva pra ler a página sozinho**, e o plano mostra os dois números.
+
+Fórmula, tabela, figura e interativo entram como palavra equivalente (12, 8, 30 e
+200), e esses quatro pesos são escolha, não medida: saem de estimar quanto cada
+coisa toma em aula. O que sustenta a ordem de grandeza é uma medida de verdade: o
+Victor lê a aula de junção inteira em 6 minutos, o modelo dá 16 minutos de leitura
+pro aluno e 30 de aula, e a diferença entre 6 e 16 é exatamente a diferença entre
+quem escreveu o texto e quem está vendo pela primeira vez.
+
+**Aula que ainda não foi escrita não tem página pra medir**, então o tempo dela sai
+de uma régua por tópicos, ajustada por mínimos quadrados nas aulas que já existem. O
+plano marca qual é qual: as escritas dizem "medido na página" e as outras dizem
+"planejado pelos tópicos".
+
+O que fazer quando o número parecer errado: **cronometre a aula de verdade e ajuste
+os pesos**, em vez de corrigir o frontmatter da aula. Um número errado no
+`tempo-aula.mjs` erra 84 vezes, e é por isso que ele é o lugar certo de consertar.
 
 ### Ordem de currículo ≠ ordem de construção
 
@@ -498,6 +539,31 @@ só abaixo de 900px.
 **Só use com componente que entende `compacto`**, que hoje é o `<Conjunto>`. O
 `<Par>` avisa o filho que ele agora tem metade da largura; quem não escuta esse
 aviso só encolhe junto com o viewBox, e aí o rótulo fica ilegível.
+
+### `<Alem>` — a curiosidade que está fora do escopo
+
+```mdx
+<Alem titulo="De onde vem esse truque" precisa="fatoração">
+
+A explicação inteira, em markdown normal.
+
+</Alem>
+```
+
+Caixinha fechada, com um aviso automático em cima dizendo que aquilo está fora do
+que a aula precisa e fora dos pré-requisitos dela, que quem já viu é bem-vindo e
+que quem não viu pode pular sem perder nada. `precisa` nomeia o assunto que a
+explicação usa e que ainda não foi dado.
+
+Serve pro caso do "de onde vem esse truque" da junção: a explicação é boa e eu
+quero ela na página, porém ela mexe com fatoração, e quem lê pela primeira vez
+trava ali achando que precisa entender aquilo pra seguir. Fechada, ela vira convite
+em vez de obstáculo, e em Modo Aula sobra como uma linha só.
+
+**Isto não é a volta das camadas** que saíram em agosto (seção 2). Aquelas obrigavam
+todo parágrafo a escolher uma caixa antes de ser escrito; esta é uma caixa só, com
+um trabalho só, e o texto normal continua sendo prosa solta. Se aparecer uma segunda
+caixa, releia esta frase antes de criar.
 
 ### `<MapaConceitos />` — o grafo desenhado
 

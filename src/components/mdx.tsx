@@ -11,6 +11,7 @@
 import type { ComponentType } from 'react';
 import C from './C';
 import Par from './Par';
+import Alem from './Alem';
 import Juncao from './viz/Juncao';
 import Setas from './viz/Setas';
 import Reta from './viz/Reta';
@@ -24,6 +25,7 @@ import Esticar from './viz/Esticar';
 export const componentesMDX: Record<string, ComponentType<any>> = {
   C,
   Par,
+  Alem,
   Juncao,
   Setas,
   Reta,

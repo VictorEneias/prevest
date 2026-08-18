@@ -13,6 +13,7 @@
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { BLOCOS, ROTULO_BLOCO } from './blocos.mjs';
+import { medirPagina, tempoDeLeitura, ehEsqueleto } from './tempo-aula.mjs';
 
 const DIR = 'content/conceitos';
 const SAIDA = 'PLANO-DE-AULAS.md';
@@ -49,7 +50,7 @@ const aulas = {};
 for (const nome of (await readdir(DIR)).filter((n) => n.endsWith('.mdx')).sort()) {
   const id = nome.replace(/\.mdx$/, '');
   const [fm, corpo] = frontmatter(await readFile(join(DIR, nome), 'utf8'));
-  const esqueleto = /Esqueleto: esta aula ainda não foi escrita/.test(corpo);
+  const esqueleto = ehEsqueleto(corpo);
   aulas[id] = {
     id,
     ...fm,
@@ -57,6 +58,7 @@ for (const nome of (await readdir(DIR)).filter((n) => n.endsWith('.mdx')).sort()
     prereqs: fm.prereqs ?? [],
     topicos: fm.topicos ?? [],
     esqueleto,
+    leitura: tempoDeLeitura(medirPagina(corpo)),
     /* o parágrafo "Quando for, ela vai cobrir…" e a linha de falta da seção 8.3 */
     previsao: (corpo.match(/Quando for, ela vai cobrir ([\s\S]*?)\n\n/) || [, ''])[1]
       .replace(/\s+/g, ' ').trim(),
@@ -120,7 +122,12 @@ p('- **Nível** é a profundidade no grafo: quantas aulas você atravessa até c
 p('- **Precisa de** são os pré-requisitos diretos declarados. Só o mais próximo aparece: se A já é pré-requisito de B, a aula que pede B não repete A.');
 p('- **Destrava** é o inverso, calculado — quem trava se esta aula não for dada.');
 p('- **Tópicos** é o que a aula cobre por dentro, e é promessa: se a aula não cobrir, ou o tópico sai ou a nota de falta diz que aquela parte não foi escrita.');
-p('- **Escrita / esqueleto** diz se o `.mdx` já tem a aula ou só o contrato dela.', '');
+p('- **Escrita / esqueleto** diz se o `.mdx` já tem a aula ou só o contrato dela.');
+p('- **Tempo** não é chute: sai de `npm run tempos`. Aula escrita é medida na própria página, ' +
+  'contando prosa, fórmula, tabela, figura e interativo; esqueleto sai de uma régua por tópicos ' +
+  'ajustada nas escritas. A aula roda a 65 palavras por minuto e a leitura do aluno em casa a 130, ' +
+  'que são as taxas de "muitos conceitos novos" do estimador de carga do Wake Forest (Barre e ' +
+  'Esarey), pros objetivos de engajar e de entender. O detalhe está em `scripts/tempo-aula.mjs`.', '');
 
 p('## Panorama por área', '');
 p('| Área | Aulas | Tópicos | Tempo |', '|---|---:|---:|---:|');
@@ -168,8 +175,9 @@ for (const b of BLOCOS) {
     p(`#### ${a.n}. ${a.titulo}`, '');
     if (a.subtitulo) p(`*${a.subtitulo}*`, '');
     p(a.resumo, '');
-    p(`\`${a.id}\` · nível ${a.prof} · ${a.nivel} · ${a.tempo} min · ` +
-      `${a.esqueleto ? 'esqueleto' : 'escrita'} · ${a.topicos.length} tópicos`, '');
+    p(`\`${a.id}\` · nível ${a.prof} · ${a.nivel} · **${a.tempo} min de aula** ` +
+      `(${a.esqueleto ? 'planejado pelos tópicos' : `medido na página, ${a.leitura} min de leitura em casa`}) · ` +
+      `${a.topicos.length} tópicos`, '');
     p(`**Precisa de:** ${a.prereqs.length ? a.prereqs.map(t).join(', ') : 'nada, é porta de entrada'}  `);
     p(`**Destrava:** ${a.filhos.length ? a.filhos.map(t).join(', ') : 'ninguém, é fim de linha'}`, '');
     p('**O que a aula cobre:**', '');
