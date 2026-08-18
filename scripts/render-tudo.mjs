@@ -7,7 +7,7 @@
  * sem reclamar e o erro só apareceria no navegador, na hora da aula.
  *
  * O que ele pega: componente que não está no mdx.tsx, JSX torto no conteúdo,
- * prop obrigatória faltando, gabarito apontando pra alternativa que não existe.
+ * prop obrigatória faltando.
  */
 import { createServer } from 'vite';
 
@@ -32,13 +32,9 @@ try {
   const { MemoryRouter } = await import('react-router-dom');
   const { default: App } = await vite.ssrLoadModule('/src/App.tsx');
   const { ProvedorAula } = await vite.ssrLoadModule('/src/estado.tsx');
-  const { conceitos, exercicios } = await vite.ssrLoadModule('/src/conteudo.ts');
+  const { conceitos } = await vite.ssrLoadModule('/src/conteudo.ts');
 
-  const rotas = [
-    '/',
-    ...conceitos.map((c) => `/conceitos/${c.id}`),
-    ...exercicios.map((e) => `/exercicios/${e.id}`),
-  ];
+  const rotas = ['/', ...conceitos.map((c) => `/conceitos/${c.id}`)];
 
   console.log('');
   for (const rota of rotas) {
@@ -50,9 +46,6 @@ try {
       const semSvg = html.replace(/<svg[\s\S]*?<\/svg>/g, '');
       if (semSvg.includes('$')) {
         quebradas.push([rota, 'sobrou cifrão no texto — LaTeX desbalanceado?']);
-      }
-      if (html.includes('questao-quebrada')) {
-        quebradas.push([rota, 'tem <Questao> com defeito — veja a caixa vermelha na página']);
       }
     } catch (e) {
       quebradas.push([rota, e.message.split('\n')[0]]);

@@ -14,7 +14,6 @@ import type { ComponentType } from 'react';
 
 export type Materia = 'matematica' | 'fisica';
 export type Nivel = 'fundamento' | 'basico' | 'medio' | 'avancado';
-export type NivelExercicio = 'A' | 'B' | 'C';
 
 export interface Conceito {
   id: string;
@@ -30,21 +29,11 @@ export interface Conceito {
   prereqs: string[];
   nivel: Nivel;
   tempo_estimado?: number;
-  /** Portão de revisão: enquanto for false o Modo Aula esconde as camadas. */
+  /** Marca o rascunho na página. Só o Victor troca pra true, e só depois de
+   *  refazer a conta linha por linha. */
   revisado: boolean;
   itens_fuvest?: number;
   resumo?: string;
-  Corpo: ComponentType<Record<string, unknown>>;
-}
-
-export interface Exercicio {
-  id: string;
-  fonte: string;
-  assuntos: string[];
-  nivel: NivelExercicio;
-  tempo_alvo?: number;
-  revisado: boolean;
-  gabarito?: string;
   Corpo: ComponentType<Record<string, unknown>>;
 }
 
@@ -66,7 +55,6 @@ function carregar(modulos: Record<string, ModuloMdx>) {
 }
 
 const modulosConceitos = import.meta.glob<ModuloMdx>('/content/conceitos/*.mdx', { eager: true });
-const modulosExercicios = import.meta.glob<ModuloMdx>('/content/exercicios/*.mdx', { eager: true });
 
 export const conceitos: Conceito[] = carregar(modulosConceitos).map(({ id, fm, Corpo }) => ({
   id,
@@ -83,25 +71,7 @@ export const conceitos: Conceito[] = carregar(modulosConceitos).map(({ id, fm, C
   Corpo,
 }));
 
-export const exercicios: Exercicio[] = carregar(modulosExercicios).map(({ id, fm, Corpo }) => ({
-  id,
-  fonte: (fm.fonte as string) ?? 'Autoral',
-  assuntos: (fm.assuntos as string[]) ?? [],
-  nivel: (fm.nivel as NivelExercicio) ?? 'B',
-  tempo_alvo: fm.tempo_alvo as number | undefined,
-  revisado: fm.revisado === true,
-  gabarito: fm.gabarito as string | undefined,
-  Corpo,
-}));
-
 export const porId = new Map(conceitos.map((c) => [c.id, c]));
-export const exercicioPorId = new Map(exercicios.map((e) => [e.id, e]));
 
-/** Quem aponta pra este conceito. Calculado, nunca declarado. */
+/** Quem aponta pra esta aula. Calculado, nunca declarado. */
 export const dependemDe = (id: string) => conceitos.filter((c) => c.prereqs.includes(id));
-
-/** Os exercícios que tocam este conceito, na ordem da escada A → B → C. */
-export const exerciciosDe = (id: string) =>
-  exercicios
-    .filter((e) => e.assuntos.includes(id))
-    .sort((a, b) => a.nivel.localeCompare(b.nivel) || a.id.localeCompare(b.id));

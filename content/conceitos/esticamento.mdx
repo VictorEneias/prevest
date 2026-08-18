@@ -10,8 +10,6 @@ revisado: false
 resumo: Dividir por um número é multiplicar pelo inverso dele, então multiplicação e divisão são a mesma operação escrita de dois jeitos.
 ---
 
-<Explicacao>
-
 Na aula de <C id="juncao">junção</C> eu te mostrei uma coisa que muda tudo: o sinal
 de menos é característica **do número**, então subtrair é a mesma coisa que somar o
 oposto, e a subtração desaparece da sua vida como operação separada.
@@ -22,11 +20,7 @@ outro**, e a divisão também deixa de ser uma operação separada. De novo, iss
 mudar o resultado de nenhuma conta sua, e vai mudar o que você consegue fazer com uma
 conta sem medo de errar.
 
-</Explicacao>
-
 ## Cada número tem um inverso
-
-<Explicacao>
 
 Na junção o personagem principal foi o **oposto**, que é o número que somado com o
 original te devolve pro zero. Aqui o personagem é o **inverso**, que é o número que
@@ -51,11 +45,7 @@ desfaz uma multiplicação**.
 | o parceiro de cada número | o oposto, $-a$ | o inverso, $\frac{1}{a}$ |
 | a conta que volta pro começo | $a + (-a) = 0$ | $a \cdot \frac{1}{a} = 1$ |
 
-</Explicacao>
-
 ## O zero é o único que fica de fora
-
-<Explicacao>
 
 Tem um número que não tem inverso, e é o zero. Pensa comigo: pra ele ter inverso,
 precisaria existir algum número que multiplicado por zero desse $1$, e isso não
@@ -67,11 +57,7 @@ dividir por zero seria multiplicar pelo inverso do zero, e o zero **não tem** i
 pra multiplicar. Quando duas explicações diferentes chegam na mesma proibição, é um
 bom sinal de que você entendeu a proibição, e não decorou.
 
-</Explicacao>
-
 ## Dividir é multiplicar pelo inverso
-
-<Explicacao>
 
 Agora a frase da aula, e ela é curta:
 
@@ -85,16 +71,12 @@ $$
 12 \div 3 = 4 \qquad\qquad 12 \cdot \frac{1}{3} = \frac{12}{3} = 4
 $$
 
-</Explicacao>
-
 <Setas
   parcelas={[12, -3, -3, -3, -3]}
   legenda="12 ÷ 3  →  gastei 4 setas de 3 pra voltar até o zero"
   titulo="A mesma conta pela leitura de quantos cabem"
   dominio={[-2, 14]}
 />
-
-<Explicacao>
 
 E confere naquele caso que a escola costuma ensinar como macete solto, o de dividir
 por uma fração:
@@ -109,11 +91,7 @@ literalmente o que a frase da aula manda fazer. **Isso é esticamento**: toda co
 multiplicar e dividir vira uma operação só, a multiplicação, do mesmo jeito que a
 junção transformou soma e subtração numa operação só.
 
-</Explicacao>
-
 ## O ganho: a ordem parou de importar
-
-<Explicacao>
 
 O ganho de verdade é o mesmo que a junção te deu. Olha essa conta:
 
@@ -152,11 +130,7 @@ e sim porque você tirou da conta o símbolo que dava poder pra ordem. Isso é a
 **comutatividade da multiplicação**, e ela só fica disponível pra você depois que a
 divisão sai da frente.
 
-</Explicacao>
-
 ## Onde isso vai te salvar
-
-<Explicacao>
 
 Vale eu te adiantar onde esse jeito de ver aparece de novo, porque assim você já lê
 as próximas aulas com o olho treinado.
@@ -171,9 +145,7 @@ ele está multiplicando os dois lados pelo inverso. E na Física, aquelas fórmu
 barra, tipo $v = \frac{\Delta s}{\Delta t}$, se reorganizam sem susto quando você
 enxerga a barra como multiplicação.
 
-</Explicacao>
-
-<Curiosidade rotulo="Curiosidade — o paralelo inteiro entre as duas aulas">
+### O paralelo inteiro entre as duas aulas
 
 Se você puser a junção e o esticamento lado a lado, a coincidência fica grande demais
 pra ser coincidência:
@@ -197,64 +169,6 @@ hábito: quando você encontrar uma operação nova pela frente, procura logo qu
 número que não faz nada e quem é o parceiro que desfaz. Você vai fazer exatamente
 isso em logaritmo, muitas aulas na frente.
 
-</Curiosidade>
-
-## Agora é com você
-
-<Questao n={1} correta="b" alternativas={["$1$", "$4$", "$16$", "$64$"]}>
-
-Quanto é $8 \div 4 \times 2$ ?
-
-<div slot="gabarito">
-
-Reescrevendo a divisão como multiplicação pelo inverso:
-
-$$
-8 \div 4 \times 2 \;=\; 8 \cdot \frac{1}{4} \cdot 2
-$$
-
-Agora a ordem não importa mais, então eu vou pela esquerda, que é a mais confortável:
-
-$$
-8 \cdot \frac{1}{4} = 2 \qquad\to\qquad 2 \cdot 2 = 4
-$$
-
-O erro que essa questão está caçando é o $1$: quem resolve o $4 \times 2$ primeiro
-acha $8 \div 8 = 1$. E repara que o problema ali não foi a ordem em si, foi ter
-agrupado o $4$ com o $2$ enquanto o $4$ ainda estava fazendo papel de divisor. Depois
-que você troca o $4$ pelo $\frac{1}{4}$, agrupar do jeito que quiser fica liberado e
-esse erro não tem mais como acontecer.
-
-**Resultado: $4$.**
-
-</div>
-
-</Questao>
-
-<Questao n={2} correta="b" alternativas={["$4$", "$9$", "$\\frac{4}{9}$", "$\\frac{9}{4}$"]}>
-
-Quanto é $6 \div \dfrac{2}{3}$ ?
-
-<div slot="gabarito">
-
-Aplicando a frase da aula, dividir por $\frac{2}{3}$ é multiplicar pelo inverso de
-$\frac{2}{3}$, que é $\frac{3}{2}$:
-
-$$
-6 \div \frac{2}{3} \;=\; 6 \cdot \frac{3}{2} \;=\; \frac{18}{2} \;=\; 9
-$$
-
-E se te incomodou o resultado ter ficado **maior** que o $6$, vale conferir pela
-leitura de "quantos cabem", que a gente viu na aula das quatro operações: a pergunta
-é quantos $\frac{2}{3}$ cabem dentro de $6$. Como cada um deles é menor que $1$, cabe
-muita gente, então o resultado tinha que ser maior que $6$ mesmo.
-
-O erro clássico aqui é o $4$, de quem multiplicou por $\frac{2}{3}$ em vez do
-inverso.
-
-</div>
-
-</Questao>
 
 ---
 

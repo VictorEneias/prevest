@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { conceitos, exercicios } from '../conteudo';
+import { conceitos } from '../conteudo';
 import { useTitulo } from '../estado';
 import MapaConceitos from '../components/viz/MapaConceitos';
 
@@ -63,10 +63,7 @@ export default function Home() {
 
       <div className="ficha" style={{ marginTop: 'var(--u)' }}>
         <span>
-          <b>{conceitos.length}</b> módulos
-        </span>
-        <span>
-          <b>{exercicios.length}</b> exercícios
+          <b>{conceitos.length}</b> aulas
         </span>
       </div>
     </div>

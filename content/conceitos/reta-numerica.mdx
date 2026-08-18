@@ -10,8 +10,6 @@ revisado: false
 resumo: Todo número é um ponto numa reta. Dessa imagem saem a escala, o negativo, o módulo, o oposto e a comparação.
 ---
 
-<Explicacao>
-
 Antes de começarmos de fato a fazer contas, existe algo que devemos estudar que
 nos ajudará muito com nossas futuras matérias, isso é a **reta numérica**.
 
@@ -26,11 +24,7 @@ que você vai ver de matemática daqui pra frente.
 E o mais interessante é que a resposta é uma coisa só, muito simples, que você já
 viu na quarta série e provavelmente nunca olhou com atenção: uma reta.
 
-</Explicacao>
-
 ## Todo número tem um endereço
-
-<Explicacao>
 
 Vamos começar entendendo o que exatamente é essa reta numérica. Comece desenhando
 uma reta. Depois marque um ponto qualquer nela e chame esse ponto de **zero**.
@@ -53,8 +47,6 @@ Por último, e o que pode vir a ser o mais complicado por agora, é que entre o 
 o $2$ cabem infinitos outros endereços ($1{,}1$, $1{,}2$, $1{,}3$ e por aí vai).
 **A reta está lotada.**
 
-</Explicacao>
-
 <Setas
   parcelas={[3]}
   legenda="três passos pra direita, saindo do zero"
@@ -64,15 +56,11 @@ o $2$ cabem infinitos outros endereços ($1{,}1$, $1{,}2$, $1{,}3$ e por aí vai
 
 ## Escala
 
-<Explicacao>
-
 É importante dizer que a unidade de distância que você escolher entre os números
 realmente **não importa**, contanto que você mantenha esse padrão.
 
 Você pode usar um padrão de distância entre os números menor para conseguir ver
 números cada vez maiores usando cada vez menos espaço.
-
-</Explicacao>
 
 <Reta
   dominio={[0, 100]}
@@ -82,14 +70,10 @@ números cada vez maiores usando cada vez menos espaço.
   legenda="a mesma reta, com cada unidade valendo bem pouco espaço"
 />
 
-<Explicacao>
-
 Além disso, obviamente podemos fazer o contrário, e aumentar a distância entre cada
 número para que possamos ver números cada vez menores entre os nossos números
 naturais. Podemos ver que entre eles, por exemplo entre o $1$ e o $2$, existem
 vários números que moram ali, porém no momento não iremos nos preocupar com eles.
-
-</Explicacao>
 
 <Reta
   dominio={[0, 2]}
@@ -99,19 +83,13 @@ vários números que moram ali, porém no momento não iremos nos preocupar com 
   legenda="a mesma reta de novo, agora com espaço pra ver quem mora entre os naturais"
 />
 
-<Explicacao>
-
 Agora, para que você possa entender melhor, brinque com a reta abaixo e se
 familiarize com o conceito. Arraste pra andar pelos números e mexa na escala pra
 afastar e aproximar.
 
-</Explicacao>
-
 <RetaZoom centro={0} janela={20} titulo="Afaste e aproxime" chaveUrl="rz" />
 
 ## Do outro lado do zero
-
-<Explicacao>
 
 Mas assim… o que é que te impede de andar pro outro lado?
 
@@ -130,8 +108,6 @@ dinheiro, números negativos podem significar uma quantidade que alguém poderia
 estar devendo. Já num termômetro eles significam temperatura abaixo do ponto em que
 a água congela, que foi o lugar onde alguém resolveu cravar o zero da escala.
 
-</Explicacao>
-
 <Setas
   parcelas={[-3]}
   legenda="três passos pra esquerda, saindo do mesmo zero"
@@ -140,8 +116,6 @@ a água congela, que foi o lugar onde alguém resolveu cravar o zero da escala.
 />
 
 ## Duas informações num número só
-
-<Explicacao>
 
 Repara que, escrito desse jeito, o $-3$ está te contando **duas coisas ao mesmo
 tempo**:
@@ -160,11 +134,7 @@ devendo velocidade a ninguém.
 Um número com sinal já é, na prática, **um vetor de uma dimensão**, e é por isso
 que vale a pena entender isso bem agora, e não daqui a três anos.
 
-</Explicacao>
-
 ## O oposto
-
-<Explicacao>
 
 O **oposto** de um número é ele espelhado no zero: mesmo módulo, direção contrária.
 
@@ -183,11 +153,7 @@ te deixa exatamente onde você começou. Agora isso parece pequeno demais pra te
 nome, porém é literalmente o que você faz toda vez que "passa um termo pro outro
 lado" numa equação, e é bom você já saber disso antes de decorar o macete.
 
-</Explicacao>
-
 ## Quem é maior
-
-<Explicacao>
 
 Chegamos na parte que mais confunde, e ela confunde justamente porque as pessoas
 tentam responder pelo tamanho do número em vez de responder pela posição.
@@ -218,9 +184,7 @@ não é posição, e quem decide quem é maior é a posição. Quando os dois n�
 negativos, **o de módulo maior é o menor dos dois**, porque ele foi mais longe pro
 lado errado.
 
-</Explicacao>
-
-<Curiosidade rotulo="Curiosidade — um jeito de conferir quando bater a dúvida">
+### Um jeito de conferir quando bater a dúvida
 
 Se em algum momento você travar nessa comparação, tem um teste que resolve na hora:
 pergunta qual dos dois você prefere ter de dívida.
@@ -230,67 +194,6 @@ número menor. A analogia não substitui a reta, e você deve continuar pensando
 reta como imagem principal, porém quando a reta não estiver na sua frente essa
 pergunta te tira do aperto.
 
-</Curiosidade>
-
-## Agora é com você
-
-<Explicacao>
-
-Duas questões pra fechar. A segunda é exatamente a pegadinha que a gente acabou de
-discutir, então vai devagar nela.
-
-</Explicacao>
-
-<Questao n={1} correta="c" alternativas={["$-8$", "$0$", "$8$", "$-4$", "$4$"]}>
-
-Qual é o oposto de $-8$ ?
-
-<div slot="gabarito">
-
-Oposto é o mesmo número espelhado no zero: mantém o módulo, troca a direção.
-
-O módulo de $-8$ é $8$, e a direção dele é pra esquerda. Espelhando, o módulo
-continua $8$ e a direção passa a ser pra direita:
-
-$$
-\text{oposto de } -8 = +8
-$$
-
-Dá pra conferir pela propriedade, que tem que fechar em zero:
-
-$$
-(-8) + (+8) = 0
-$$
-
-</div>
-
-</Questao>
-
-<Questao n={2} correta="a" alternativas={["$-9 < -2$", "$-9 > -2$", "$-9 = -2$", "$-2 < -9$", "Não dá pra comparar negativos"]}>
-
-Qual das comparações abaixo está correta?
-
-<div slot="gabarito">
-
-A pergunta não é qual número é maior de tamanho, e sim qual está mais à direita na
-reta.
-
-Pra chegar no $-9$ eu ando 9 passos pra esquerda. Pra chegar no $-2$ eu ando só 2.
-Ou seja, o $-9$ ficou bem mais longe pra esquerda, e mais à esquerda é o lado do
-menor:
-
-$$
--9 < -2
-$$
-
-O que engana é o módulo: o $9$ é maior que o $2$, e o olho quer transferir isso pro
-número inteiro. Mas módulo é distância até o zero, não é posição, e entre dois
-negativos **quem tem o módulo maior é o menor dos dois**, porque foi mais longe pro
-lado negativo.
-
-</div>
-
-</Questao>
 
 ---
 

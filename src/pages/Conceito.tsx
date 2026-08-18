@@ -1,6 +1,6 @@
-import { Link, useParams } from 'react-router-dom';
-import { dependemDe, exerciciosDe, porId } from '../conteudo';
-import { ROTULO_MATERIA, ROTULO_NIVEL_EX, rotuloBloco } from '../lib/curriculo';
+import { useParams } from 'react-router-dom';
+import { dependemDe, porId } from '../conteudo';
+import { ROTULO_MATERIA, rotuloBloco } from '../lib/curriculo';
 import { useTitulo } from '../estado';
 import C from '../components/C';
 import MapaConceitos from '../components/viz/MapaConceitos';
@@ -51,16 +51,17 @@ export default function Conceito({
 
   const { Corpo } = c;
   const filhos = dependemDe(c.id);
-  const exercicios = exerciciosDe(c.id);
 
   if (dentroDePainel) {
     return (
       <div className="folha">
-        <article className={`papel ${c.revisado ? '' : 'conceito-nao-revisado'}`}>
+        <article className="papel">
           <h2>{c.titulo}</h2>
           {c.resumo && <p style={{ color: 'var(--tinta-media)' }}>{c.resumo}</p>}
           <hr className="regua" />
-          <Corpo />
+          <div className="aula">
+            <Corpo />
+          </div>
         </article>
       </div>
     );
@@ -68,7 +69,7 @@ export default function Conceito({
 
   return (
     <div className="folha">
-      <article className={`papel ${c.revisado ? '' : 'conceito-nao-revisado'}`}>
+      <article className="papel">
         {!c.revisado && (
           <p className="rascunho">
             <b>Rascunho</b> Ainda não conferi esta página linha por linha.
@@ -109,26 +110,9 @@ export default function Conceito({
         )}
 
         <hr className="regua" />
-        <Corpo />
-
-        {exercicios.length > 0 && (
-          <>
-            <hr className="regua" />
-            <p className="rotulo-secao">Exercícios deste módulo</p>
-            <ul className="lista-exercicios">
-              {exercicios.map((e) => (
-                <li key={e.id}>
-                  <Link to={`/exercicios/${e.id}`}>
-                    <b>{e.nivel}</b>
-                    <span>{ROTULO_NIVEL_EX[e.nivel]}</span>
-                    <em>{e.fonte}</em>
-                    {e.tempo_alvo && <span className="alvo">{e.tempo_alvo} min</span>}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
+        <div className="aula">
+          <Corpo />
+        </div>
 
         {(filhos.length > 0 || c.prereqs.length > 0) && (
           <>

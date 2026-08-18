@@ -2,10 +2,9 @@
  * O estado que atravessa a aula inteira: o modo de exibição, o tamanho da fonte
  * e a pilha de painéis.
  *
- * O modo continua sendo um data-attribute no <html>, igual era antes, porque
- * quase todo o efeito dele é CSS e assim o painel herda o modo de graça. O que
- * o React resolve aqui é o resto: reabrir as camadas quando o modo troca e
- * empilhar painel sem iframe.
+ * O modo é um data-attribute no <html> porque o efeito dele é todo CSS, e assim
+ * o painel herda o modo de graça. O que o React resolve aqui é a pilha de
+ * painéis, que antes era iframe.
  */
 import {
   createContext,
@@ -19,13 +18,6 @@ import {
 
 export type Modo = 'estudo' | 'aula';
 export type Tamanho = 'normal' | 'grande' | 'enorme';
-
-/** Em que modo cada camada nasce aberta. Trocar de modo só abre e fecha
- *  <details>, então o aluno pode reabrir uma camada no clique durante a aula. */
-export const CAMADAS_ABERTAS: Record<Modo, string[]> = {
-  estudo: ['resolucao', 'pensamento', 'erros'],
-  aula: [],
-};
 
 const TAMANHOS: Tamanho[] = ['normal', 'grande', 'enorme'];
 

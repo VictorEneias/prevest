@@ -4,7 +4,6 @@ import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import { componentesMDX } from './components/mdx';
 import { useAula, type ItemPilha } from './estado';
 import Conceito, { PaginaConceito } from './pages/Conceito';
-import Exercicio from './pages/Exercicio';
 import Home from './pages/Home';
 
 /**
@@ -46,7 +45,6 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/conceitos/:id" element={<PaginaConceito />} />
-          <Route path="/exercicios/:id" element={<Exercicio />} />
           <Route path="*" element={<NaoAchei />} />
         </Routes>
       </main>
