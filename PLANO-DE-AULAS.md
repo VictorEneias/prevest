@@ -1,6 +1,6 @@
 # Plano de aulas — Matemática
 
-84 aulas, 768 tópicos declarados, 51h10 de aula. Gerado por `npm run plano` a partir do frontmatter de `content/conceitos/`; **não edite este arquivo à mão**, edite a aula e rode o script de novo.
+84 aulas, 768 tópicos declarados, 48h25 de aula. Gerado por `npm run plano` a partir do frontmatter de `content/conceitos/`; **não edite este arquivo à mão**, edite a aula e rode o script de novo.
 
 ## Como ler uma ficha
 
@@ -15,14 +15,14 @@
 
 | Área | Aulas | Tópicos | Tempo |
 |---|---:|---:|---:|
-| Aritmética | 17 | 147 | 9h55 |
-| Álgebra | 16 | 135 | 9h15 |
-| Funções | 17 | 160 | 10h30 |
-| Geometria | 25 | 247 | 16h05 |
-| Dados e contagem | 9 | 79 | 5h25 |
-| **Total** | **84** | **768** | **51h10** |
+| Aritmética | 17 | 147 | 9h20 |
+| Álgebra | 16 | 135 | 8h40 |
+| Funções | 17 | 160 | 10h10 |
+| Geometria | 25 | 247 | 15h15 |
+| Dados e contagem | 9 | 79 | 5h00 |
+| **Total** | **84** | **768** | **48h25** |
 
-Por nível declarado: **41 de base** (revisão de fundamental que trava o resto, 25h05) e **43 de médio** (26h05).
+Por nível declarado: **41 de base** (revisão de fundamental que trava o resto, 23h35) e **43 de médio** (24h50).
 
 Por estado: **6 escritas** (Conjuntos numéricos, Escalamento, Frações, Junção, O que cada operação faz, A reta numérica) e **78 esqueletos**, que já têm título, resumo, tópicos e prereqs, mas nenhum texto.
 
@@ -57,92 +57,92 @@ O grafo declara dependência, não fila. Esta é uma ordem que respeita todos os
 | 2 | Ângulos | Geometria | 0 | 35 | 1h00 |
 | 3 | Triângulos | Geometria | 1 | 55 | 1h55 |
 | 4 | Conjuntos numéricos | Aritmética | 1 | 45 | 2h40 |
-| 5 | O que cada operação faz | Aritmética | 2 | 40 | 3h20 |
-| 6 | Circunferência e círculo | Geometria | 2 | 45 | 4h05 |
-| 7 | Plano cartesiano | Geometria | 2 | 40 | 4h45 |
-| 8 | Polígonos | Geometria | 2 | 35 | 5h20 |
-| 9 | Quadriláteros | Geometria | 2 | 40 | 6h00 |
-| 10 | Retas e planos no espaço | Geometria | 3 | 40 | 6h40 |
-| 11 | Frações | Aritmética | 3 | 50 | 7h30 |
-| 12 | Junção | Aritmética | 3 | 30 | 8h00 |
-| 13 | Princípio multiplicativo | Dados e contagem | 3 | 35 | 8h35 |
-| 14 | Arranjos e permutações | Dados e contagem | 4 | 35 | 9h10 |
-| 15 | Escalamento | Aritmética | 4 | 30 | 9h40 |
-| 16 | Poliedros | Geometria | 4 | 35 | 10h15 |
-| 17 | Potências | Aritmética | 5 | 35 | 10h50 |
-| 18 | Porcentagem | Aritmética | 5 | 25 | 11h15 |
-| 19 | Razão e proporção | Aritmética | 5 | 40 | 11h55 |
-| 20 | Primos e fatoração | Aritmética | 5 | 35 | 12h30 |
-| 21 | Linguagem algébrica | Álgebra | 5 | 35 | 13h05 |
-| 22 | Combinações | Dados e contagem | 5 | 35 | 13h40 |
-| 23 | Leitura de gráficos e tabelas | Dados e contagem | 6 | 45 | 14h25 |
-| 24 | Probabilidade | Dados e contagem | 6 | 35 | 15h00 |
-| 25 | Radiciação | Aritmética | 6 | 35 | 15h35 |
-| 26 | Unidades de medida | Aritmética | 6 | 35 | 16h10 |
-| 27 | Aumentos e descontos | Aritmética | 6 | 35 | 16h45 |
-| 28 | Notação científica | Aritmética | 6 | 25 | 17h10 |
-| 29 | Equação do 1º grau | Álgebra | 6 | 35 | 17h45 |
-| 30 | Monômios e polinômios | Álgebra | 6 | 30 | 18h15 |
-| 31 | Teorema de Tales | Geometria | 6 | 25 | 18h40 |
-| 32 | Áreas de polígonos | Geometria | 7 | 40 | 19h20 |
-| 33 | Semelhança de triângulos | Geometria | 7 | 45 | 20h05 |
-| 34 | Produtos notáveis | Álgebra | 7 | 30 | 20h35 |
-| 35 | Sistemas do 1º grau | Álgebra | 7 | 30 | 21h05 |
-| 36 | Números reais | Aritmética | 7 | 35 | 21h40 |
-| 37 | Juros simples e compostos | Aritmética | 7 | 35 | 22h15 |
-| 38 | O que é uma função | Funções | 7 | 50 | 23h05 |
-| 39 | Média, moda e mediana | Dados e contagem | 7 | 35 | 23h40 |
-| 40 | Probabilidade condicional | Dados e contagem | 7 | 35 | 24h15 |
-| 41 | Binômio de Newton | Dados e contagem | 8 | 30 | 24h45 |
-| 42 | Dispersão | Dados e contagem | 8 | 40 | 25h25 |
-| 43 | Função afim | Funções | 8 | 40 | 26h05 |
-| 44 | Fatoração | Álgebra | 8 | 35 | 26h40 |
-| 45 | Matrizes | Álgebra | 8 | 35 | 27h15 |
-| 46 | Prismas | Geometria | 8 | 50 | 28h05 |
-| 47 | Teorema de Pitágoras | Geometria | 8 | 35 | 28h40 |
-| 48 | Comprimento e área do círculo | Geometria | 8 | 35 | 29h15 |
-| 49 | Conjuntos e intervalos | Aritmética | 8 | 40 | 29h55 |
-| 50 | Equação do 2º grau | Álgebra | 9 | 40 | 30h35 |
-| 51 | Determinantes | Álgebra | 9 | 35 | 31h10 |
-| 52 | Frações algébricas | Álgebra | 9 | 35 | 31h45 |
-| 53 | Inequações do 1º grau | Álgebra | 9 | 30 | 32h15 |
-| 54 | Função exponencial | Funções | 9 | 35 | 32h50 |
-| 55 | Função composta e inversa | Funções | 9 | 35 | 33h25 |
-| 56 | Sequências e PA | Funções | 9 | 35 | 34h00 |
-| 57 | Função modular | Funções | 9 | 30 | 34h30 |
-| 58 | O ponto no plano | Geometria | 9 | 30 | 35h00 |
-| 59 | Cilindro e cone | Geometria | 9 | 50 | 35h50 |
-| 60 | Pirâmides | Geometria | 9 | 40 | 36h30 |
-| 61 | Relações métricas no triângulo retângulo | Geometria | 9 | 30 | 37h00 |
-| 62 | Trigonometria no triângulo retângulo | Geometria | 10 | 40 | 37h40 |
-| 63 | A reta no plano | Geometria | 10 | 50 | 38h30 |
-| 64 | Esfera | Geometria | 10 | 35 | 39h05 |
-| 65 | Função quadrática | Funções | 10 | 40 | 39h45 |
-| 66 | Logaritmos | Funções | 10 | 40 | 40h25 |
-| 67 | Equações e inequações exponenciais | Funções | 10 | 30 | 40h55 |
-| 68 | Progressão geométrica | Funções | 10 | 35 | 41h30 |
-| 69 | Números complexos | Álgebra | 10 | 40 | 42h10 |
-| 70 | Polinômios | Álgebra | 10 | 40 | 42h50 |
-| 71 | Sistemas lineares | Álgebra | 10 | 35 | 43h25 |
-| 72 | Equações polinomiais | Álgebra | 11 | 35 | 44h00 |
-| 73 | Círculo trigonométrico | Funções | 11 | 45 | 44h45 |
-| 74 | Função logarítmica | Funções | 11 | 30 | 45h15 |
-| 75 | Transformações de gráfico | Funções | 11 | 40 | 45h55 |
-| 76 | Inequações e estudo do sinal | Funções | 11 | 30 | 46h25 |
-| 77 | A circunferência no plano | Geometria | 11 | 35 | 47h00 |
-| 78 | Lei dos senos e dos cossenos | Geometria | 11 | 25 | 47h25 |
-| 79 | Sólidos inscritos e circunscritos | Geometria | 11 | 35 | 48h00 |
-| 80 | Cônicas | Geometria | 12 | 40 | 48h40 |
-| 81 | Funções trigonométricas | Funções | 12 | 40 | 49h20 |
-| 82 | Equações e inequações logarítmicas | Funções | 12 | 30 | 49h50 |
-| 83 | Complexos na forma trigonométrica | Álgebra | 12 | 35 | 50h25 |
-| 84 | Identidades e equações trigonométricas | Funções | 13 | 45 | 51h10 |
+| 5 | O que cada operação faz | Aritmética | 2 | 35 | 3h15 |
+| 6 | Circunferência e círculo | Geometria | 2 | 45 | 4h00 |
+| 7 | Plano cartesiano | Geometria | 2 | 35 | 4h35 |
+| 8 | Polígonos | Geometria | 2 | 35 | 5h10 |
+| 9 | Quadriláteros | Geometria | 2 | 40 | 5h50 |
+| 10 | Retas e planos no espaço | Geometria | 3 | 40 | 6h30 |
+| 11 | Frações | Aritmética | 3 | 45 | 7h15 |
+| 12 | Junção | Aritmética | 3 | 30 | 7h45 |
+| 13 | Princípio multiplicativo | Dados e contagem | 3 | 30 | 8h15 |
+| 14 | Arranjos e permutações | Dados e contagem | 4 | 30 | 8h45 |
+| 15 | Escalamento | Aritmética | 4 | 30 | 9h15 |
+| 16 | Poliedros | Geometria | 4 | 35 | 9h50 |
+| 17 | Potências | Aritmética | 5 | 30 | 10h20 |
+| 18 | Porcentagem | Aritmética | 5 | 25 | 10h45 |
+| 19 | Razão e proporção | Aritmética | 5 | 40 | 11h25 |
+| 20 | Primos e fatoração | Aritmética | 5 | 30 | 11h55 |
+| 21 | Linguagem algébrica | Álgebra | 5 | 30 | 12h25 |
+| 22 | Combinações | Dados e contagem | 5 | 30 | 12h55 |
+| 23 | Leitura de gráficos e tabelas | Dados e contagem | 6 | 45 | 13h40 |
+| 24 | Probabilidade | Dados e contagem | 6 | 35 | 14h15 |
+| 25 | Radiciação | Aritmética | 6 | 30 | 14h45 |
+| 26 | Unidades de medida | Aritmética | 6 | 30 | 15h15 |
+| 27 | Aumentos e descontos | Aritmética | 6 | 35 | 15h50 |
+| 28 | Notação científica | Aritmética | 6 | 25 | 16h15 |
+| 29 | Equação do 1º grau | Álgebra | 6 | 35 | 16h50 |
+| 30 | Monômios e polinômios | Álgebra | 6 | 30 | 17h20 |
+| 31 | Teorema de Tales | Geometria | 6 | 25 | 17h45 |
+| 32 | Áreas de polígonos | Geometria | 7 | 35 | 18h20 |
+| 33 | Semelhança de triângulos | Geometria | 7 | 45 | 19h05 |
+| 34 | Produtos notáveis | Álgebra | 7 | 30 | 19h35 |
+| 35 | Sistemas do 1º grau | Álgebra | 7 | 30 | 20h05 |
+| 36 | Números reais | Aritmética | 7 | 35 | 20h40 |
+| 37 | Juros simples e compostos | Aritmética | 7 | 35 | 21h15 |
+| 38 | O que é uma função | Funções | 7 | 45 | 22h00 |
+| 39 | Média, moda e mediana | Dados e contagem | 7 | 30 | 22h30 |
+| 40 | Probabilidade condicional | Dados e contagem | 7 | 35 | 23h05 |
+| 41 | Binômio de Newton | Dados e contagem | 8 | 30 | 23h35 |
+| 42 | Dispersão | Dados e contagem | 8 | 35 | 24h10 |
+| 43 | Função afim | Funções | 8 | 35 | 24h45 |
+| 44 | Fatoração | Álgebra | 8 | 30 | 25h15 |
+| 45 | Matrizes | Álgebra | 8 | 35 | 25h50 |
+| 46 | Prismas | Geometria | 8 | 45 | 26h35 |
+| 47 | Teorema de Pitágoras | Geometria | 8 | 30 | 27h05 |
+| 48 | Comprimento e área do círculo | Geometria | 8 | 30 | 27h35 |
+| 49 | Conjuntos e intervalos | Aritmética | 8 | 35 | 28h10 |
+| 50 | Equação do 2º grau | Álgebra | 9 | 35 | 28h45 |
+| 51 | Determinantes | Álgebra | 9 | 30 | 29h15 |
+| 52 | Frações algébricas | Álgebra | 9 | 30 | 29h45 |
+| 53 | Inequações do 1º grau | Álgebra | 9 | 30 | 30h15 |
+| 54 | Função exponencial | Funções | 9 | 35 | 30h50 |
+| 55 | Função composta e inversa | Funções | 9 | 30 | 31h20 |
+| 56 | Sequências e PA | Funções | 9 | 35 | 31h55 |
+| 57 | Função modular | Funções | 9 | 30 | 32h25 |
+| 58 | O ponto no plano | Geometria | 9 | 30 | 32h55 |
+| 59 | Cilindro e cone | Geometria | 9 | 45 | 33h40 |
+| 60 | Pirâmides | Geometria | 9 | 35 | 34h15 |
+| 61 | Relações métricas no triângulo retângulo | Geometria | 9 | 30 | 34h45 |
+| 62 | Trigonometria no triângulo retângulo | Geometria | 10 | 35 | 35h20 |
+| 63 | A reta no plano | Geometria | 10 | 45 | 36h05 |
+| 64 | Esfera | Geometria | 10 | 35 | 36h40 |
+| 65 | Função quadrática | Funções | 10 | 40 | 37h20 |
+| 66 | Logaritmos | Funções | 10 | 40 | 38h00 |
+| 67 | Equações e inequações exponenciais | Funções | 10 | 30 | 38h30 |
+| 68 | Progressão geométrica | Funções | 10 | 35 | 39h05 |
+| 69 | Números complexos | Álgebra | 10 | 35 | 39h40 |
+| 70 | Polinômios | Álgebra | 10 | 35 | 40h15 |
+| 71 | Sistemas lineares | Álgebra | 10 | 35 | 40h50 |
+| 72 | Equações polinomiais | Álgebra | 11 | 35 | 41h25 |
+| 73 | Círculo trigonométrico | Funções | 11 | 45 | 42h10 |
+| 74 | Função logarítmica | Funções | 11 | 30 | 42h40 |
+| 75 | Transformações de gráfico | Funções | 11 | 40 | 43h20 |
+| 76 | Inequações e estudo do sinal | Funções | 11 | 30 | 43h50 |
+| 77 | A circunferência no plano | Geometria | 11 | 35 | 44h25 |
+| 78 | Lei dos senos e dos cossenos | Geometria | 11 | 25 | 44h50 |
+| 79 | Sólidos inscritos e circunscritos | Geometria | 11 | 30 | 45h20 |
+| 80 | Cônicas | Geometria | 12 | 40 | 46h00 |
+| 81 | Funções trigonométricas | Funções | 12 | 35 | 46h35 |
+| 82 | Equações e inequações logarítmicas | Funções | 12 | 30 | 47h05 |
+| 83 | Complexos na forma trigonométrica | Álgebra | 12 | 35 | 47h40 |
+| 84 | Identidades e equações trigonométricas | Funções | 13 | 45 | 48h25 |
 
 ## As fichas
 
 ### Aritmética
 
-17 aulas, 9h55.
+17 aulas, 9h20.
 
 #### 1. A reta numérica
 
@@ -150,7 +150,7 @@ O grafo declara dependência, não fila. Esta é uma ordem que respeita todos os
 
 Todo número é um ponto numa reta. Dessa imagem saem a escala, o negativo, o módulo, o oposto e a comparação.
 
-`reta-numerica` · nível 0 · base · **25 min de aula** e 14 min de leitura em casa (medido na página) · 8 tópicos
+`reta-numerica` · nível 0 · base · **25 min de aula** e 13 min de leitura em casa (medido na página) · 8 tópicos
 
 **Precisa de:** nada, é porta de entrada  
 **Destrava:** Conjuntos numéricos
@@ -203,7 +203,7 @@ A sintaxe dos conjuntos, e depois os moradores: naturais, inteiros e racionais, 
 
 As quatro operações vistas pelo significado, a ordem em que uma expressão se resolve, e os dois pares em que uma operação desfaz a outra.
 
-`quatro-operacoes` · nível 2 · base · **40 min de aula** e 19 min de leitura em casa (medido na página) · 9 tópicos
+`quatro-operacoes` · nível 2 · base · **35 min de aula** e 19 min de leitura em casa (medido na página) · 9 tópicos
 
 **Precisa de:** Conjuntos numéricos  
 **Destrava:** Frações, Junção, Princípio multiplicativo
@@ -228,7 +228,7 @@ As quatro operações vistas pelo significado, a ordem em que uma expressão se 
 
 A fração como divisão que ficou pendente, e tudo que você precisa pra operar com ela.
 
-`fracoes` · nível 3 · base · **50 min de aula** e 25 min de leitura em casa (medido na página) · 12 tópicos
+`fracoes` · nível 3 · base · **45 min de aula** e 24 min de leitura em casa (medido na página) · 12 tópicos
 
 **Precisa de:** O que cada operação faz  
 **Destrava:** Escalamento
@@ -301,7 +301,7 @@ Dividir por um número é multiplicar pelo inverso dele, então multiplicação 
 
 As propriedades das potências saindo da definição, incluindo o que significa expoente zero e expoente negativo.
 
-`potencias` · nível 5 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`potencias` · nível 5 · base · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Escalamento  
 **Destrava:** Função exponencial, Juros simples e compostos, Monômios e polinômios, Notação científica, Radiciação
@@ -380,7 +380,7 @@ Razão, proporção e as grandezas que andam juntas, com a regra de três como c
 
 Todo número composto se desmonta em primos de um jeito só, e é daí que sai o método rápido de MMC e MDC.
 
-`primos-e-fatoracao` · nível 5 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`primos-e-fatoracao` · nível 5 · base · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Escalamento  
 **Destrava:** Radiciação
@@ -406,7 +406,7 @@ Todo número composto se desmonta em primos de um jeito só, e é daí que sai o
 
 Raiz como operação inversa, com as propriedades dos radicais vindo das propriedades das potências.
 
-`radiciacao` · nível 6 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`radiciacao` · nível 6 · base · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Potências, Primos e fatoração  
 **Destrava:** Equação do 2º grau, Dispersão, Números reais, Teorema de Pitágoras
@@ -432,7 +432,7 @@ Raiz como operação inversa, com as propriedades dos radicais vindo das proprie
 
 Comprimento, área, volume, massa e tempo, e por que área multiplica por cem e não por dez.
 
-`unidades-de-medida` · nível 6 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`unidades-de-medida` · nível 6 · base · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Razão e proporção  
 **Destrava:** Áreas de polígonos
@@ -563,7 +563,7 @@ Juros simples somam sempre sobre o mesmo capital, juros compostos multiplicam so
 
 União, interseção e diferença, e a notação de intervalo que aparece em toda inequação daqui pra frente.
 
-`conjuntos-e-intervalos` · nível 8 · medio · **40 min de aula** e 20 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
+`conjuntos-e-intervalos` · nível 8 · medio · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
 
 **Precisa de:** Números reais  
 **Destrava:** Inequações do 1º grau
@@ -587,7 +587,7 @@ União, interseção e diferença, e a notação de intervalo que aparece em tod
 
 ### Álgebra
 
-16 aulas, 9h15.
+16 aulas, 8h40.
 
 #### 21. Linguagem algébrica
 
@@ -595,7 +595,7 @@ União, interseção e diferença, e a notação de intervalo que aparece em tod
 
 O que uma letra representa, a diferença entre incógnita, variável e parâmetro, e o que autoriza juntar dois termos.
 
-`linguagem-algebrica` · nível 5 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`linguagem-algebrica` · nível 5 · base · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Escalamento  
 **Destrava:** Equação do 1º grau, Monômios e polinômios
@@ -723,7 +723,7 @@ Substituição e adição, e o que significa um sistema não ter solução ou te
 
 Transformar soma em produto, que é o que permite simplificar e resolver depois.
 
-`fatoracao-algebrica` · nível 8 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`fatoracao-algebrica` · nível 8 · base · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Produtos notáveis  
 **Destrava:** Equação do 2º grau, Frações algébricas
@@ -776,7 +776,7 @@ Organizar dados em linhas e colunas, e operar com a tabela inteira de uma vez.
 
 A fórmula deduzida por completamento de quadrado, e o discriminante contando quantas raízes existem.
 
-`equacao-segundo-grau` · nível 9 · base · **40 min de aula** e 20 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
+`equacao-segundo-grau` · nível 9 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
 
 **Precisa de:** Fatoração, Radiciação  
 **Destrava:** Função quadrática, Números complexos, Polinômios
@@ -804,7 +804,7 @@ A fórmula deduzida por completamento de quadrado, e o discriminante contando qu
 
 Cálculo de determinante e o que ele significa geometricamente.
 
-`determinantes` · nível 9 · medio · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`determinantes` · nível 9 · medio · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Matrizes  
 **Destrava:** Sistemas lineares
@@ -830,7 +830,7 @@ Cálculo de determinante e o que ele significa geometricamente.
 
 Simplificar e operar frações com polinômio, sem esquecer que o denominador não pode zerar.
 
-`fracoes-algebricas` · nível 9 · medio · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`fracoes-algebricas` · nível 9 · medio · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Fatoração  
 **Destrava:** Inequações e estudo do sinal
@@ -881,7 +881,7 @@ Quase tudo igual à equação, menos um detalhe que inverte tudo: multiplicar po
 
 Inventar um número novo pra fechar o que faltava, e descobrir que ele tem geometria.
 
-`numeros-complexos` · nível 10 · medio · **40 min de aula** e 20 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
+`numeros-complexos` · nível 10 · medio · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
 
 **Precisa de:** Equação do 2º grau  
 **Destrava:** Complexos na forma trigonométrica
@@ -909,7 +909,7 @@ Inventar um número novo pra fechar o que faltava, e descobrir que ele tem geome
 
 Grau, valor numérico e a divisão de polinômios, com o dispositivo que abrevia a conta.
 
-`polinomios` · nível 10 · medio · **40 min de aula** e 20 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
+`polinomios` · nível 10 · medio · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
 
 **Precisa de:** Equação do 2º grau  
 **Destrava:** Equações polinomiais
@@ -1014,7 +1014,7 @@ Escrito com módulo e argumento, multiplicar complexo vira girar e esticar.
 
 ### Funções
 
-17 aulas, 10h30.
+17 aulas, 10h10.
 
 #### 38. O que é uma função
 
@@ -1022,7 +1022,7 @@ Escrito com módulo e argumento, multiplicar complexo vira girar e esticar.
 
 Domínio, imagem e gráfico, e a regra de que cada entrada tem uma saída só.
 
-`introducao-a-funcoes` · nível 7 · base · **50 min de aula** e 25 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
+`introducao-a-funcoes` · nível 7 · base · **45 min de aula** e 23 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
 
 **Precisa de:** Plano cartesiano, Equação do 1º grau  
 **Destrava:** Função afim
@@ -1053,7 +1053,7 @@ Domínio, imagem e gráfico, e a regra de que cada entrada tem uma saída só.
 
 Reta no gráfico, taxa constante, e o significado real de cada coeficiente.
 
-`funcao-afim` · nível 8 · base · **40 min de aula** e 20 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
+`funcao-afim` · nível 8 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
 
 **Precisa de:** O que é uma função  
 **Destrava:** A reta no plano, Função composta e inversa, Função exponencial, Função modular, Função quadrática, Sequências e PA
@@ -1108,7 +1108,7 @@ Crescimento que multiplica em vez de somar, e por que ele sempre ganha do polino
 
 Compor é aplicar em sequência, inverter é desfazer, e a inversa só existe sob uma condição.
 
-`funcao-composta-e-inversa` · nível 9 · medio · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`funcao-composta-e-inversa` · nível 9 · medio · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Função afim  
 **Destrava:** Função logarítmica
@@ -1405,7 +1405,7 @@ Inequação produto e quociente resolvidas pelo quadro de sinais.
 
 Seno, cosseno e tangente como funções: período, amplitude e as transformações.
 
-`funcoes-trigonometricas` · nível 12 · medio · **40 min de aula** e 20 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
+`funcoes-trigonometricas` · nível 12 · medio · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
 
 **Precisa de:** Círculo trigonométrico, Transformações de gráfico  
 **Destrava:** Identidades e equações trigonométricas
@@ -1484,7 +1484,7 @@ Relação fundamental, soma de arcos e arco duplo, e as equações que saem daí
 
 ### Geometria
 
-25 aulas, 16h05.
+25 aulas, 15h15.
 
 #### 2. Ângulos
 
@@ -1584,7 +1584,7 @@ Elementos, posições relativas e os ângulos que aparecem quando você desenha 
 
 A ideia que casou álgebra com geometria: par ordenado, quadrantes e localização.
 
-`plano-cartesiano` · nível 2 · base · **40 min de aula** e 20 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
+`plano-cartesiano` · nível 2 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
 
 **Precisa de:** Conjuntos numéricos  
 **Destrava:** O ponto no plano, Círculo trigonométrico, O que é uma função
@@ -1747,7 +1747,7 @@ Retas paralelas dividem transversais em segmentos proporcionais. É a base da se
 
 Toda fórmula de área sai do retângulo, e nenhuma precisa ser decorada isolada.
 
-`areas-de-poligonos` · nível 7 · base · **40 min de aula** e 20 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
+`areas-de-poligonos` · nível 7 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
 
 **Precisa de:** Quadriláteros, Unidades de medida  
 **Destrava:** Comprimento e área do círculo, Prismas
@@ -1805,7 +1805,7 @@ Os casos de semelhança e a razão de semelhança, que é o que faz medir a altu
 
 Cubo, paralelepípedo e prisma qualquer, com área total pela planificação e volume como base vezes altura.
 
-`prismas` · nível 8 · medio · **50 min de aula** e 25 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
+`prismas` · nível 8 · medio · **45 min de aula** e 23 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
 
 **Precisa de:** Poliedros, Áreas de polígonos  
 **Destrava:** Cilindro e cone, Pirâmides
@@ -1836,7 +1836,7 @@ Cubo, paralelepípedo e prisma qualquer, com área total pela planificação e v
 
 Um fato sobre áreas antes de ser uma fórmula, e dá pra ver acontecendo.
 
-`teorema-de-pitagoras` · nível 8 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`teorema-de-pitagoras` · nível 8 · base · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Semelhança de triângulos, Radiciação  
 **Destrava:** O ponto no plano, Relações métricas no triângulo retângulo
@@ -1862,7 +1862,7 @@ Um fato sobre áreas antes de ser uma fórmula, e dá pra ver acontecendo.
 
 Comprimento e área do círculo, mais as partes dele que a prova cobra: setor, coroa e segmento.
 
-`circulo-comprimento-e-area` · nível 8 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`circulo-comprimento-e-area` · nível 8 · base · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Circunferência e círculo, Áreas de polígonos  
 **Destrava:** Cilindro e cone
@@ -1913,7 +1913,7 @@ Distância entre dois pontos, ponto médio e alinhamento, com Pitágoras trabalh
 
 As mesmas ideias dos sólidos de face plana, agora com o círculo na base.
 
-`cilindro-e-cone` · nível 9 · medio · **50 min de aula** e 25 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
+`cilindro-e-cone` · nível 9 · medio · **45 min de aula** e 23 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
 
 **Precisa de:** Prismas, Comprimento e área do círculo  
 **Destrava:** Esfera
@@ -1944,7 +1944,7 @@ As mesmas ideias dos sólidos de face plana, agora com o círculo na base.
 
 Área e volume da pirâmide, mais o tronco, com o apótema fazendo o trabalho pesado.
 
-`piramides` · nível 9 · medio · **40 min de aula** e 20 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
+`piramides` · nível 9 · medio · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
 
 **Precisa de:** Prismas  
 **Destrava:** Sólidos inscritos e circunscritos
@@ -1997,7 +1997,7 @@ Traçar a altura cria três triângulos semelhantes, e daí saem todas as relaç
 
 Seno, cosseno e tangente como razões que só dependem do ângulo, e por que isso é verdade.
 
-`trigonometria-triangulo-retangulo` · nível 10 · base · **40 min de aula** e 20 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
+`trigonometria-triangulo-retangulo` · nível 10 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
 
 **Precisa de:** Relações métricas no triângulo retângulo  
 **Destrava:** Círculo trigonométrico, Lei dos senos e dos cossenos
@@ -2025,7 +2025,7 @@ Seno, cosseno e tangente como razões que só dependem do ângulo, e por que iss
 
 Coeficiente angular, as três formas de escrever a equação, e as posições entre duas retas.
 
-`analitica-reta` · nível 10 · medio · **50 min de aula** e 25 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
+`analitica-reta` · nível 10 · medio · **45 min de aula** e 23 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
 
 **Precisa de:** O ponto no plano, Função afim  
 **Destrava:** A circunferência no plano
@@ -2134,7 +2134,7 @@ Sair do triângulo retângulo, e ver Pitágoras aparecer como caso particular.
 
 Quando um sólido está encaixado no outro, a conta toda sai de achar a relação certa entre as medidas.
 
-`solidos-inscritos-e-circunscritos` · nível 11 · medio · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`solidos-inscritos-e-circunscritos` · nível 11 · medio · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Esfera, Pirâmides  
 **Destrava:** ninguém, é fim de linha
@@ -2185,7 +2185,7 @@ Elipse, hipérbole e parábola definidas por distância, com as equações saind
 
 ### Dados e contagem
 
-9 aulas, 5h25.
+9 aulas, 5h00.
 
 #### 13. Princípio multiplicativo
 
@@ -2193,7 +2193,7 @@ Elipse, hipérbole e parábola definidas por distância, com as equações saind
 
 Se uma escolha tem m saídas e a seguinte tem n, o par tem m vezes n. Toda a contagem sai daí.
 
-`principio-multiplicativo` · nível 3 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`principio-multiplicativo` · nível 3 · base · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** O que cada operação faz  
 **Destrava:** Arranjos e permutações
@@ -2219,7 +2219,7 @@ Se uma escolha tem m saídas e a seguinte tem n, o par tem m vezes n. Toda a con
 
 Permutação e arranjo são o princípio multiplicativo com nome, para quando a ordem importa.
 
-`arranjos-e-permutacoes` · nível 4 · medio · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`arranjos-e-permutacoes` · nível 4 · medio · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Princípio multiplicativo  
 **Destrava:** Combinações
@@ -2245,7 +2245,7 @@ Permutação e arranjo são o princípio multiplicativo com nome, para quando a 
 
 Escolher três pessoas de dez não depende da ordem, e é dividir o arranjo pelas ordens repetidas.
 
-`combinacoes` · nível 5 · medio · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`combinacoes` · nível 5 · medio · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Arranjos e permutações, Escalamento  
 **Destrava:** Binômio de Newton, Probabilidade
@@ -2328,7 +2328,7 @@ Probabilidade é contagem virada fração, e a contagem é a parte difícil.
 
 Cada uma responde uma pergunta diferente, e escolher errado distorce a conclusão.
 
-`medidas-de-tendencia-central` · nível 7 · base · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
+`medidas-de-tendencia-central` · nível 7 · base · **30 min de aula** e 15 min de leitura em casa (planejado pelos tópicos) · 8 tópicos
 
 **Precisa de:** Leitura de gráficos e tabelas  
 **Destrava:** Dispersão
@@ -2406,7 +2406,7 @@ Elevar um binômio a qualquer potência, e descobrir que os coeficientes são co
 
 Dois conjuntos com a mesma média podem ser completamente diferentes, e variância e desvio padrão medem isso.
 
-`medidas-de-dispersao` · nível 8 · medio · **40 min de aula** e 20 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
+`medidas-de-dispersao` · nível 8 · medio · **35 min de aula** e 18 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
 
 **Precisa de:** Média, moda e mediana, Radiciação  
 **Destrava:** ninguém, é fim de linha
