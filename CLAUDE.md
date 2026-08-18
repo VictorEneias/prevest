@@ -399,6 +399,22 @@ conceito (`src/pages/Conceito.tsx`). Está documentado aqui porque é onde o
   entortava seta: uma fileira de dois módulos ia pro meio dos 2450px sem olhar
   onde estavam os filhos dela. Tirar isso custou 43px de largura e derrubou os
   trechos tortos de 46 pra 28.
+- **A seta só anda na vertical e na horizontal**, com o canto arredondado. Ela
+  sai debaixo do módulo, desce, anda de lado no vão vazio entre duas fileiras e
+  desce reta no destino, então a flecha chega sempre por cima. Enquanto era curva
+  de Bézier, toda seta que mudava de coluna descia em diagonal e o olho perdia
+  qual entrava em qual módulo.
+  - **O trecho horizontal mora num canal.** Duas setas que andam de lado no mesmo
+    vão viram uma linha só se estiverem na mesma altura; cada uma pega a primeira
+    altura livre, e trechos que não se cruzam em x dividem a mesma. O desvio curto
+    fica no canal de cima, e é isso que dá menos cruzamento (122 contra 138 se for
+    o contrário).
+  - **Cada seta entra por uma porta diferente** da borda de cima do módulo, na
+    ordem de onde vem. Entrando todas pelo meio, três setas viravam uma no último
+    trecho.
+  - **Desvio menor que 44px vira curva, não degrau**: dois cantos separados por
+    20px de reta parecem defeito de desenho.
+  - **O vão entre fileiras é 96px** (era 80) porque é ele que hospeda os canais.
 - **Nó-ponte é o que impede a seta de passar por cima de um módulo.** A seta longa
   ganha um ponto em cada camada intermediária, esse ponto reserva um corredor na
   fila, e a linha atravessa a fileira **na vertical** dentro dele — todo o desvio

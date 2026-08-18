@@ -62,11 +62,22 @@ export const MEDIDAS = {
   noW: 156,
   noH: 52,
   gapX: 30,
-  gapY: 80,
+  /* O vão entre fileiras é onde as setas andam de lado, e cada uma ocupa uma
+     altura própria; com os 80px de antes as linhas passavam a 12px do topo dos
+     módulos e o vão concorrido embolava. */
+  gapY: 96,
   /** Largura do corredor de uma seta que atravessa a camada. */
   ponteW: 22,
   /** Trecho reto abaixo do módulo onde as setas que saem dele andam juntas. */
   tronco: 10,
+  /** Raio do canto onde a seta troca de vertical pra horizontal. */
+  canto: 9,
+  /** Abaixo disso o desvio vira curva em vez de degrau. */
+  degrauMinimo: 44,
+  /** Quanto a porta de chegada mais externa fica longe da quina do módulo. */
+  margemPorta: 34,
+  /** Distância entre duas portas de chegada vizinhas. */
+  passoPorta: 30,
   pad: 46,
 };
 
@@ -608,6 +619,51 @@ export function calcularLayout(
     for (const it of camadas.flat()) it.x -= esq;
   }
 
+  /* Encaixe fino: cada módulo tenta pousar EXATAMENTE no x de um vizinho, e só
+     se couber sem empurrar ninguém. A compactação anterior minimiza a distância
+     média até os vizinhos, o que com seta em curva bastava; com seta ortogonal
+     não, porque 20px de diferença já viram um degrau, e o que se lê como linha
+     limpa é a seta que desce reta. Rende pouco, 10 setas retas de 112, porque
+     com módulo de 156px e fileira apertada quase nunca sobra o espaço exato —
+     mas as que pegam são as cadeias simples, que é onde o degrau mais incomoda. */
+  {
+    const grau = (it: Item) =>
+      (acima.get(it.chave) ?? []).length + (abaixo.get(it.chave) ?? []).length;
+    for (let volta = 0; volta < 4; volta++) {
+      const indices = volta % 2 === 0 ? [...camadas.keys()] : [...camadas.keys()].reverse();
+      for (const ci of indices) {
+        const itens = camadas[ci];
+        /* A ponte tenta primeiro, pra corrente longa ficar numa coluna só, e
+           depois quem tem mais vizinhos, que é quem tem mais a ganhar. */
+        const prioridade = [...itens.keys()].sort(
+          (a, b) =>
+            Number(!itens[b].real) - Number(!itens[a].real) || grau(itens[b]) - grau(itens[a]),
+        );
+        for (const i of prioridade) {
+          const it = itens[i];
+          const vizinhos = [...(acima.get(it.chave) ?? []), ...(abaixo.get(it.chave) ?? [])];
+          if (!vizinhos.length) continue;
+          const limEsq = i > 0 ? itens[i - 1].x + sep(itens[i - 1], it) : -Infinity;
+          const limDir = i < itens.length - 1 ? itens[i + 1].x - sep(it, itens[i + 1]) : Infinity;
+          const alvos = [...new Set(vizinhos.map((v) => v.x))].sort(
+            (a, b) => Math.abs(a - it.x) - Math.abs(b - it.x),
+          );
+          /* Só pousa se couber onde está: deixar o módulo empurrar os vizinhos
+             pra conseguir se alinhar desmancha o alinhamento deles, e o saldo
+             medido é negativo (12 setas retas viram 10). */
+          for (const alvo of alvos) {
+            if (alvo >= limEsq - 0.01 && alvo <= limDir + 0.01) {
+              it.x = alvo;
+              break;
+            }
+          }
+        }
+      }
+    }
+    const esq = Math.min(...camadas.flat().map((it) => it.x - it.w / 2));
+    for (const it of camadas.flat()) it.x -= esq;
+  }
+
   /* As camadas estreitas já foram centradas na largura final, por estética, e
      isso era o que mais entortava seta no mapa: uma fileira de dois módulos ia
      pro meio dos 2450px sem olhar onde estavam os filhos dela, e as setas saíam
@@ -641,6 +697,89 @@ export function calcularLayout(
     saidas.set(corrente.de, (saidas.get(corrente.de) ?? 0) + 1);
   }
 
+  /* Porta de chegada: quando três setas caem no mesmo módulo, entrar todas pelo
+     meio do topo faz as três se sobreporem no último trecho e vira uma linha
+     só. Cada uma entra por um ponto diferente da borda de cima, na ordem de
+     onde vêm, o que também evita que se cruzem na chegada. */
+  const portaDe = new Map<string, number>();
+  {
+    const porDestino = new Map<string, { chave: string; vemDe: number }[]>();
+    for (const corrente of correntes) {
+      const origem = itemDe.get(corrente.de)!;
+      const ultima = corrente.pontes[corrente.pontes.length - 1];
+      const lista = porDestino.get(corrente.para) ?? [];
+      lista.push({
+        chave: `${corrente.de}»${corrente.para}`,
+        vemDe: (ultima ?? origem).x,
+      });
+      porDestino.set(corrente.para, lista);
+    }
+    for (const [, lista] of porDestino) {
+      if (lista.length < 2) continue;
+      lista.sort((a, b) => a.vemDe - b.vemDe);
+      const util = Math.min(M.noW - 2 * M.margemPorta, (lista.length - 1) * M.passoPorta);
+      lista.forEach((e, i) => {
+        portaDe.set(e.chave, -util / 2 + (util * i) / (lista.length - 1));
+      });
+    }
+  }
+
+  /* Rota da seta: só vertical e horizontal, com o canto arredondado. Enquanto
+     era Bézier, toda seta que mudava de coluna descia em diagonal e o olho
+     perdia qual entrava em qual módulo; na vertical a seta sai debaixo do
+     módulo, anda de lado no vão vazio entre as fileiras e desce reta no
+     destino, e a flecha chega sempre por cima.
+
+     O trecho horizontal mora num CANAL dentro do vão. Sem canal, duas setas que
+     andam de lado no mesmo vão viram uma linha só e não dá pra saber quem vai
+     pra onde: aqui cada uma pega a primeira altura livre, e trechos que não se
+     cruzam em x dividem a mesma. */
+  const canalDe = new Map<string, number>();
+  {
+    const porVao = new Map<number, { chave: string; a: number; b: number }[]>();
+    for (const corrente of correntes) {
+      const pontos = rotaBruta(corrente);
+      for (let i = 1; i < pontos.length; i++) {
+        const [x0, y0] = pontos[i - 1];
+        const [x1] = pontos[i];
+        if (Math.abs(x1 - x0) < M.degrauMinimo) continue;
+        const ci = Math.floor((y0 - M.pad) / passoY);
+        const chave = `${ci}|${x0.toFixed(1)}|${x1.toFixed(1)}`;
+        const lista = porVao.get(ci) ?? [];
+        if (!lista.some((t) => t.chave === chave))
+          lista.push({ chave, a: Math.min(x0, x1), b: Math.max(x0, x1) });
+        porVao.set(ci, lista);
+      }
+    }
+    for (const [, lista] of porVao) {
+      /* O desvio curto pega o canal de cima e o longo desce mais antes de andar
+         de lado. Do jeito contrário, e também alocando na ordem do x, o mapa
+         fica com mais cruzamento: 138 e 128 contra 122. */
+      lista.sort((p, q) => p.b - p.a - (q.b - q.a) || p.a - q.a);
+      const ocupado: number[] = [];
+      for (const t of lista) {
+        let canal = 0;
+        while (canal < ocupado.length && ocupado[canal] > t.a + 0.5) canal++;
+        ocupado[canal] = t.b;
+        canalDe.set(t.chave, canal);
+      }
+    }
+  }
+
+  /** Onde fica, em y, o canal `n` do vão abaixo da camada `ci`. */
+  const yDoCanal = (ci: number, n: number, total: number) => {
+    const base = yDaCamada(ci) + M.noH;
+    const alto = base + M.tronco + M.canto + 3;
+    const baixo = base + M.gapY - M.canto - 10;
+    if (total <= 1) return (alto + baixo) / 2;
+    return alto + ((baixo - alto) * n) / (total - 1);
+  };
+  const canaisDoVao = new Map<number, number>();
+  for (const [chave, n] of canalDe) {
+    const ci = Number(chave.split('|')[0]);
+    canaisDoVao.set(ci, Math.max(canaisDoVao.get(ci) ?? 0, n + 1));
+  }
+
   const arestas: ArestaLayout[] = [];
   for (const corrente of correntes) {
     const origem = itemDe.get(corrente.de)!;
@@ -650,8 +789,48 @@ export function calcularLayout(
        desvio horizontal acontecer no vão entre camadas, que é vazio. Com um
        ponto só, no centro, o trecho varria na diagonal por dentro da fileira e
        raspava os módulos vizinhos. */
+    const bruta = rotaBruta(corrente);
+    const pontos: [number, number][] = [bruta[0]];
+    const n = (v: number) => v.toFixed(1);
+    let d = `M ${n(bruta[0][0])} ${n(bruta[0][1])}`;
+    for (let i = 1; i < bruta.length; i++) {
+      const [x0, y0] = bruta[i - 1];
+      const [x1, y1] = bruta[i];
+      if (Math.abs(x1 - x0) < 0.5) {
+        d += ` V ${n(y1)}`;
+        pontos.push([x1, y1]);
+        continue;
+      }
+      /* Degrau curto não vira canto: dois cantos separados por 20px de reta
+         parecem defeito de desenho, e uma curva curta lê melhor. */
+      if (Math.abs(x1 - x0) < M.degrauMinimo) {
+        const c = (y1 - y0) * 0.42;
+        d += ` C ${n(x0)} ${n(y0 + c)}, ${n(x1)} ${n(y1 - c)}, ${n(x1)} ${n(y1)}`;
+        pontos.push([x1, y1]);
+        continue;
+      }
+      const ci = Math.floor((y0 - M.pad) / passoY);
+      const chave = `${ci}|${x0.toFixed(1)}|${x1.toFixed(1)}`;
+      const ym = yDoCanal(ci, canalDe.get(chave) ?? 0, canaisDoVao.get(ci) ?? 1);
+      const lado = Math.sign(x1 - x0);
+      const r = Math.min(M.canto, Math.abs(x1 - x0) / 2, ym - y0, y1 - ym);
+      d +=
+        ` V ${n(ym - r)}` +
+        ` Q ${n(x0)} ${n(ym)}, ${n(x0 + lado * r)} ${n(ym)}` +
+        ` H ${n(x1 - lado * r)}` +
+        ` Q ${n(x1)} ${n(ym)}, ${n(x1)} ${n(ym + r)}` +
+        ` V ${n(y1)}`;
+      pontos.push([x0, ym], [x1, ym], [x1, y1]);
+    }
+    arestas.push({ de: corrente.de, para: corrente.para, d, pontos });
+  }
+
+  /** Os cantos da rota, antes de arredondar: origem, tronco, pontes e destino. */
+  function rotaBruta(corrente: { de: string; para: string; pontes: Item[] }) {
+    const origem = itemDe.get(corrente.de)!;
+    const destino = itemDe.get(corrente.para)!;
     const base = yDaCamada(origem.camada) + M.noH;
-    const pontos: [number, number][] = [
+    return [
       [origem.x, base],
       /* Tronco: as setas irmãs descem um trecho reto antes de abrir o leque.
          Como o trecho é idêntico, elas se sobrepõem exatamente e o que se vê é
@@ -666,16 +845,8 @@ export function calcularLayout(
             [p.x, yDaCamada(p.camada) + M.noH],
           ] as [number, number][],
       ),
-      [destino.x, yDaCamada(destino.camada)],
-    ];
-    let d = `M ${pontos[0][0].toFixed(1)} ${pontos[0][1].toFixed(1)}`;
-    for (let i = 1; i < pontos.length; i++) {
-      const [x0, y0] = pontos[i - 1];
-      const [x1, y1] = pontos[i];
-      const c = (y1 - y0) * 0.42;
-      d += ` C ${x0.toFixed(1)} ${(y0 + c).toFixed(1)}, ${x1.toFixed(1)} ${(y1 - c).toFixed(1)}, ${x1.toFixed(1)} ${y1.toFixed(1)}`;
-    }
-    arestas.push({ de: corrente.de, para: corrente.para, d, pontos });
+      [destino.x + (portaDe.get(`${corrente.de}»${corrente.para}`) ?? 0), yDaCamada(destino.camada)],
+    ] as [number, number][];
   }
 
   const largura = Math.max(...camadas.flat().map((it) => it.x + it.w / 2)) + M.pad;
