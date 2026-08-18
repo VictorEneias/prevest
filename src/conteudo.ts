@@ -99,3 +99,9 @@ export const exercicioPorId = new Map(exercicios.map((e) => [e.id, e]));
 
 /** Quem aponta pra este conceito. Calculado, nunca declarado. */
 export const dependemDe = (id: string) => conceitos.filter((c) => c.prereqs.includes(id));
+
+/** Os exercícios que tocam este conceito, na ordem da escada A → B → C. */
+export const exerciciosDe = (id: string) =>
+  exercicios
+    .filter((e) => e.assuntos.includes(id))
+    .sort((a, b) => a.nivel.localeCompare(b.nivel) || a.id.localeCompare(b.id));

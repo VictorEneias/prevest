@@ -21,7 +21,10 @@
   /* --- tinta --- */
   --tinta: #14181f;
   --tinta-media: #454d59;
-  --tinta-fraca: #78808c;
+  /* Era #78808c, que dá 3,88:1 sobre o papel e não passa em AA. Este dá 5,02:1,
+     e é a cor de quase todo texto pequeno do site: ficha, rótulo de camada,
+     legenda do mapa e as marcas da reta numérica. */
+  --tinta-fraca: #666e7a;
 
   /* --- o par de sinal --- */
   --azul: #1b4fd8;
@@ -644,23 +647,107 @@ html[data-modo='aula'] .conceito-nao-revisado .questao-gabarito {
   }
 }
 
-/* ---------- selo de rascunho ---------- */
+/* ---------- selo de rascunho ----------
+   O aviso é pra mim, e quem lê a tela junto é o aluno: um bloco de quatro linhas
+   dizendo que nada foi conferido derruba a confiança dele no material bem antes
+   de me ajudar em alguma coisa. O que fazer com o rascunho está no CLAUDE.md. */
 
 .rascunho {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--u) * 0.4);
   font-family: var(--f-ui);
-  font-size: 0.78rem;
+  font-size: 0.74rem;
+  color: var(--tinta-media);
   background: var(--marca-fraco);
-  border: 1px solid var(--marca);
-  border-radius: var(--raio);
-  padding: calc(var(--u) * 0.5) calc(var(--u) * 0.75);
-  margin-bottom: var(--u);
+  border-left: 3px solid var(--marca);
+  border-radius: 0 var(--raio) var(--raio) 0;
+  padding: 4px calc(var(--u) * 0.5);
+  margin: 0 0 var(--u);
 }
 .rascunho b {
-  display: block;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  font-size: 0.72rem;
-  margin-bottom: 3px;
+  font-size: 0.68rem;
+  color: var(--tinta);
+}
+
+/* ---------- a porta de entrada da home ---------- */
+
+.comecar {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 62ch;
+  margin: 0 0 calc(var(--u) * 1.25);
+}
+.comecar a {
+  align-self: flex-start;
+  font-family: var(--f-ui);
+  font-weight: 600;
+  font-size: 1.02rem;
+  color: var(--azul);
+  text-decoration: none;
+  border-bottom: 2px solid var(--azul-medio);
+  padding-bottom: 2px;
+}
+.comecar a:hover {
+  border-bottom-color: var(--azul);
+}
+.comecar > span {
+  font-size: 0.88rem;
+  color: var(--tinta-media);
+}
+
+/* ---------- a escada A → B → C de um módulo ---------- */
+
+.lista-exercicios {
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  margin: 0 0 var(--u);
+  padding: 0;
+}
+.lista-exercicios li {
+  margin: 0;
+}
+.lista-exercicios a {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.5);
+  font-family: var(--f-ui);
+  font-size: 0.82rem;
+  color: var(--tinta-media);
+  text-decoration: none;
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 6px calc(var(--u) * 0.5);
+}
+.lista-exercicios a:hover {
+  border-color: var(--azul);
+  color: var(--tinta);
+}
+.lista-exercicios b {
+  flex: none;
+  width: calc(var(--u) * 1.1);
+  height: calc(var(--u) * 1.1);
+  display: grid;
+  place-items: center;
+  font-size: 0.78rem;
+  color: var(--tinta);
+  background: var(--papel-fundo);
+  border: 1px solid var(--linha);
+  border-radius: 50%;
+}
+.lista-exercicios em {
+  flex: 1;
+  font-style: normal;
+  text-align: right;
+  color: var(--tinta-fraca);
+}
+.lista-exercicios .alvo {
+  color: var(--tinta-fraca);
 }
 
 /* Em Modo Aula, conteúdo não revisado some da tela. */
@@ -962,8 +1049,12 @@ pre code {
     font-weight: 600;
     letter-spacing: 0.09em;
     text-transform: uppercase;
-    fill: var(--cor-bloco);
-    opacity: 0.62;
+    fill: var(--tinta-media);
+  }
+  .mapa-area-traco {
+    stroke: var(--cor-bloco);
+    stroke-width: 3;
+    stroke-linecap: round;
   }
 
   /* ---- setas ---- */

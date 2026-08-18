@@ -1,8 +1,13 @@
+import { Link } from 'react-router-dom';
 import { conceitos, exercicios } from '../conteudo';
+import { useTitulo } from '../estado';
 import MapaConceitos from '../components/viz/MapaConceitos';
 
 export default function Home() {
-  const revisados = conceitos.filter((c) => c.revisado).length;
+  useTitulo();
+  /* A raiz do grafo é a porta de entrada. Sem ela em algum lugar com nome, quem
+     abre a home fica olhando 70 caixas sem saber por qual começar. */
+  const comeco = conceitos.find((c) => c.prereqs.length === 0);
 
   return (
     <div className="folha folha-larga">
@@ -38,20 +43,27 @@ export default function Home() {
         </p>
       </div>
 
+      {comeco && (
+        <p className="comecar">
+          <Link to={`/conceitos/${comeco.id}`}>
+            Começar por {comeco.titulo} <span aria-hidden="true">→</span>
+          </Link>
+          {comeco.resumo && <span>{comeco.resumo}</span>}
+        </p>
+      )}
+
       <p className="nota-secao" style={{ maxWidth: '62ch' }}>
         Cada caixa é um módulo e cada seta é um pré-requisito. Quanto mais embaixo, mais coisa
         você atravessa pra chegar ali, porque a ordem é de dependência. Passe o mouse num módulo
-        pra acender a cadeia que sustenta ele. <b>Nada aqui está bloqueado.</b>
+        pra acender a cadeia que sustenta ele, arraste pra andar pelo mapa e role pra aproximar.
+        <b> Nada aqui está bloqueado.</b>
       </p>
 
       <MapaConceitos controles altura="66vh" />
 
       <div className="ficha" style={{ marginTop: 'var(--u)' }}>
         <span>
-          <b>{conceitos.length}</b> conceitos
-        </span>
-        <span>
-          <b>{revisados}</b> revisados
+          <b>{conceitos.length}</b> módulos
         </span>
         <span>
           <b>{exercicios.length}</b> exercícios

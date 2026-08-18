@@ -1,6 +1,7 @@
-import { useParams } from 'react-router-dom';
-import { dependemDe, porId } from '../conteudo';
-import { ROTULO_MATERIA, rotuloBloco } from '../lib/curriculo';
+import { Link, useParams } from 'react-router-dom';
+import { dependemDe, exerciciosDe, porId } from '../conteudo';
+import { ROTULO_MATERIA, ROTULO_NIVEL_EX, rotuloBloco } from '../lib/curriculo';
+import { useTitulo } from '../estado';
 import C from '../components/C';
 import MapaConceitos from '../components/viz/MapaConceitos';
 
@@ -11,9 +12,11 @@ const NIVEL: Record<string, string> = {
   avancado: 'Avançado',
 };
 
-/** A rota /conceitos/:id. */
+/** A rota /conceitos/:id. O título da aba sai daqui e não do <Conceito>, senão
+ *  abrir um painel renomearia a aba da página que está atrás. */
 export function PaginaConceito() {
   const { id } = useParams();
+  useTitulo(porId.get(id ?? '')?.titulo);
   return <Conceito id={id ?? ''} />;
 }
 
@@ -48,6 +51,7 @@ export default function Conceito({
 
   const { Corpo } = c;
   const filhos = dependemDe(c.id);
+  const exercicios = exerciciosDe(c.id);
 
   if (dentroDePainel) {
     return (
@@ -66,13 +70,9 @@ export default function Conceito({
     <div className="folha">
       <article className={`papel ${c.revisado ? '' : 'conceito-nao-revisado'}`}>
         {!c.revisado && (
-          <div className="rascunho">
-            <b>Rascunho — não revisado</b>
-            Nada aqui foi conferido linha por linha ainda, e o erro que aparece nesse estágio é o
-            sutil: sinal trocado numa passagem, condição de existência omitida, caso particular
-            tratado como geral. Confira antes de usar em aula e mude <code>revisado: true</code> no
-            frontmatter.
-          </div>
+          <p className="rascunho">
+            <b>Rascunho</b> Ainda não conferi esta página linha por linha.
+          </p>
         )}
 
         <h1>{c.titulo}</h1>
@@ -111,13 +111,32 @@ export default function Conceito({
         <hr className="regua" />
         <Corpo />
 
+        {exercicios.length > 0 && (
+          <>
+            <hr className="regua" />
+            <p className="rotulo-secao">Exercícios deste módulo</p>
+            <ul className="lista-exercicios">
+              {exercicios.map((e) => (
+                <li key={e.id}>
+                  <Link to={`/exercicios/${e.id}`}>
+                    <b>{e.nivel}</b>
+                    <span>{ROTULO_NIVEL_EX[e.nivel]}</span>
+                    <em>{e.fonte}</em>
+                    {e.tempo_alvo && <span className="alvo">{e.tempo_alvo} min</span>}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+
         {(filhos.length > 0 || c.prereqs.length > 0) && (
           <>
             <hr className="regua" />
             <p className="rotulo-secao">Onde este módulo se encaixa</p>
             <p className="nota-secao">
-              Nada aqui está bloqueado. É só o que se conecta a este módulo — o que vem antes, à
-              esquerda, e o que continua a partir dele, à direita.
+              Nada aqui está bloqueado. É só o que se conecta a este módulo: o que vem antes, em
+              cima, e o que continua a partir dele, embaixo.
             </p>
             <MapaConceitos foco={c.id} raio={1} altura="34vh" />
           </>

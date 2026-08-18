@@ -45,6 +45,14 @@ export function rotuloBloco(bloco: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+/** O que cada nível de exercício treina. Aparece na página do exercício e na
+ *  lista do módulo. */
+export const ROTULO_NIVEL_EX: Record<string, string> = {
+  A: 'mecânica',
+  B: 'vestibular',
+  C: 'integração',
+};
+
 export const ROTULO_MATERIA: Record<Materia, string> = {
   matematica: 'Matemática',
   fisica: 'Física',

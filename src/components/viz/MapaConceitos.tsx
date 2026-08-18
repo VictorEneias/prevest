@@ -102,21 +102,25 @@ export default function MapaConceitos({
       tela.style.transform = `translate(${tx}px, ${ty}px) scale(${escala})`;
     };
 
-    function enquadrar(x0: number, y0: number, x1: number, y1: number) {
+    /* `soPelaLargura` é o enquadramento de abertura. Espremer os 70 módulos numa
+       moldura de 66vh dá 0.36 de escala e o título do módulo sai com 5px, então
+       o aluno abre a home e vê um borrão de caixinhas. Pela largura dá 0.73, ele
+       vê o começo do curso em tamanho de leitura e o resto está a um arrasto. O
+       botão "Tudo" continua dando a visão de conjunto. */
+    function enquadrar(x0: number, y0: number, x1: number, y1: number, soPelaLargura = false) {
       const cx = moldura!.clientWidth;
       const cy = moldura!.clientHeight;
       const m = 20;
-      escala = Math.min(
-        (cx - m * 2) / Math.max(1, x1 - x0),
-        (cy - m * 2) / Math.max(1, y1 - y0),
-        1.4,
-      );
+      const cabeNaLargura = (cx - m * 2) / Math.max(1, x1 - x0);
+      const cabeNaAltura = (cy - m * 2) / Math.max(1, y1 - y0);
+      escala = Math.min(soPelaLargura ? cabeNaLargura : Math.min(cabeNaLargura, cabeNaAltura), 1.4);
       tx = m - x0 * escala + Math.max(0, (cx - m * 2 - (x1 - x0) * escala) / 2);
       ty = m - y0 * escala + Math.max(0, (cy - m * 2 - (y1 - y0) * escala) / 2);
       aplicar();
     }
     const tudo = () => enquadrar(0, 0, mapa.largura, mapa.altura);
-    tudo();
+    const abertura = () => enquadrar(0, 0, mapa.largura, mapa.altura, true);
+    abertura();
 
     let arrastando = false;
     let px = 0;
@@ -215,7 +219,7 @@ export default function MapaConceitos({
       const q = (busca?.value ?? '').trim().toLowerCase();
       if (!q) {
         nos.forEach((n) => n.classList.remove('apagada', 'acesa'));
-        tudo();
+        abertura();
         return;
       }
       const casam: HTMLElement[] = [];
@@ -254,7 +258,7 @@ export default function MapaConceitos({
     let redim: number | undefined;
     const observador = new ResizeObserver(() => {
       clearTimeout(redim);
-      redim = window.setTimeout(tudo, 120);
+      redim = window.setTimeout(abertura, 120);
     });
     observador.observe(moldura);
 
@@ -351,18 +355,26 @@ export default function MapaConceitos({
                   />
                 ))}
 
-                {rotulosArea.map((a) => (
-                  <text
-                    key={`${a.materia}-${a.bloco}`}
-                    className="mapa-area-rotulo"
-                    data-slot={a.slotCor}
-                    x={a.rx}
-                    y={a.ry}
-                    textAnchor="middle"
-                  >
-                    {a.rotulo}
-                  </text>
-                ))}
+                {/* O rótulo é tinta e o traço embaixo é que carrega a cor da área:
+                    escrito na cor do bloco ele ficava em 1,9:1 sobre o papel no
+                    verde e no laranja, ilegível de longe. */}
+                {rotulosArea.map((a) => {
+                  const meio = (a.rotulo.length * 7.2) / 2;
+                  return (
+                    <g key={`${a.materia}-${a.bloco}`} data-slot={a.slotCor}>
+                      <text className="mapa-area-rotulo" x={a.rx} y={a.ry} textAnchor="middle">
+                        {a.rotulo}
+                      </text>
+                      <line
+                        className="mapa-area-traco"
+                        x1={a.rx - meio}
+                        y1={a.ry + 6}
+                        x2={a.rx + meio}
+                        y2={a.ry + 6}
+                      />
+                    </g>
+                  );
+                })}
               </svg>
 
               {mapa.nos.map((n) => (

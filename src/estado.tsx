@@ -124,6 +124,14 @@ export function ProvedorAula({ children }: { children: ReactNode }) {
   return <Ctx.Provider value={valor}>{children}</Ctx.Provider>;
 }
 
+/** O título da aba. Com quatro páginas abertas em aula, "Pré-vestibular" em
+ *  todas elas não ajuda ninguém a achar a certa. */
+export function useTitulo(titulo?: string) {
+  useEffect(() => {
+    document.title = titulo ? `${titulo} · Pré-vestibular` : 'Pré-vestibular';
+  }, [titulo]);
+}
+
 export function useAula() {
   const v = useContext(Ctx);
   if (!v) throw new Error('useAula() precisa estar dentro do <ProvedorAula>.');

@@ -1,7 +1,8 @@
 import { MDXProvider } from '@mdx-js/react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { useEffect, useRef, type ReactNode } from 'react';
+import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import { componentesMDX } from './components/mdx';
-import { useAula } from './estado';
+import { useAula, type ItemPilha } from './estado';
 import Conceito, { PaginaConceito } from './pages/Conceito';
 import Exercicio from './pages/Exercicio';
 import Home from './pages/Home';
@@ -18,6 +19,7 @@ export default function App() {
 
   return (
     <MDXProvider components={componentesMDX}>
+      <VoltarProTopo />
       <a className="pular" href="#conteudo">
         Pular pro conteúdo
       </a>
@@ -52,36 +54,86 @@ export default function App() {
       <div className="pilha-fundo" data-aberto={pilha.length ? 'sim' : 'nao'} onClick={fecharTudo} />
 
       {pilha.map((p, i) => (
-        <aside
+        <Painel
           key={`${p.id}-${i}`}
-          className="painel"
-          role="dialog"
-          aria-label={p.titulo}
-          style={{ zIndex: 51 + i, right: Math.min(i, 4) * 14 }}
-        >
-          <div className="painel-topo">
-            <span className="painel-trilha">
-              Você está em:{' '}
-              {pilha.slice(0, i + 1).map((q, k) => (
-                <span key={k}>
-                  {k > 0 && ' › '}
-                  {k === i ? <b>{q.titulo}</b> : q.titulo}
-                </span>
-              ))}
-            </span>
-            <Link className="painel-botao" to={`/conceitos/${p.id}`} onClick={fecharTudo}>
-              Abrir inteiro
-            </Link>
-            <button className="painel-botao" onClick={fecharPainel}>
-              Fechar ✕
-            </button>
-          </div>
-          <div className="painel-corpo">
-            <Conceito id={p.id} dentroDePainel />
-          </div>
-        </aside>
+          p={p}
+          i={i}
+          trilha={pilha.slice(0, i + 1)}
+          fecharPainel={fecharPainel}
+          fecharTudo={fecharTudo}
+        />
       ))}
     </MDXProvider>
+  );
+}
+
+/** O router não zera o scroll sozinho, então clicar num módulo do mapa do rodapé
+ *  abria a página seguinte já no meio dela. */
+function VoltarProTopo() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [pathname]);
+  return null;
+}
+
+/**
+ * Um painel da pilha. Ele toma o foco ao abrir e devolve pra quem chamou ao
+ * fechar: sem isso o Esc e o leitor de tela continuavam na página de trás,
+ * enquanto o que está na tela é o painel.
+ */
+function Painel({
+  p,
+  i,
+  trilha,
+  fecharPainel,
+  fecharTudo,
+}: {
+  p: ItemPilha;
+  i: number;
+  trilha: ItemPilha[];
+  fecharPainel: () => void;
+  fecharTudo: () => void;
+}): ReactNode {
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const quemChamou = document.activeElement as HTMLElement | null;
+    ref.current?.focus();
+    return () => quemChamou?.focus?.();
+  }, []);
+
+  return (
+    <aside
+      ref={ref}
+      className="painel"
+      role="dialog"
+      aria-modal="true"
+      aria-label={p.titulo}
+      tabIndex={-1}
+      style={{ zIndex: 51 + i, right: Math.min(i, 4) * 14 }}
+    >
+      <div className="painel-topo">
+        <span className="painel-trilha">
+          Você está em:{' '}
+          {trilha.map((q, k) => (
+            <span key={k}>
+              {k > 0 && ' › '}
+              {k === trilha.length - 1 ? <b>{q.titulo}</b> : q.titulo}
+            </span>
+          ))}
+        </span>
+        <Link className="painel-botao" to={`/conceitos/${p.id}`} onClick={fecharTudo}>
+          Abrir inteiro
+        </Link>
+        <button className="painel-botao" onClick={fecharPainel}>
+          Fechar ✕
+        </button>
+      </div>
+      <div className="painel-corpo">
+        <Conceito id={p.id} dentroDePainel />
+      </div>
+    </aside>
   );
 }
 
