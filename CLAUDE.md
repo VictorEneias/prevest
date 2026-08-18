@@ -409,9 +409,25 @@ conceito (`src/pages/Conceito.tsx`). Está documentado aqui porque é onde o
     altura livre, e trechos que não se cruzam em x dividem a mesma. O desvio curto
     fica no canal de cima, e é isso que dá menos cruzamento (122 contra 138 se for
     o contrário).
-  - **Cada seta entra por uma porta diferente** da borda de cima do módulo, na
-    ordem de onde vem. Entrando todas pelo meio, três setas viravam uma no último
-    trecho.
+  - **A porta de chegada acompanha a seta.** O topo do módulo tem 156px de borda
+    e a seta não precisa entrar pelo meio: se ela vem de uma coluna que cai
+    dentro dessa faixa, entra ali e desce reta. Quem tem uma saída só também
+    desliza o ponto de partida na base. Isso levou as setas perfeitamente retas
+    de 10 pra 39, de 112.
+  - **Duas setas que chegam do mesmo lado se juntam.** Vindas de longe, as duas
+    batem no mesmo limite da porta, dividem o canal e se sobrepõem no pedaço
+    final: o que se vê é uma linha só entrando no módulo. É o tronco da saída,
+    do lado de cá. Agrupar numa porta média as que chegam perto uma da outra foi
+    testado e é pior — vira duas molinhas convergindo em vez de duas retas
+    paralelas.
+  - **O canal é escolhido por busca local**, trocando dois trechos de altura
+    enquanto isso desfizer cruzamento. Só a ordem gulosa deixava cruzamento que
+    some com uma troca: 132 contra 106 no mesmo desenho.
+  - **A corrente longa desce numa coluna só** pelo maior trecho que couber. A
+    ponte não precisa ficar no vão onde a ordenação a pôs, e a linha ainda tem
+    12px de manobra dentro do corredor, então olho todos os vãos livres de cada
+    fileira e só troco de coluna quando o espaço obriga. Sem isso a seta longa
+    descia desviando 8px numa camada e voltando 15px na seguinte.
   - **Desvio menor que 44px vira curva, não degrau**: dois cantos separados por
     20px de reta parecem defeito de desenho.
   - **O vão entre fileiras é 96px** (era 80) porque é ele que hospeda os canais.

@@ -75,9 +75,7 @@ export const MEDIDAS = {
   /** Abaixo disso o desvio vira curva em vez de degrau. */
   degrauMinimo: 44,
   /** Quanto a porta de chegada mais externa fica longe da quina do módulo. */
-  margemPorta: 34,
-  /** Distância entre duas portas de chegada vizinhas. */
-  passoPorta: 30,
+  margemPorta: 16,
   pad: 46,
 };
 
@@ -664,6 +662,97 @@ export function calcularLayout(
     for (const it of camadas.flat()) it.x -= esq;
   }
 
+  /* Corredor reto: a seta longa desce numa coluna só pelo maior trecho que
+     couber. Cada ponte nascia da compactação da camada dela, e sozinhas ficavam
+     fora de prumo umas das outras — na tela isso é a seta descendo em
+     zigue-zague, desviando 8px numa camada e voltando 15px na seguinte, que foi
+     a primeira coisa que me apontaram como errada no desenho.
+
+     A ponte não precisa ficar no vão onde a ordenação a pôs: ela precisa é não
+     encostar em ninguém. Então olho TODOS os vãos livres de cada fileira, vou
+     intersectando enquanto desço, e quando a interseção esvazia fecho ali um
+     trecho e começo outro. Isso dá o menor número de desvios possível. */
+  {
+    const posicaoNaCamada = new Map<string, number>();
+    camadas.forEach((c) => c.forEach((it, i) => posicaoNaCamada.set(it.chave, i)));
+
+    /* Os pedaços de uma fileira onde uma ponte cabe sem raspar em nada. */
+    const vaosLivres = (ci: number, minhas: Set<string>): [number, number][] => {
+      const obstaculos = camadas[ci]
+        .filter((it) => !minhas.has(it.chave))
+        .map((it): [number, number] => {
+          /* A folga aqui é menor que a que a compactação usou: o corredor tem
+             22px de largura mas a linha desenhada é fina, então ela pode andar
+             uns 12px dentro dele sem chegar perto de módulo nenhum, e são esses
+             12px de manobra que deixam a corrente ficar reta por mais camadas. */
+          const meia = it.w / 2 + 6 + M.ponteW / 2;
+          return [it.x - meia, it.x + meia];
+        })
+        .sort((a, b) => a[0] - b[0]);
+      const livres: [number, number][] = [];
+      let corrente = -Infinity;
+      for (const [a, b] of obstaculos) {
+        /* o vão que a própria ponte ocupava tem largura exatamente zero, e é o
+           candidato mais importante de todos: sem o >= ele sumia da lista e a
+           corrente fugia pra borda do mapa atrás de espaço */
+        if (a >= corrente - 0.01) livres.push([corrente, Math.max(a, corrente)]);
+        corrente = Math.max(corrente, b);
+      }
+      livres.push([corrente, Infinity]);
+      return livres;
+    };
+
+    const cruza = (a: [number, number], b: [number, number]): [number, number] | null => {
+      const lo = Math.max(a[0], b[0]);
+      const hi = Math.min(a[1], b[1]);
+      return lo <= hi ? [lo, hi] : null;
+    };
+
+    for (const [id, corredor] of corredorDe) {
+      const pontes = [...corredor.entries()].sort((a, b) => a[0] - b[0]).map(([, p]) => p);
+      const minhas = new Set(pontes.map((p) => p.chave));
+      let alvo = itemDe.get(id)!.x;
+      let trecho: Item[] = [];
+      let janela: [number, number] | null = null;
+
+      const fechar = () => {
+        if (!janela || !trecho.length) return;
+        const x = Math.min(Math.max(alvo, janela[0]), janela[1]);
+        for (const p of trecho) p.x = x;
+        alvo = x;
+        trecho = [];
+        janela = null;
+      };
+
+      for (const ponte of pontes) {
+        const livres = vaosLivres(ponte.camada, minhas);
+        const atual: [number, number] | null = janela;
+        const proxima: [number, number] | null = atual
+          ? (livres.map((v) => cruza(atual, v)).find((v) => v) ?? null)
+          : null;
+        if (janela && proxima) {
+          janela = proxima;
+          trecho.push(ponte);
+          continue;
+        }
+        fechar();
+        /* Trecho novo: fico no vão mais perto de onde a seta vinha, mas só se
+           ele estiver a um módulo e meio de distância. Sem esse limite a seta
+           acha uma coluna livre do outro lado do mapa e atravessa tudo pra
+           descer reta, que é pior que o zigue-zague que eu queria tirar. */
+        const raio = 1.5 * M.noW;
+        const dist = (w: [number, number], ref: number) => Math.max(w[0] - ref, ref - w[1], 0);
+        const perto = livres.filter((v) => dist(v, alvo) <= raio);
+        const ref = perto.length ? alvo : ponte.x;
+        janela = (perto.length ? perto : livres).reduce((melhor, v) =>
+          dist(v, ref) < dist(melhor, ref) ? v : melhor,
+        );
+        trecho = [ponte];
+      }
+      fechar();
+    }
+  }
+
   /* As camadas estreitas já foram centradas na largura final, por estética, e
      isso era o que mais entortava seta no mapa: uma fileira de dois módulos ia
      pro meio dos 2450px sem olhar onde estavam os filhos dela, e as setas saíam
@@ -697,10 +786,14 @@ export function calcularLayout(
     saidas.set(corrente.de, (saidas.get(corrente.de) ?? 0) + 1);
   }
 
-  /* Porta de chegada: quando três setas caem no mesmo módulo, entrar todas pelo
-     meio do topo faz as três se sobreporem no último trecho e vira uma linha
-     só. Cada uma entra por um ponto diferente da borda de cima, na ordem de
-     onde vêm, o que também evita que se cruzem na chegada. */
+  /* Porta de chegada: ela acompanha a seta, em vez de a seta desviar pra achar
+     a porta. O topo do módulo tem 156px de borda e a seta não precisa entrar
+     pelo meio: se ela vem de uma coluna que cai dentro dessa faixa, entra ali e
+     desce reta, e o degrau de 10px que existia só pra centralizar some.
+
+     Quando duas setas chegariam a menos de 24px uma da outra, elas passam a
+     usar a MESMA porta e se juntam antes de entrar — que é como o olho lê
+     "essas duas vão pro mesmo lugar". É o tronco da saída, do lado de cá. */
   const portaDe = new Map<string, number>();
   {
     const porDestino = new Map<string, { chave: string; vemDe: number }[]>();
@@ -708,19 +801,42 @@ export function calcularLayout(
       const origem = itemDe.get(corrente.de)!;
       const ultima = corrente.pontes[corrente.pontes.length - 1];
       const lista = porDestino.get(corrente.para) ?? [];
-      lista.push({
-        chave: `${corrente.de}»${corrente.para}`,
-        vemDe: (ultima ?? origem).x,
-      });
+      lista.push({ chave: `${corrente.de}»${corrente.para}`, vemDe: (ultima ?? origem).x });
       porDestino.set(corrente.para, lista);
     }
-    for (const [, lista] of porDestino) {
-      if (lista.length < 2) continue;
-      lista.sort((a, b) => a.vemDe - b.vemDe);
-      const util = Math.min(M.noW - 2 * M.margemPorta, (lista.length - 1) * M.passoPorta);
-      lista.forEach((e, i) => {
-        portaDe.set(e.chave, -util / 2 + (util * i) / (lista.length - 1));
-      });
+    const limite = M.noW / 2 - M.margemPorta;
+    for (const [id, lista] of porDestino) {
+      const centro = itemDe.get(id)!.x;
+      /* Cada seta entra na coluna de onde vem, presa à borda do módulo. Duas
+         que vêm de longe do mesmo lado batem no mesmo limite, ganham a mesma
+         porta e se juntam — a junção sai do próprio clamp. Agrupar as que
+         chegam perto uma da outra numa porta média foi testado e é pior: em vez
+         de duas retas paralelas entrando lado a lado, dá duas molinhas
+         convergindo. */
+      for (const e of lista) {
+        portaDe.set(e.chave, Math.min(Math.max(e.vemDe - centro, -limite), limite));
+      }
+    }
+  }
+
+  /* Saída: quem tem uma seta só desliza o ponto de partida na base do módulo
+     pra ela sair alinhada com o destino. Com duas ou mais, o ponto continua no
+     meio, porque é o tronco compartilhado que faz as irmãs saírem juntas. */
+  const saidaDe = new Map<string, number>();
+  {
+    const conta = new Map<string, number>();
+    for (const c of correntes) conta.set(c.de, (conta.get(c.de) ?? 0) + 1);
+    const limite = M.noW / 2 - M.margemPorta;
+    for (const corrente of correntes) {
+      if ((conta.get(corrente.de) ?? 0) > 1) continue;
+      const origem = itemDe.get(corrente.de)!;
+      const destino = itemDe.get(corrente.para)!;
+      const chegada = destino.x + (portaDe.get(`${corrente.de}»${corrente.para}`) ?? 0);
+      const alvo = corrente.pontes.length ? corrente.pontes[0].x : chegada;
+      saidaDe.set(
+        `${corrente.de}»${corrente.para}`,
+        Math.min(Math.max(alvo - origem.x, -limite), limite),
+      );
     }
   }
 
@@ -734,9 +850,14 @@ export function calcularLayout(
      andam de lado no mesmo vão viram uma linha só e não dá pra saber quem vai
      pra onde: aqui cada uma pega a primeira altura livre, e trechos que não se
      cruzam em x dividem a mesma. */
+  /** Um canal por (vão, ponto de chegada, lado de onde vem). */
+  const chaveDoCanal = (ci: number, x0: number, x1: number) =>
+    `${ci}|${x1.toFixed(1)}|${Math.sign(x1 - x0)}`;
+
   const canalDe = new Map<string, number>();
   {
-    const porVao = new Map<number, { chave: string; a: number; b: number }[]>();
+    type Trecho = { chave: string; a: number; b: number; entradas: number[]; saida: number };
+    const porVao = new Map<number, Trecho[]>();
     for (const corrente of correntes) {
       const pontos = rotaBruta(corrente);
       for (let i = 1; i < pontos.length; i++) {
@@ -744,25 +865,98 @@ export function calcularLayout(
         const [x1] = pontos[i];
         if (Math.abs(x1 - x0) < M.degrauMinimo) continue;
         const ci = Math.floor((y0 - M.pad) / passoY);
-        const chave = `${ci}|${x0.toFixed(1)}|${x1.toFixed(1)}`;
+        const chave = chaveDoCanal(ci, x0, x1);
         const lista = porVao.get(ci) ?? [];
-        if (!lista.some((t) => t.chave === chave))
-          lista.push({ chave, a: Math.min(x0, x1), b: Math.max(x0, x1) });
+        const ja = lista.find((t) => t.chave === chave);
+        /* Duas setas que terminam no mesmo ponto e vêm do mesmo lado dividem o
+           canal de propósito: elas se sobrepõem no pedaço comum e o que se vê é
+           uma linha só entrando no módulo, que é como o olho lê "essas duas vão
+           pro mesmo lugar". O tronco faz isso na saída; isto é o mesmo na
+           chegada. */
+        if (ja) {
+          ja.a = Math.min(ja.a, x0, x1);
+          ja.b = Math.max(ja.b, x0, x1);
+          if (!ja.entradas.includes(x0)) ja.entradas.push(x0);
+        } else {
+          lista.push({
+            chave,
+            a: Math.min(x0, x1),
+            b: Math.max(x0, x1),
+            entradas: [x0],
+            saida: x1,
+          });
+        }
         porVao.set(ci, lista);
       }
     }
+
+    const dentro = (v: number, t: Trecho) => v > t.a + 0.5 && v < t.b - 0.5;
+    /* Quantas vezes as duas setas se cruzam, sabendo quem está no canal de
+       cima: a que desce depois atravessa o trecho de lado da que já virou. */
+    const cruzaPar = (cima: Trecho, baixo: Trecho) => {
+      let n = 0;
+      for (const e of baixo.entradas) if (dentro(e, cima)) n++;
+      if (dentro(cima.saida, baixo)) n++;
+      return n;
+    };
+
     for (const [, lista] of porVao) {
       /* O desvio curto pega o canal de cima e o longo desce mais antes de andar
-         de lado. Do jeito contrário, e também alocando na ordem do x, o mapa
-         fica com mais cruzamento: 138 e 128 contra 122. */
+         de lado; alocar na ordem do x deixa o mapa com mais cruzamento. */
       lista.sort((p, q) => p.b - p.a - (q.b - q.a) || p.a - q.a);
       const ocupado: number[] = [];
+      const canal = new Map<string, number>();
       for (const t of lista) {
-        let canal = 0;
-        while (canal < ocupado.length && ocupado[canal] > t.a + 0.5) canal++;
-        ocupado[canal] = t.b;
-        canalDe.set(t.chave, canal);
+        let c = 0;
+        while (c < ocupado.length && ocupado[c] > t.a + 0.5) c++;
+        ocupado[c] = t.b;
+        canal.set(t.chave, c);
       }
+
+      /* Troca de canal entre dois trechos enquanto isso desfizer cruzamento.
+         O greedy só olha quem cabe onde; ele produz cruzamentos que somem só
+         com a troca — os micro-cruzamentos logo abaixo de um módulo, que não
+         precisavam existir. */
+      const custo = () => {
+        let n = 0;
+        for (let i = 0; i < lista.length; i++) {
+          for (let j = i + 1; j < lista.length; j++) {
+            const ci2 = canal.get(lista[i].chave)!;
+            const cj = canal.get(lista[j].chave)!;
+            if (ci2 === cj) continue;
+            n += ci2 < cj ? cruzaPar(lista[i], lista[j]) : cruzaPar(lista[j], lista[i]);
+          }
+        }
+        return n;
+      };
+      const livre = (t: Trecho, c: number) =>
+        lista.every(
+          (o) => o === t || canal.get(o.chave) !== c || o.b <= t.a + 0.5 || o.a >= t.b - 0.5,
+        );
+      let melhorou = true;
+      let voltas = 0;
+      while (melhorou && voltas++ < 8) {
+        melhorou = false;
+        for (let i = 0; i < lista.length; i++) {
+          for (let j = i + 1; j < lista.length; j++) {
+            const a = lista[i];
+            const b = lista[j];
+            const ca = canal.get(a.chave)!;
+            const cb = canal.get(b.chave)!;
+            if (ca === cb) continue;
+            const antes = custo();
+            canal.set(a.chave, cb);
+            canal.set(b.chave, ca);
+            if (!livre(a, cb) || !livre(b, ca) || custo() >= antes) {
+              canal.set(a.chave, ca);
+              canal.set(b.chave, cb);
+            } else {
+              melhorou = true;
+            }
+          }
+        }
+      }
+      for (const [chave, c] of canal) canalDe.set(chave, c);
     }
   }
 
@@ -810,7 +1004,7 @@ export function calcularLayout(
         continue;
       }
       const ci = Math.floor((y0 - M.pad) / passoY);
-      const chave = `${ci}|${x0.toFixed(1)}|${x1.toFixed(1)}`;
+      const chave = chaveDoCanal(ci, x0, x1);
       const ym = yDoCanal(ci, canalDe.get(chave) ?? 0, canaisDoVao.get(ci) ?? 1);
       const lado = Math.sign(x1 - x0);
       const r = Math.min(M.canto, Math.abs(x1 - x0) / 2, ym - y0, y1 - ym);
@@ -830,8 +1024,9 @@ export function calcularLayout(
     const origem = itemDe.get(corrente.de)!;
     const destino = itemDe.get(corrente.para)!;
     const base = yDaCamada(origem.camada) + M.noH;
+    const chave = `${corrente.de}»${corrente.para}`;
     return [
-      [origem.x, base],
+      [origem.x + (saidaDe.get(chave) ?? 0), base],
       /* Tronco: as setas irmãs descem um trecho reto antes de abrir o leque.
          Como o trecho é idêntico, elas se sobrepõem exatamente e o que se vê é
          uma linha só saindo do módulo, que só então bifurca. */
@@ -845,7 +1040,7 @@ export function calcularLayout(
             [p.x, yDaCamada(p.camada) + M.noH],
           ] as [number, number][],
       ),
-      [destino.x + (portaDe.get(`${corrente.de}»${corrente.para}`) ?? 0), yDaCamada(destino.camada)],
+      [destino.x + (portaDe.get(chave) ?? 0), yDaCamada(destino.camada)],
     ] as [number, number][];
   }
 
