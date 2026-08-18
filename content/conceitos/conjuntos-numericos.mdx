@@ -5,17 +5,23 @@ materia: matematica
 bloco: aritmetica
 prereqs: [reta-numerica]
 nivel: base
-tempo_estimado: 35
+tempo_estimado: 65
 revisado: false
-resumo: "Naturais, inteiros e racionais: quem é cada grupo, qual é a regra de entrada e por que um cabe dentro do outro."
+resumo: "A sintaxe dos conjuntos, e depois os moradores: naturais, inteiros e racionais, com a regra de entrada de cada um e o encaixe entre eles."
 topicos:
+  - sintaxe matemática
+  - elemento de um conjunto
+  - símbolo de pertence
+  - está contido e contém
+  - subconjunto
+  - símbolo de união
+  - símbolo de interseção
+  - conjunto vazio
+  - para todo e existe
   - números naturais
   - números inteiros
   - números racionais
-  - símbolo de pertence
-  - conjunto contido
   - N Z Q
-  - classificação de números
 ---
 Na aula passada a gente combinou onde os números moram, e viu que a
 <C id="reta-numerica">reta</C> continua pros dois lados do zero e que ela está
@@ -29,6 +35,10 @@ natural tal que...", e se você não souber exatamente quem está dentro e quem 
 fora de cada um desses grupos, você perde a questão sem nem chegar a errar uma
 conta.
 
+E antes dos nomes a gente vai passar pela **sintaxe**, que são os símbolos usados pra
+escrever tudo isso. É a parte que a escola costuma pular, e é a que mais te faz travar
+numa questão que você sabia resolver.
+
 ## O que é um conjunto
 
 Antes dos nomes, a ideia. Um **conjunto** é só um saco onde a gente resolveu juntar
@@ -37,17 +47,324 @@ dizer, pra qualquer coisa do mundo, se ela entra ou não entra, então o conjunt
 definido. No nosso caso as coisas são números, e a regra de entrada vai ser sempre
 uma frase curta sobre que tipo de número aquele é.
 
-Junto com os nomes vem uma notação que você vai ver pelo resto do ensino médio. O
-símbolo $\in$ significa "pertence a", e cortado, $\notin$, significa "não pertence
-a":
+Cada coisa que está dentro do saco se chama **elemento** do conjunto. E escrever quem
+são os elementos é simples: você põe eles entre chaves, separados por vírgula, e dá um
+nome pro conjunto, que por costume é letra maiúscula.
 
 $$
-3 \in \mathbb{N} \qquad\qquad -3 \notin \mathbb{N}
+A = \{1,\, 2,\, 3,\, 4,\, 5,\, 6\}
 $$
 
-que se lê "3 pertence aos naturais" e "menos 3 não pertence aos naturais". Não tem
-mistério nenhum nisso, é abreviação de escrita, porém é bom você ficar íntimo dos
-símbolos agora, porque daqui pra frente eles aparecem no enunciado sem aviso.
+Duas coisas que essa escrita não guarda, e é bom você já saber: **ordem não importa** e
+**repetição não conta**. O conjunto $\{2,\, 1\}$ é o mesmo que $\{1,\, 2\}$, e escrever
+$\{1,\, 1,\, 2\}$ é só um jeito esquisito de escrever $\{1,\, 2\}$. Um conjunto responde
+uma pergunta só sobre cada coisa do mundo, que é "você está aqui dentro?", e essa
+pergunta não tem lugar na fila nem tem quantidade.
+
+## A sintaxe: os símbolos que você vai ler pelo resto da vida
+
+Antes de realmente falar de conjuntos de um jeito ou de outro, a gente tem que falar da
+**sintaxe matemática**. Pra muita gente isso vai ser uma coisa que ela passa a escola
+inteira sem nunca aprender, porém entender esses símbolos ia ajudar bastante a não
+travar nas partes que são mais simples, e ia possibilitar focar nas partes mais
+complicadas. Além disso, daqui pra frente esses símbolos vão ser cada vez mais
+utilizados, e saber ler eles e entender eles vai ser uma coisa crucial na nossa jornada
+de realmente saber o que a gente está fazendo, e não usar apenas truques decorados.
+
+Bem, vamos lá, eu vou explicar eles de maneira bem simples e sem muita enrolação. O bom
+é que, pra quase todos, se você conseguir decorar o que cada símbolo significa, os nomes
+deles normalmente são bem autoexplicativos em relação a como cada um funciona.
+
+### Os três conjuntos que eu vou usar em tudo
+
+Pra você não ter que segurar exemplo novo a cada símbolo, eu vou usar sempre estes três:
+
+$$
+A = \{1,\, 2,\, 3,\, 4,\, 5,\, 6\} \qquad B = \{5,\, 6,\, 7,\, 8\} \qquad C = \{2,\, 4\}
+$$
+
+<Conjunto
+  layout="separados"
+  conjuntos={[
+    { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
+    { nome: 'B', elementos: [5, 6, 7, 8] },
+    { nome: 'C', elementos: [2, 4] },
+  ]}
+  titulo="Os três conjuntos desta seção"
+  legenda="o 5 e o 6 moram no A e no B; o C é feito só de gente do A"
+/>
+
+Vale olhar sem pressa como eles se encaixam, porque é isso que vai dar a resposta certa
+de cada símbolo daqui pra frente: o $C$ é todo feito de gente que já estava no $A$; o
+$B$ tem dois moradores que também são do $A$ (o $5$ e o $6$) e dois que não são (o $7$ e
+o $8$); e o $B$ e o $C$ não têm ninguém em comum.
+
+### $\in$ e $\notin$: pertence e não pertence
+
+Primeiro a gente tem as relações **entre elemento e conjunto**. Esses dois vão ser
+provavelmente os mais utilizados, e também costumam ser os únicos que a maior parte das
+pessoas conhece.
+
+O símbolo $\in$ vai ser lido como "**pertence**". Então uma frase escrita
+
+$$
+2 \in A
+$$
+
+pode ser lida como "o número 2 pertence ao conjunto A".
+
+<Conjunto
+  layout="um"
+  conjuntos={[{ nome: 'A', elementos: [1, 2, 3, 4, 5, 6] }]}
+  destacar={[2]}
+  titulo="2 ∈ A"
+  legenda="o 2 está lá dentro, no meio dos outros moradores"
+/>
+
+Tendo entendido o $\in$, a gente também tem o oposto dele, o $\notin$, que vai ser lido
+como "**não pertence**". Então uma frase escrita
+
+$$
+2 \notin B
+$$
+
+pode ser lida como "o número 2 não pertence ao conjunto B".
+
+<Conjunto
+  layout="um"
+  conjuntos={[{ nome: 'B', elementos: [5, 6, 7, 8] }]}
+  fora={[2]}
+  titulo="2 ∉ B"
+  legenda="o B tem quatro moradores, e nenhum deles é o 2"
+/>
+
+E olha uma coisa que vale pra todos os símbolos daqui pra frente: **o corte em cima do
+símbolo é a negação dele**. Se você sabe ler o símbolo, você sabe ler o símbolo cortado,
+e isso já corta metade da lista de coisas pra decorar.
+
+### $\subset$ e $\supset$: está contido e contém
+
+Agora a gente vai falar das relações **entre conjunto e conjunto**.
+
+Vamos começar pelo $\subset$. Ele vai ser lido como "**está contido**", e é um paralelo
+bem direto ao "pertence", porém serve pra falar de outros conjuntos contidos dentro de
+um conjunto maior. Ou seja, a frase
+
+$$
+C \subset A
+$$
+
+vai ser lida como "o conjunto C está contido no conjunto A".
+
+Além disso a gente também tem o análogo, que seria falar que
+
+$$
+A \supset C
+$$
+
+que vai ser lido como "o conjunto A contém o conjunto C". Ou seja, fala a mesma coisa
+que a frase anterior, porém numa espécie de ordem trocada.
+
+No fim das contas, as duas maneiras querem dizer a mesma coisa: **todos os elementos de
+C também fazem parte de A**, ou em outras palavras, C é um **subconjunto** de A.
+
+<Conjunto
+  layout="separados"
+  conjuntos={[
+    { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
+    { nome: 'C', elementos: [2, 4] },
+  ]}
+  destacar={[2, 4]}
+  titulo="C ⊂ A, com os dois desenhados separados"
+  legenda="cada morador do C aparece de novo lá no A, e é isso que a frase quer dizer"
+/>
+
+<Conjunto
+  layout="aninhados"
+  conjuntos={[
+    { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
+    { nome: 'C', elementos: [2, 4] },
+  ]}
+  destacar={[2, 4]}
+  titulo="A ⊃ C, com o C desenhado dentro do A"
+  legenda="é a mesma informação do desenho de cima, com o C circulado por dentro"
+/>
+
+**As duas figuras dizem exatamente a mesma coisa**, e é bom você se acostumar com as
+duas, porque a prova usa as duas. A de cima é a que a definição descreve, e a de baixo é
+a que aparece quando o exercício quer que você enxergue o encaixe de olho.
+
+### $\not\subset$ e $\not\supset$: não está contido e não contém
+
+E aí vêm os cortados, que são a negação dos dois. A frase
+
+$$
+B \not\subset A
+$$
+
+se lê "o conjunto B não está contido no conjunto A", e do outro jeito, $A \not\supset B$,
+se lê "o conjunto A não contém o conjunto B", que de novo é a mesma coisa com a ordem
+trocada.
+
+<Conjunto
+  layout="venn"
+  conjuntos={[
+    { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
+    { nome: 'B', elementos: [5, 6, 7, 8] },
+  ]}
+  destacar={[7, 8]}
+  titulo="B ⊄ A"
+  legenda="o 5 e o 6 estão nos dois, porém o 7 e o 8 ficaram de fora do A"
+/>
+
+Repara em duas coisas nessa figura, porque as duas caem em prova.
+
+A primeira é que **basta um único elemento ficar de fora**. Aqui são dois, o $7$ e o
+$8$, e se fosse só o $8$ a frase continuaria verdadeira do mesmo jeito, porque estar
+contido é tudo ou nada.
+
+A segunda é que **não estar contido não quer dizer estar totalmente fora**. O $B$ tem
+dois moradores dentro do $A$ e mesmo assim ele não está contido, e é justamente esse
+caso do meio termo que o aluno erra.
+
+E tem uma confusão que vale matar agora, antes que ela te pegue: o $\in$ liga
+**elemento** com **conjunto**, e o $\subset$ liga **conjunto** com **conjunto**. Então
+$2 \in A$ está certo e $2 \subset A$ está errado, $C \subset A$ está certo e $C \in A$
+está errado. Quando bater a dúvida, pergunta se o que está do lado esquerdo é um morador
+ou um saco.
+
+### $\cup$ e $\cap$: união e interseção
+
+Por fim vamos falar das **operações com conjuntos**, que servem pra representar novos
+conjuntos a partir de dois outros anteriores. Apesar de existirem mais, aqui a gente vai
+ver apenas duas, e essas duas são de longe as mais utilizadas e importantes.
+
+Começando pelo $\cup$, ele vai ser lido como "**união**", e é bem fácil de lembrar, visto
+que o símbolo é praticamente a primeira letra da palavra união. Ou seja, a frase
+
+$$
+D = A \cup B
+$$
+
+vai ser lida como "o conjunto D é a união de A e B". E isso significa exatamente o que
+parece: D vai ser um conjunto que contém todos os elementos tanto de A quanto de B (olha
+o paralelo, sem querer falei $D \supset A$ e $D \supset B$).
+
+<Conjunto
+  layout="venn"
+  conjuntos={[
+    { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
+    { nome: 'B', elementos: [5, 6, 7, 8] },
+  ]}
+  regiao="uniao"
+  envolver="D"
+  titulo="D = A ∪ B, com o D em volta dos dois"
+  legenda="a união é tudo que está pintado: o A inteiro mais o B inteiro"
+/>
+
+<Conjunto
+  layout="um"
+  conjuntos={[{ nome: 'D', elementos: [1, 2, 3, 4, 5, 6, 7, 8] }]}
+  titulo="D = A ∪ B, escrito como um conjunto só"
+  legenda="mesma informação da figura de cima, agora sem lembrar de onde cada um veio"
+/>
+
+$$
+D = \{1,\, 2,\, 3,\, 4,\, 5,\, 6,\, 7,\, 8\}
+$$
+
+E repara que o $5$ e o $6$ aparecem uma vez só, mesmo estando nos dois conjuntos, porque
+elemento não se conta duas vezes. É a mesma regra da repetição que a gente viu lá em
+cima, funcionando aqui.
+
+Por último a gente tem o $\cap$, que é a **interseção**. Logo uma frase
+
+$$
+E = A \cap C
+$$
+
+vai ser lida como "o conjunto E é a interseção de A e C", ou seja, E vai ser o conjunto
+de todos os elementos que pertencem tanto ao conjunto A quanto ao conjunto C.
+
+Esse exemplo tem uma graça escondida. Como o $C$ está inteiro dentro do $A$, todo
+morador do $C$ também é do $A$, e aí a interseção dá o **próprio C**. Guarda isso, porque
+é uma equivalência que aparece direto: dizer $C \subset A$ e dizer $A \cap C = C$ é dizer
+a mesma coisa de dois jeitos.
+
+Pra você ver a interseção com trabalho de verdade, eu troco o $C$ pelo $B$, que cruza o
+$A$ sem estar dentro dele:
+
+<Conjunto
+  layout="venn"
+  conjuntos={[
+    { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
+    { nome: 'B', elementos: [5, 6, 7, 8] },
+  ]}
+  regiao="intersecao"
+  destacar={[5, 6]}
+  titulo="A ∩ B é só o miolo"
+  legenda="a parte pintada é onde os dois conjuntos se cruzam"
+/>
+
+<Conjunto
+  layout="um"
+  conjuntos={[{ nome: 'E', elementos: [5, 6] }]}
+  destacar={[5, 6]}
+  titulo="E = A ∩ B, escrito como um conjunto só"
+  legenda="sobraram os dois que estavam nos dois lados"
+/>
+
+$$
+E = A \cap B = \{5,\, 6\}
+$$
+
+E quando os dois conjuntos não têm ninguém em comum, como acontece com o $B$ e o $C$, a
+interseção existe do mesmo jeito, só que ela é um conjunto **sem nenhum elemento**. Esse
+tem nome e símbolo próprio, é o **conjunto vazio**:
+
+$$
+B \cap C = \varnothing
+$$
+
+### Três que aparecem sem aviso: para todo, existe e portanto
+
+Esses aqui não são bem da matéria de conjuntos que a gente está vendo, porém eles
+aparecem tanto no meio de enunciado e de demonstração que vale você já sair daqui
+sabendo ler:
+
+| símbolo | lê-se |
+|---|---|
+| $\forall$ | "para todo", ou "qualquer que seja" |
+| $\exists$ | "existe" |
+| $\nexists$ | "não existe" |
+| $\therefore$ | "portanto" |
+
+Repara que o $\nexists$ segue a mesma regra do corte que você já viu, e por isso ele não
+precisa de explicação nova.
+
+O bonito é quando eles se juntam com os de cima, porque aí você lê uma frase inteira de
+matemática sem ter que traduzir símbolo por símbolo:
+
+$$
+\forall\, x \in A,\;\; x < 7
+$$
+
+que se lê "para todo x que pertence ao conjunto A, x é menor que 7". E olha que é
+verdade, porque os moradores do $A$ vão do $1$ ao $6$.
+
+$$
+\exists\, x \in B \mid x > 6
+$$
+
+que se lê "existe um x que pertence ao B tal que x é maior que 6", e essa barrinha do
+meio é o "**tal que**". Também é verdade, porque o $7$ e o $8$ estão lá dentro.
+
+E o $\therefore$ costuma fechar a conta, tipo "$5 \in A$ e $5 \in B$, $\therefore$
+$5 \in A \cap B$".
+
+Nenhum desses três muda nada do que você já sabe fazer, eles só encurtam a escrita. E é
+bom aprender agora, porque no dia em que um enunciado usar um deles sem explicar, você
+não vai travar numa questão que você sabia resolver.
 
 ## Os naturais: os números de contar
 
@@ -147,14 +464,16 @@ infinita, como a gente já tinha visto na aula passada.
 
 ## Um dentro do outro
 
-Juntando as três coisas aparece o encaixe, que é a parte que a prova cobra:
+Juntando as três coisas aparece o encaixe, que é a parte que a prova cobra, e agora
+você já tem o símbolo pra ler ele:
 
 $$
 \mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q}
 $$
 
 que se lê "os naturais estão contidos nos inteiros, que estão contidos nos
-racionais". Pensa em caixa dentro de caixa: a caixa dos naturais está inteirinha
+racionais", e é o mesmo $\subset$ do $C \subset A$ lá de cima, agora com conjuntos que
+têm nome próprio e infinitos moradores. Pensa em caixa dentro de caixa: a caixa dos naturais está inteirinha
 dentro da dos inteiros, que está inteirinha dentro da dos racionais, e cada caixa de
 fora tem morador que a de dentro não tem.
 
@@ -197,6 +516,20 @@ onde esse pessoal mora.
 
 ---
 
-*Dois assuntos saem desta página de propósito: união, interseção e intervalo ficam
-com a aula de conjuntos e intervalos, e os irracionais ficam com a de números reais.
-Aqui é só quem é quem.*
+*Falta nesta página: o interativo da sintaxe, que seria o aluno jogando elemento em
+cada região de dois conjuntos e vendo a união, a interseção e o vazio mudarem junto, que
+é o único jeito de ele testar hipótese sozinho em vez de só ler figura pronta.*
+
+*E falta uma decisão de tamanho. Com a sintaxe dentro a aula foi de 35 pra 65 minutos,
+e passou do teto de 55: pela contagem de palavras por minuto das outras aulas, a sintaxe
+sozinha é uns 25 a 30 minutos. Se ela não couber num encontro, o corte pronto é este:
+"o que é um conjunto" mais as cinco seções de símbolo viram uma aula chamada sintaxe
+matemática, e sobra aqui uma aula de 35 minutos só com os naturais, os inteiros, os
+racionais e o encaixe entre eles, que passa a ter a sintaxe como pré-requisito. Eu não
+fiz o corte porque você pediu a sintaxe nesta aula, e porque a página inteira é honesta
+do jeito que está.*
+
+*E o recorte com as outras aulas é este: aqui você aprende a **ler** os símbolos; quem
+resolve problema com dois e três conjuntos, diferença, complementar e notação de
+intervalo é a aula de conjuntos e intervalos; e os irracionais ficam com a de números
+reais.*

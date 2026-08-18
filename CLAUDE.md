@@ -448,6 +448,34 @@ a divisão inteira num desenho só.
 escrito como fração quando é uma fração de denominador pequeno, senão `1/3` viraria
 `0,3333` na tela e ninguém reconheceria o inverso.
 
+### `<Conjunto />` — o diagrama de conjunto, congelado
+
+Da família do `<Setas />` e do `<Reta />`: figura estática, sem controle. Existe
+porque a sintaxe ($\in$, $\subset$, $\cup$, $\cap$) só entra quando o símbolo e o
+desenho aparecem juntos, e porque o mesmo par de conjuntos desenhado de dois jeitos
+é o que mostra que `C ⊂ A` e `A ⊃ C` dizem a mesma coisa.
+
+```mdx
+<Conjunto
+  layout="venn"                {/* um | separados | venn | aninhados */}
+  conjuntos={[
+    { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
+    { nome: 'B', elementos: [5, 6, 7, 8] },
+  ]}
+  destacar={[5, 6]}            {/* bolinha cheia */}
+  fora={[2]}                   {/* elemento desenhado do lado de fora, pro ∉ */}
+  regiao="intersecao"          {/* intersecao | uniao — pinta a região */}
+  envolver="D"                 {/* contorno tracejado em volta de tudo */}
+  titulo="A ∩ B é só o miolo"
+  legenda="a parte pintada é onde os dois se cruzam"
+/>
+```
+
+**Onde cada elemento cai é calculado, não escrito à mão.** No `venn`, quem está nos
+dois vai pro miolo; no `aninhados`, quem é só do de fora fica no anel. Então dá pra
+mexer na lista de elementos no `.mdx` sem recalcular desenho nenhum. Em `aninhados`
+o primeiro conjunto é o de fora.
+
 ### `<MapaConceitos />` — o grafo desenhado
 
 Não se usa em `.mdx`; é da home (`src/pages/Home.tsx`) e do rodapé de cada
