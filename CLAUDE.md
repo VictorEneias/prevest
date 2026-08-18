@@ -390,6 +390,64 @@ associatividade (agrupar) e a equivalência soma/subtração (trocar notação).
 soma vetorial 1D. Use em Física: resultante, velocidade relativa, deslocamento.
 **Não crie um componente novo pra isso.**
 
+### `<Caixas />` — o número procurando a caixa dele
+
+Naturais dentro de inteiros dentro de racionais, e o número entra na menor caixa
+que aceita ele. O slider varre de quarto em quarto, então o aluno vê o ponto cair
+pra fora de duas caixas no meio do caminho entre dois inteiros, e o campo de texto
+aceita fração, dízima e raiz, que é o que faz a caixa de fora (os irracionais)
+existir na tela.
+
+```mdx
+<Caixas valor="3" titulo="Joga um número e vê em quais caixas ele cai" chaveUrl="cx" />
+```
+
+`valor` é string de propósito: `"3"`, `"-2"`, `"0,75"`, `"3/4"`, `"8/4"`,
+`"0,333..."`, `"√2"`, `"π"`.
+
+### `<Retangulo />` — a comutatividade que gira
+
+Bolinhas em linha e coluna, com botão pra contar por linha, contar por coluna e
+girar. É a prova honesta de que $3 \times 4 = 4 \times 3$, e substituiu um bloco
+de `●` que, sendo `pre`, sumia no Modo Aula justamente na hora de explicar.
+
+```mdx
+<Retangulo linhas={3} colunas={4} titulo="O mesmo retângulo, contado de dois jeitos" chaveUrl="rt" />
+```
+
+A mesma figura serve pra área do retângulo e pra distributiva quando essas aulas
+forem escritas: passe `linhas`/`colunas` diferentes em vez de criar componente.
+
+### `<Barra />` — a fração como pedaço de barra
+
+O denominador corta e o numerador pinta. Com `b` aparece a segunda barra, pra
+comparar, e com `soma` aparece a terceira, já cortada no MMC. O botão **igualar os
+pedaços** é o coração da figura: os cortes multiplicam e o pintado não muda de
+tamanho, que é a equivalência acontecendo.
+
+```mdx
+<Barra a={[3, 5]} b={[3, 7]} titulo="Quem pintou mais?" chaveUrl="b1" />
+<Barra a={[1, 2]} b={[1, 3]} soma={true} titulo="Só junta depois de igualar" chaveUrl="b2" />
+```
+
+A barra mostra **dois** inteiros lado a lado, com a linha grossa marcando o fim do
+primeiro, então $7/4$ passa da linha em vez de estourar o desenho.
+
+### `<Esticar />` — multiplicar como esticar, encolher e virar
+
+Uma seta na reta multiplicada por um fator: acima de 1 estica, entre 0 e 1 encolhe,
+negativo vira pro outro lado do zero. É o que faz "menos com menos dá mais" virar
+uma coisa que se vê, e o preset **o inverso** larga a ponta exatamente no 1, que é
+a divisão inteira num desenho só.
+
+```mdx
+<Esticar valor={3} fator={2} titulo="Estica, encolhe e vira" chaveUrl="es" />
+```
+
+`dominio` trava a escala; sem ele a reta se ajusta ao resultado. O fator aparece
+escrito como fração quando é uma fração de denominador pequeno, senão `1/3` viraria
+`0,3333` na tela e ninguém reconheceria o inverso.
+
 ### `<MapaConceitos />` — o grafo desenhado
 
 Não se usa em `.mdx`; é da home (`src/pages/Home.tsx`) e do rodapé de cada

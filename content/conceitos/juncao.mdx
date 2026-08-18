@@ -5,7 +5,7 @@ materia: matematica
 bloco: aritmetica
 prereqs: [quatro-operacoes]
 nivel: base
-tempo_estimado: 40
+tempo_estimado: 50
 revisado: false
 resumo: Parar de ver o sinal como parte da operação e passar a ver como característica do número. Soma e subtração viram uma coisa só.
 topicos:
@@ -143,6 +143,83 @@ a pensar as coisas como junção. No caso, a junção do número 3 negativo com 
   titulo="Junção de dois negativos"
 />
 
+## Agora mexe você
+
+Até aqui eu te mostrei as setas prontas, e agora eu quero que você mexa nelas, porque
+tem duas coisas que eu não consigo te mostrar com desenho parado.
+
+<Juncao
+  parcelas={[5, -3, 2]}
+  notacao="subtracao"
+  permitirEditar={true}
+  permitirReordenar={true}
+  permitirAgrupar={true}
+  titulo="Junção — encadeando setas"
+  chaveUrl="j1"
+/>
+
+A primeira é **embaralhar as parcelas**. Arrasta as fichas de cima pra trocar a ordem
+delas, ou aperta **embaralhar** e deixa o sorteio fazer isso, e olha o ponto do
+resultado: ele não se move. E o motivo é bem simples quando você pensa em seta, porque
+as parcelas não estão fazendo nada uma com a outra, cada uma só anda o tanto dela, e a
+ordem em que você anda não muda onde você chega. Isso tem nome, **comutatividade**, e é
+a mesma coisa que dizer que $5 - 3$ e $-3 + 5$ são a conta de sempre escrita de dois
+jeitos.
+
+Aqui vale um aviso, porque é justamente onde a notação de subtração engana: escrito como
+subtração, $5 - 3$ não pode virar $3 - 5$, e aí parece que a comutatividade é mentira.
+Só que a conta nunca foi "5 subtrai 3", ela era a junção de $+5$ com $-3$, e o que você
+embaralha são as **parcelas com o sinal delas**. Reordenado do jeito certo, $-3 + 5$ dá
+$2$ igualzinho. Quem reordena sem carregar o sinal junto muda a conta, e depois culpa a
+propriedade.
+
+A segunda é **agrupar**. Aperta **agrupar**, clica em duas fichas vizinhas pra elas
+virarem uma seta só, e repara em duas coisas: o resultado continua no mesmo lugar, e a
+seta que sobrou é exatamente a junção das duas que você juntou. Isso é a **associatividade**, e é ela que te autoriza a resolver uma junção
+grande por pedaços: em $-7 + 4 + 3 - 1$ dá pra juntar o $+4$ com o $+3$, virar um $+7$,
+e aí a conta com o $-7$ acaba na hora, sem nenhum esforço.
+
+As duas juntas são o motivo prático de a junção valer o seu tempo. Numa expressão de
+seis parcelas você pode agrupar os positivos, agrupar os negativos, e sobrar uma junção
+de dois números, que é conta de cabeça.
+
+E o nome disso na escola, pra você reconhecer quando aparecer na prova, é **soma
+algébrica**. É o mesmo assunto desta aula: quando o professor pede pra "resolver a soma
+algébrica", ele está pedindo pra você juntar as parcelas, cada uma com o sinal dela.
+
+## O sinal na frente do parêntese
+
+Tem um lugar em que isso te salva todo dia, e é o parêntese com sinal na frente:
+
+$$
+-(3 + 5)
+$$
+
+Esse menos da frente não está subtraindo nada de ninguém, ele está dizendo "**o oposto
+de tudo que está aqui dentro**". E o oposto de uma junção é a junção dos opostos, porque
+virar a seta inteira pro outro lado é a mesma coisa que virar cada pedacinho dela:
+
+$$
+-(3 + 5) \;=\; -3 - 5 \;=\; -8
+$$
+
+Repara que essa é a figura do exemplo 3 de novo, aquela das duas setas pra esquerda, e
+não é coincidência nenhuma: as duas contas são a mesma junção com roupa diferente.
+
+Agora com sinal lá dentro, que é onde mora o erro:
+
+$$
+-(3 - 5) \;=\; -3 + 5 \;=\; 2
+$$
+
+O $-5$ virou $+5$, porque **o menos da frente vira todas as setas de dentro**, e não só
+a primeira. E se em vez de menos tiver um mais na frente, ninguém vira e o parêntese só
+some, então $+(3 - 5)$ continua sendo $3 - 5$.
+
+Um jeito de conferir isso sem confiar em regra: resolve primeiro o que está dentro do
+parêntese, que dá $3 - 5 = -2$, e depois vira o resultado, que dá $+2$. Bateu com a
+junção de cima, e vai bater sempre, porque é a mesma coisa dita de dois jeitos.
+
 ## Não é pra complicar
 
 Quero reforçar que eu não estou aqui tentando complicar, ou dificultar o que muita
@@ -164,6 +241,17 @@ Quem escreve isso está usando a regra de sinais da **multiplicação** numa con
 junção. Na multiplicação, dois negativos dão positivo. Na junção não é assim: as duas
 setas apontam pra esquerda, e duas setas pra esquerda não têm como parar do lado
 direito do zero. O resultado é $-8$.
+
+**Virar só a primeira seta do parêntese.** Em $-(3 - 5)$, jogar o menos pra dentro só
+no primeiro número:
+
+$$
+-(3 - 5) \;\to\; -3 - 5 = -8 \qquad \text{(errado)}
+$$
+
+O menos da frente é o oposto de tudo que está dentro, então ele vira o $+3$ e vira
+também o $-5$, dando $-3 + 5 = 2$. Quem resolve o parêntese primeiro nem passa por essa
+armadilha.
 
 **Somar os módulos e escolher o sinal no chute.** Em $-7 + 4$, somar $7$ com $4$ e
 depois decidir o sinal olhando "quem é maior":

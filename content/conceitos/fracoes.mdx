@@ -206,14 +206,25 @@ cortado em sete partes, e **quanto mais partes, menor cada uma**. Três pedaços
 dão mais que três pedaços pequenos. Se ajudar, pensa em dividir uma pizza entre cinco
 pessoas ou entre sete: você prefere estar no grupo de cinco.
 
+<Barra
+  a={[3, 5]}
+  b={[3, 7]}
+  titulo="Duas barras lado a lado: quem pintou mais?"
+  chaveUrl="b1"
+/>
+
+Repara que as duas barras têm o mesmo comprimento, porque as duas representam o mesmo
+inteiro, e a única coisa que muda é **em quantos pedaços ele foi cortado**. Aperta o
+preset dos equivalentes e você vê o outro caso importante: $\frac{2}{4}$ e
+$\frac{1}{2}$ pintam exatamente o mesmo tanto, com cortes diferentes.
+
 Quando os dois números são diferentes dos dois lados, o jeito garantido é igualar os
 denominadores, que é exatamente o que a próxima seção ensina a fazer.
 
 ## Somar e subtrair: só junta pedaço do mesmo tamanho
 
-Na aula das quatro operações eu disse que a soma junta
-quantidades da mesma natureza, e que somar maçã com laranja não significa nada. Com
-fração isso volta com força: **você só consegue juntar pedaços do mesmo tamanho**.
+Na aula das quatro operações eu disse que a soma junta quantidades da mesma natureza, e
+que somar maçã com laranja não significa nada. Com fração isso volta com força: **você só consegue juntar pedaços do mesmo tamanho**.
 
 Quando o tamanho já é o mesmo, você só conta os pedaços e o denominador fica quieto:
 
@@ -254,6 +265,20 @@ múltiplos de cada um até aparecer um em comum:
 | $3$ | $3, \mathbf{6}, 9, 12, \dots$ |
 
 O primeiro que aparece nas duas listas é o $6$, então $\text{MMC}(2, 3) = 6$.
+
+E aqui dá pra ver a coisa mais importante desta seção acontecendo. Aperta **igualar os
+pedaços** e olha o que muda e o que não muda: a quantidade de cortes aumenta nas duas
+barras, e **o tanto que está pintado continua exatamente igual**. É por isso que
+igualar denominador é permitido, e é por isso que a terceira barra, a da soma, só pode
+existir depois que os pedaços têm o mesmo tamanho.
+
+<Barra
+  a={[1, 2]}
+  b={[1, 3]}
+  soma={true}
+  titulo="Só dá pra juntar depois que os pedaços ficam iguais"
+  chaveUrl="b2"
+/>
 
 E olha o que te tira de apuro quando você trava na prova: **você não é obrigado a
 usar o MMC**. Multiplicar os denominadores um pelo outro sempre dá um múltiplo comum,
@@ -421,11 +446,9 @@ bater a dúvida na prova, volta pra pizza, que ela nunca mente.
 
 ---
 
-*Falta nesta página: o interativo certo pra ela é uma barra que o aluno corta em $n$
-pedaços e pinta $m$, com duas barras lado a lado pra comparação e pra soma, que é o
-que faria a seção de somar dispensar meio parágrafo de texto. Esta é a aula mais longa
-do curso, com 70 minutos, e ela cobre o que a escola divide em três. Se em aula ela
-não couber num encontro, o corte é tirar divisibilidade e MDC pra junto de primos e
-fatoração, que já existe e já cobre o método pelos primos. A divisão por fração é
-ensinada aqui pela contagem de "quantos cabem", de propósito, e a explicação pelo
-inverso fica com o esticamento: quem mexer nas duas, mexa nas duas juntas.*
+*Falta nesta página: esta é a aula mais longa do curso, com 70 minutos, e ela cobre o
+que a escola divide em três. Se em aula ela não couber num encontro, o corte é tirar
+divisibilidade e MDC pra junto de primos e fatoração, que já existe e já cobre o método
+pelos primos. A divisão por fração é ensinada aqui pela contagem de "quantos cabem", de
+propósito, e a explicação pelo inverso fica com o esticamento: quem mexer nas duas,
+mexa nas duas juntas.*

@@ -1,6 +1,6 @@
 # Plano de aulas — Matemática
 
-84 aulas, 762 tópicos declarados, 59h40 de aula. Gerado por `npm run plano` a partir do frontmatter de `content/conceitos/`; **não edite este arquivo à mão**, edite a aula e rode o script de novo.
+84 aulas, 762 tópicos declarados, 59h50 de aula. Gerado por `npm run plano` a partir do frontmatter de `content/conceitos/`; **não edite este arquivo à mão**, edite a aula e rode o script de novo.
 
 ## Como ler uma ficha
 
@@ -14,14 +14,14 @@
 
 | Área | Aulas | Tópicos | Tempo |
 |---|---:|---:|---:|
-| Aritmética | 17 | 141 | 11h50 |
+| Aritmética | 17 | 141 | 12h00 |
 | Álgebra | 16 | 135 | 11h45 |
 | Funções | 17 | 160 | 12h50 |
 | Geometria | 25 | 247 | 16h50 |
 | Dados e contagem | 9 | 79 | 6h25 |
-| **Total** | **84** | **762** | **59h40** |
+| **Total** | **84** | **762** | **59h50** |
 
-Por nível declarado: **41 de base** (revisão de fundamental que trava o resto, 28h45) e **43 de médio** (30h55).
+Por nível declarado: **41 de base** (revisão de fundamental que trava o resto, 28h55) e **43 de médio** (30h55).
 
 Por estado: **6 escritas** (Conjuntos numéricos, Esticamento, Frações, Junção, O que cada operação faz, A reta numérica) e **78 esqueletos**, que já têm título, resumo, tópicos e prereqs, mas nenhum texto.
 
@@ -63,85 +63,85 @@ O grafo declara dependência, não fila. Esta é uma ordem que respeita todos os
 | 9 | Quadriláteros | Geometria | 2 | 40 | 5h35 |
 | 10 | Retas e planos no espaço | Geometria | 3 | 35 | 6h10 |
 | 11 | Frações | Aritmética | 3 | 70 | 7h20 |
-| 12 | Junção | Aritmética | 3 | 40 | 8h00 |
-| 13 | Princípio multiplicativo | Dados e contagem | 3 | 40 | 8h40 |
-| 14 | Arranjos e permutações | Dados e contagem | 4 | 45 | 9h25 |
-| 15 | Esticamento | Aritmética | 4 | 55 | 10h20 |
-| 16 | Poliedros | Geometria | 4 | 35 | 10h55 |
-| 17 | Potências | Aritmética | 5 | 45 | 11h40 |
-| 18 | Porcentagem | Aritmética | 5 | 35 | 12h15 |
-| 19 | Razão e proporção | Aritmética | 5 | 50 | 13h05 |
-| 20 | Primos e fatoração | Aritmética | 5 | 40 | 13h45 |
-| 21 | Linguagem algébrica | Álgebra | 5 | 40 | 14h25 |
-| 22 | Combinações | Dados e contagem | 5 | 45 | 15h10 |
-| 23 | Leitura de gráficos e tabelas | Dados e contagem | 6 | 35 | 15h45 |
-| 24 | Probabilidade | Dados e contagem | 6 | 50 | 16h35 |
-| 25 | Radiciação | Aritmética | 6 | 45 | 17h20 |
-| 26 | Unidades de medida | Aritmética | 6 | 30 | 17h50 |
-| 27 | Aumentos e descontos | Aritmética | 6 | 35 | 18h25 |
-| 28 | Notação científica | Aritmética | 6 | 25 | 18h50 |
-| 29 | Equação do 1º grau | Álgebra | 6 | 45 | 19h35 |
-| 30 | Monômios e polinômios | Álgebra | 6 | 45 | 20h20 |
-| 31 | Teorema de Tales | Geometria | 6 | 35 | 20h55 |
-| 32 | Áreas de polígonos | Geometria | 7 | 45 | 21h40 |
-| 33 | Semelhança de triângulos | Geometria | 7 | 45 | 22h25 |
-| 34 | Produtos notáveis | Álgebra | 7 | 40 | 23h05 |
-| 35 | Sistemas do 1º grau | Álgebra | 7 | 45 | 23h50 |
-| 36 | Números reais | Aritmética | 7 | 40 | 24h30 |
-| 37 | Juros simples e compostos | Aritmética | 7 | 45 | 25h15 |
-| 38 | O que é uma função | Funções | 7 | 45 | 26h00 |
-| 39 | Média, moda e mediana | Dados e contagem | 7 | 40 | 26h40 |
-| 40 | Probabilidade condicional | Dados e contagem | 7 | 45 | 27h25 |
-| 41 | Binômio de Newton | Dados e contagem | 8 | 40 | 28h05 |
-| 42 | Dispersão | Dados e contagem | 8 | 45 | 28h50 |
-| 43 | Função afim | Funções | 8 | 45 | 29h35 |
-| 44 | Fatoração | Álgebra | 8 | 50 | 30h25 |
-| 45 | Matrizes | Álgebra | 8 | 45 | 31h10 |
-| 46 | Prismas | Geometria | 8 | 45 | 31h55 |
-| 47 | Teorema de Pitágoras | Geometria | 8 | 40 | 32h35 |
-| 48 | Comprimento e área do círculo | Geometria | 8 | 35 | 33h10 |
-| 49 | Conjuntos e intervalos | Aritmética | 8 | 40 | 33h50 |
-| 50 | Equação do 2º grau | Álgebra | 9 | 55 | 34h45 |
-| 51 | Determinantes | Álgebra | 9 | 40 | 35h25 |
-| 52 | Frações algébricas | Álgebra | 9 | 40 | 36h05 |
-| 53 | Inequações do 1º grau | Álgebra | 9 | 35 | 36h40 |
-| 54 | Função exponencial | Funções | 9 | 45 | 37h25 |
-| 55 | Função composta e inversa | Funções | 9 | 45 | 38h10 |
-| 56 | Sequências e PA | Funções | 9 | 45 | 38h55 |
-| 57 | Função modular | Funções | 9 | 40 | 39h35 |
-| 58 | O ponto no plano | Geometria | 9 | 40 | 40h15 |
-| 59 | Cilindro e cone | Geometria | 9 | 45 | 41h00 |
-| 60 | Pirâmides | Geometria | 9 | 45 | 41h45 |
-| 61 | Relações métricas no triângulo retângulo | Geometria | 9 | 40 | 42h25 |
-| 62 | Trigonometria no triângulo retângulo | Geometria | 10 | 45 | 43h10 |
-| 63 | A reta no plano | Geometria | 10 | 50 | 44h00 |
-| 64 | Esfera | Geometria | 10 | 35 | 44h35 |
-| 65 | Função quadrática | Funções | 10 | 55 | 45h30 |
-| 66 | Logaritmos | Funções | 10 | 50 | 46h20 |
-| 67 | Equações e inequações exponenciais | Funções | 10 | 40 | 47h00 |
-| 68 | Progressão geométrica | Funções | 10 | 45 | 47h45 |
-| 69 | Números complexos | Álgebra | 10 | 45 | 48h30 |
-| 70 | Polinômios | Álgebra | 10 | 45 | 49h15 |
-| 71 | Sistemas lineares | Álgebra | 10 | 50 | 50h05 |
-| 72 | Equações polinomiais | Álgebra | 11 | 45 | 50h50 |
-| 73 | Círculo trigonométrico | Funções | 11 | 50 | 51h40 |
-| 74 | Função logarítmica | Funções | 11 | 40 | 52h20 |
-| 75 | Transformações de gráfico | Funções | 11 | 40 | 53h00 |
-| 76 | Inequações e estudo do sinal | Funções | 11 | 45 | 53h45 |
-| 77 | A circunferência no plano | Geometria | 11 | 45 | 54h30 |
-| 78 | Lei dos senos e dos cossenos | Geometria | 11 | 45 | 55h15 |
-| 79 | Sólidos inscritos e circunscritos | Geometria | 11 | 40 | 55h55 |
-| 80 | Cônicas | Geometria | 12 | 45 | 56h40 |
-| 81 | Funções trigonométricas | Funções | 12 | 50 | 57h30 |
-| 82 | Equações e inequações logarítmicas | Funções | 12 | 40 | 58h10 |
-| 83 | Complexos na forma trigonométrica | Álgebra | 12 | 40 | 58h50 |
-| 84 | Identidades e equações trigonométricas | Funções | 13 | 50 | 59h40 |
+| 12 | Junção | Aritmética | 3 | 50 | 8h10 |
+| 13 | Princípio multiplicativo | Dados e contagem | 3 | 40 | 8h50 |
+| 14 | Arranjos e permutações | Dados e contagem | 4 | 45 | 9h35 |
+| 15 | Esticamento | Aritmética | 4 | 55 | 10h30 |
+| 16 | Poliedros | Geometria | 4 | 35 | 11h05 |
+| 17 | Potências | Aritmética | 5 | 45 | 11h50 |
+| 18 | Porcentagem | Aritmética | 5 | 35 | 12h25 |
+| 19 | Razão e proporção | Aritmética | 5 | 50 | 13h15 |
+| 20 | Primos e fatoração | Aritmética | 5 | 40 | 13h55 |
+| 21 | Linguagem algébrica | Álgebra | 5 | 40 | 14h35 |
+| 22 | Combinações | Dados e contagem | 5 | 45 | 15h20 |
+| 23 | Leitura de gráficos e tabelas | Dados e contagem | 6 | 35 | 15h55 |
+| 24 | Probabilidade | Dados e contagem | 6 | 50 | 16h45 |
+| 25 | Radiciação | Aritmética | 6 | 45 | 17h30 |
+| 26 | Unidades de medida | Aritmética | 6 | 30 | 18h00 |
+| 27 | Aumentos e descontos | Aritmética | 6 | 35 | 18h35 |
+| 28 | Notação científica | Aritmética | 6 | 25 | 19h00 |
+| 29 | Equação do 1º grau | Álgebra | 6 | 45 | 19h45 |
+| 30 | Monômios e polinômios | Álgebra | 6 | 45 | 20h30 |
+| 31 | Teorema de Tales | Geometria | 6 | 35 | 21h05 |
+| 32 | Áreas de polígonos | Geometria | 7 | 45 | 21h50 |
+| 33 | Semelhança de triângulos | Geometria | 7 | 45 | 22h35 |
+| 34 | Produtos notáveis | Álgebra | 7 | 40 | 23h15 |
+| 35 | Sistemas do 1º grau | Álgebra | 7 | 45 | 24h00 |
+| 36 | Números reais | Aritmética | 7 | 40 | 24h40 |
+| 37 | Juros simples e compostos | Aritmética | 7 | 45 | 25h25 |
+| 38 | O que é uma função | Funções | 7 | 45 | 26h10 |
+| 39 | Média, moda e mediana | Dados e contagem | 7 | 40 | 26h50 |
+| 40 | Probabilidade condicional | Dados e contagem | 7 | 45 | 27h35 |
+| 41 | Binômio de Newton | Dados e contagem | 8 | 40 | 28h15 |
+| 42 | Dispersão | Dados e contagem | 8 | 45 | 29h00 |
+| 43 | Função afim | Funções | 8 | 45 | 29h45 |
+| 44 | Fatoração | Álgebra | 8 | 50 | 30h35 |
+| 45 | Matrizes | Álgebra | 8 | 45 | 31h20 |
+| 46 | Prismas | Geometria | 8 | 45 | 32h05 |
+| 47 | Teorema de Pitágoras | Geometria | 8 | 40 | 32h45 |
+| 48 | Comprimento e área do círculo | Geometria | 8 | 35 | 33h20 |
+| 49 | Conjuntos e intervalos | Aritmética | 8 | 40 | 34h00 |
+| 50 | Equação do 2º grau | Álgebra | 9 | 55 | 34h55 |
+| 51 | Determinantes | Álgebra | 9 | 40 | 35h35 |
+| 52 | Frações algébricas | Álgebra | 9 | 40 | 36h15 |
+| 53 | Inequações do 1º grau | Álgebra | 9 | 35 | 36h50 |
+| 54 | Função exponencial | Funções | 9 | 45 | 37h35 |
+| 55 | Função composta e inversa | Funções | 9 | 45 | 38h20 |
+| 56 | Sequências e PA | Funções | 9 | 45 | 39h05 |
+| 57 | Função modular | Funções | 9 | 40 | 39h45 |
+| 58 | O ponto no plano | Geometria | 9 | 40 | 40h25 |
+| 59 | Cilindro e cone | Geometria | 9 | 45 | 41h10 |
+| 60 | Pirâmides | Geometria | 9 | 45 | 41h55 |
+| 61 | Relações métricas no triângulo retângulo | Geometria | 9 | 40 | 42h35 |
+| 62 | Trigonometria no triângulo retângulo | Geometria | 10 | 45 | 43h20 |
+| 63 | A reta no plano | Geometria | 10 | 50 | 44h10 |
+| 64 | Esfera | Geometria | 10 | 35 | 44h45 |
+| 65 | Função quadrática | Funções | 10 | 55 | 45h40 |
+| 66 | Logaritmos | Funções | 10 | 50 | 46h30 |
+| 67 | Equações e inequações exponenciais | Funções | 10 | 40 | 47h10 |
+| 68 | Progressão geométrica | Funções | 10 | 45 | 47h55 |
+| 69 | Números complexos | Álgebra | 10 | 45 | 48h40 |
+| 70 | Polinômios | Álgebra | 10 | 45 | 49h25 |
+| 71 | Sistemas lineares | Álgebra | 10 | 50 | 50h15 |
+| 72 | Equações polinomiais | Álgebra | 11 | 45 | 51h00 |
+| 73 | Círculo trigonométrico | Funções | 11 | 50 | 51h50 |
+| 74 | Função logarítmica | Funções | 11 | 40 | 52h30 |
+| 75 | Transformações de gráfico | Funções | 11 | 40 | 53h10 |
+| 76 | Inequações e estudo do sinal | Funções | 11 | 45 | 53h55 |
+| 77 | A circunferência no plano | Geometria | 11 | 45 | 54h40 |
+| 78 | Lei dos senos e dos cossenos | Geometria | 11 | 45 | 55h25 |
+| 79 | Sólidos inscritos e circunscritos | Geometria | 11 | 40 | 56h05 |
+| 80 | Cônicas | Geometria | 12 | 45 | 56h50 |
+| 81 | Funções trigonométricas | Funções | 12 | 50 | 57h40 |
+| 82 | Equações e inequações logarítmicas | Funções | 12 | 40 | 58h20 |
+| 83 | Complexos na forma trigonométrica | Álgebra | 12 | 40 | 59h00 |
+| 84 | Identidades e equações trigonométricas | Funções | 13 | 50 | 59h50 |
 
 ## As fichas
 
 ### Aritmética
 
-17 aulas, 11h50.
+17 aulas, 12h00.
 
 #### 1. A reta numérica
 
@@ -167,8 +167,6 @@ Todo número é um ponto numa reta. Dessa imagem saem a escala, o negativo, o m�
 
 **Seções já escritas:** Todo número tem um endereço · Escala · Do outro lado do zero · Duas informações num número só · O oposto · Quem é maior · Um jeito de conferir quando bater a dúvida
 
-**Falta:** decidir se a seção do módulo fica onde está ou volta pra dentro do "outro lado do zero". Distância entre dois pontos saiu daqui de vez: ela é da aula de ponto no plano, na geometria analítica.
-
 #### 4. Conjuntos numéricos
 
 *Dando nome aos moradores da reta*
@@ -191,8 +189,6 @@ Naturais, inteiros e racionais: quem é cada grupo, qual é a regra de entrada e
 - classificação de números
 
 **Seções já escritas:** O que é um conjunto · Os naturais: os números de contar · Os inteiros: os naturais mais os opostos deles · Os racionais: quem dá pra escrever como fração · Um dentro do outro · E será que sobrou alguém de fora?
-
-**Falta:** um interativo em que o aluno joga um número em cada caixa e vê onde ele cai, e decidir se o símbolo de pertence merece mais exemplos. Dois assuntos saem daqui de propósito: união, interseção e intervalo ficam com a aula de conjuntos e intervalos, e os irracionais ficam com a de números reais. Aqui é só quem é quem.
 
 #### 5. O que cada operação faz
 
@@ -218,8 +214,6 @@ As quatro operações vistas pelo significado, a ordem em que uma expressão se 
 - expressões numéricas
 
 **Seções já escritas:** Somar é andar mais um tanto · Subtrair é andar pra trás, e também é medir distância · Multiplicar é repetir a mesma seta · Por que 3 × 4 dá o mesmo que 4 × 3 · Dividir tem duas leituras, e as duas importam · Por que não dá pra dividir por zero · Em que ordem você resolve, e por quê · Uma expressão numérica é isso repetido · Dois pares em que uma desfaz a outra · Onde o pessoal escorrega
-
-**Falta:** um interativo de retângulo pra comutatividade, que hoje está só como desenho de bolinha. Os algoritmos de conta armada ficam de fora de propósito: quem chega neste site está no ensino médio e já arma conta, e o que falta pra ele é o significado, que é justamente o que a aula faz. A ordem das operações ganhou seção própria porque ela é o que abre o gancho que junção e esticamento fecham, e o exemplo da expressão numérica ainda não tem potência dentro, porque potências vem depois.
 
 #### 11. Frações
 
@@ -249,7 +243,7 @@ A fração como divisão que ficou pendente, e tudo que você precisa pra operar
 
 **Seções já escritas:** Uma fração é uma divisão que ficou pendente · O mesmo ponto com vários nomes · Divisibilidade: descobrir se corta sem fazer a conta · Simplificar: cortar até não dar mais · Quem é maior · Somar e subtrair: só junta pedaço do mesmo tamanho · Multiplicar é o mais fácil de todos · Dividir por uma fração: quantos cabem · Por que somar os algarismos funciona no 3 e no 9 · Onde o pessoal escorrega
 
-**Falta:** o interativo certo pra ela é uma barra que o aluno corta em $n$ pedaços e pinta $m$, com duas barras lado a lado pra comparação e pra soma, que é o que faria a seção de somar dispensar meio parágrafo de texto. Esta é a aula mais longa do curso, com 70 minutos, e ela cobre o que a escola divide em três. Se em aula ela não couber num encontro, o corte é tirar divisibilidade e MDC pra junto de primos e fatoração, que já existe e já cobre o método pelos primos. A divisão por fração é ensinada aqui pela contagem de "quantos cabem", de propósito, e a explicação pelo inverso fica com o esticamento: quem mexer nas duas, mexa nas duas juntas.
+**Falta:** esta é a aula mais longa do curso, com 70 minutos, e ela cobre o que a escola divide em três. Se em aula ela não couber num encontro, o corte é tirar divisibilidade e MDC pra junto de primos e fatoração, que já existe e já cobre o método pelos primos. A divisão por fração é ensinada aqui pela contagem de "quantos cabem", de propósito, e a explicação pelo inverso fica com o esticamento: quem mexer nas duas, mexa nas duas juntas.
 
 #### 12. Junção
 
@@ -257,7 +251,7 @@ A fração como divisão que ficou pendente, e tudo que você precisa pra operar
 
 Parar de ver o sinal como parte da operação e passar a ver como característica do número. Soma e subtração viram uma coisa só.
 
-`juncao` · nível 3 · base · 40 min · escrita · 7 tópicos
+`juncao` · nível 3 · base · 50 min · escrita · 7 tópicos
 
 **Precisa de:** O que cada operação faz  
 **Destrava:** Esticamento
@@ -272,7 +266,7 @@ Parar de ver o sinal como parte da operação e passar a ver como característic
 - oposto
 - sinal na frente de parênteses
 
-**Seções já escritas:** Mas afinal, o que é junção? · Alguns exemplos · Exemplo 1 · Exemplo 2 · De onde vem esse truque · Exemplo 3 · Não é pra complicar · Onde o pessoal escorrega
+**Seções já escritas:** Mas afinal, o que é junção? · Alguns exemplos · Exemplo 1 · Exemplo 2 · De onde vem esse truque · Exemplo 3 · Agora mexe você · O sinal na frente do parêntese · Não é pra complicar · Onde o pessoal escorrega
 
 #### 15. Esticamento
 
@@ -296,7 +290,7 @@ Dividir por um número é multiplicar pelo inverso dele, então multiplicação 
 
 **Seções já escritas:** Cada número tem um inverso · O zero é o único que fica de fora · Dividir é multiplicar pelo inverso · Multiplicar por negativo é virar a seta · Cortar em cima e embaixo é multiplicar por 1 · O ganho: a ordem parou de importar · Onde isso vai te salvar · O paralelo inteiro entre as duas aulas · Onde o pessoal escorrega
 
-**Falta:** o interativo, que é uma seta na reta que o aluno estica e encolhe por um fator, inclusive por fator entre $0$ e $1$ e por fator negativo, que é exatamente o desenho que a seção de sinais pede e que hoje está sendo substituído por tabela. A regra de sinais e o cancelamento passaram a ser desta aula e agora estão escritos, e a divisão por fração é ensinada em frações pela contagem de "quantos cabem": quem mexer numa das duas, mexa nas duas juntas. E o nome "esticamento" continua provisório, é o meu jeito de espelhar a junção.
+**Falta:** decidir o nome. "Esticamento" continua provisório, é o meu jeito de espelhar a junção, e agora que a figura mostra a seta esticando, encolhendo e virando, o nome ficou mais defensável do que era. A divisão por fração é ensinada em frações pela contagem de "quantos cabem", e a explicação pelo inverso é desta aula: quem mexer numa das duas, mexa nas duas juntas.
 
 #### 17. Potências
 

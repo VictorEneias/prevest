@@ -93,17 +93,21 @@ Pela leitura de repetir, $3 \times 4$ é somar quatro três vezes, e $4 \times 3
 somar três quatro vezes. São duas histórias diferentes, com setas de tamanhos
 diferentes na reta, e mesmo assim elas terminam no mesmo lugar.
 
-O jeito de ver por que é desenhar um retângulo de 3 linhas com 4 bolinhas em cada:
+O jeito de ver por que é desenhar um retângulo de 3 linhas com 4 bolinhas em cada e
+contar ele de dois jeitos:
 
-```
-● ● ● ●
-● ● ● ●
-● ● ● ●
-```
+<Retangulo
+  linhas={3}
+  colunas={4}
+  titulo="O mesmo retângulo, contado de dois jeitos"
+  chaveUrl="rt"
+/>
 
-Contando por linha você faz $4 + 4 + 4$. Contando por coluna você faz
-$3 + 3 + 3 + 3$. É o mesmo desenho, só com a cabeça virada, e virar a cabeça não
-cria nem destrói bolinha, então os dois jeitos de contar têm que dar o mesmo número.
+Aperta **contar por linha** e você faz $4 + 4 + 4$; aperta **contar por coluna** e você
+faz $3 + 3 + 3 + 3$. São duas contas diferentes e o total é o mesmo, e o motivo aparece
+quando você aperta **girar a cabeça**: é o mesmo desenho de lado, e virar a cabeça não
+cria nem destrói bolinha. Congela um retângulo antes de girar, se quiser ver os dois
+totais lado a lado.
 
 Isso tem nome, **comutatividade**, e o retângulo é a demonstração mais honesta dela
 que existe nesse nível. Guarda o desenho, porque ele volta quando você estudar área,
@@ -292,10 +296,8 @@ unidade errada com o número certo na mão.
 
 ---
 
-*Falta nesta página: um interativo de retângulo pra comutatividade, que hoje está
-só como desenho de bolinha. Os algoritmos de conta armada ficam de fora de propósito:
-quem chega neste site está no ensino médio e já arma conta, e o que falta pra ele é
-o significado, que é justamente o que a aula faz. A ordem das operações ganhou seção
-própria porque ela é o que abre o gancho que junção e esticamento fecham, e o
-exemplo da expressão numérica ainda não tem potência dentro, porque potências vem
-depois.*
+*Nota desta página: os algoritmos de conta armada ficam de fora de propósito, porque
+quem chega neste site está no ensino médio e já arma conta, e o que falta pra ele é o
+significado. A ordem das operações ganhou seção própria porque ela é o que abre o
+gancho que junção e esticamento fecham, e o exemplo da expressão numérica ainda não
+tem potência dentro, porque potências vem depois desta aula.*

@@ -14,6 +14,10 @@ import Juncao from './viz/Juncao';
 import Setas from './viz/Setas';
 import Reta from './viz/Reta';
 import RetaZoom from './viz/RetaZoom';
+import Caixas from './viz/Caixas';
+import Retangulo from './viz/Retangulo';
+import Barra from './viz/Barra';
+import Esticar from './viz/Esticar';
 
 export const componentesMDX: Record<string, ComponentType<any>> = {
   C,
@@ -21,4 +25,8 @@ export const componentesMDX: Record<string, ComponentType<any>> = {
   Setas,
   Reta,
   RetaZoom,
+  Caixas,
+  Retangulo,
+  Barra,
+  Esticar,
 };
