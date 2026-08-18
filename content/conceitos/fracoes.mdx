@@ -3,7 +3,7 @@ titulo: Frações
 subtitulo: O número que mora entre as marcas
 materia: matematica
 bloco: aritmetica
-prereqs: [esticamento]
+prereqs: [quatro-operacoes]
 nivel: base
 tempo_estimado: 70
 revisado: false
@@ -22,9 +22,11 @@ topicos:
   - divisão de frações
   - fração de fração
 ---
-Na aula de <C id="esticamento">esticamento</C> a fração já entrou de contrabando: o
-inverso de $3$ era $\frac{1}{3}$, e foi ele que fez a divisão desaparecer. Hoje ela
-para de ser figurante e vira o assunto.
+Na aula das <C id="quatro-operacoes">quatro operações</C> eu deixei uma conta pendurada.
+O $12 \div 4$ fecha redondo e dá $3$, e o $3 \div 4$ não fecha em número de contar
+nenhum, porém a resposta existe, e hoje ela vira o assunto da aula: a **fração** é o
+número que responde as divisões que não fecham, e é ela que preenche todo o espaço entre
+as marcas da <C id="reta-numerica">reta</C>.
 
 E eu vou fazer uma coisa aqui que a escola normalmente não faz, que é juntar nesta
 mesma aula a **divisibilidade**, o **MMC** e o **MDC**. O motivo é honesto: esses três
@@ -88,18 +90,23 @@ Agora olha uma coisa estranha: $\frac{1}{2}$, $\frac{2}{4}$, $\frac{3}{6}$ e
 $\frac{50}{100}$ caem **exatamente no mesmo ponto** da reta. São nomes diferentes pro
 mesmo número, e a gente chama isso de **frações equivalentes**.
 
-O porquê vem direto do esticamento. Pra sair de $\frac{1}{2}$ e chegar em
-$\frac{2}{4}$, você multiplicou o de cima e o de baixo por $2$, e fazer isso é o mesmo
-que multiplicar a fração inteira por $\frac{2}{2}$:
+O porquê você enxerga cortando a pizza de novo. Pega a metade e passa a faca em cada
+pedaço: onde havia $2$ pedaços passam a haver $4$, e onde você tinha $1$ pedaço na mão
+passa a ter $2$. **A quantidade de pizza não mudou**, e é isso que a igualdade está
+dizendo: cortar de novo muda o nome do pedaço e não muda quanto você tem.
+
+Escrito em conta, você multiplicou o de cima e o de baixo pelo mesmo $2$. E daqui a
+pouco, quando a gente multiplicar fração com fração, você vai ver que fazer isso é
+literalmente multiplicar a fração inteira por $\frac{2}{2}$:
 
 $$
 \frac{1}{2} \cdot \frac{2}{2} \;=\; \frac{2}{4}
 $$
 
-E $\frac{2}{2}$ é $1$. Ou seja, você multiplicou por $1$, e multiplicar por $1$ não
-move nada, que é justamente o que a gente viu quando o $1$ apareceu como o número que
-não faz nada na multiplicação. **Multiplicar cima e baixo pelo mesmo número não é
-autorizado por uma regra da escola, é autorizado por ser multiplicação por $1$.**
+E $\frac{2}{2}$ é $1$, porque é o inteiro cortado em dois com os dois pedaços na mão.
+Ou seja, você multiplicou por $1$, e multiplicar por $1$ não move nada. **Multiplicar
+cima e baixo pelo mesmo número não é autorizado por uma regra da escola, é autorizado
+por ser multiplicação por $1$.**
 
 <Reta
   dominio={[0, 1]}
@@ -142,10 +149,9 @@ em $3\,472$, os $3\,400$ da frente já são múltiplos de $4$ de qualquer jeito,
 
 ## Simplificar: cortar até não dar mais
 
-Simplificar é andar no sentido contrário da equivalência: em vez de multiplicar cima e
-baixo, você **divide** os dois pelo mesmo número. E é permitido pelo mesmo motivo,
-porque dividir os dois por $2$ é multiplicar a fração por $\frac{1/2}{1/2}$, que
-também é $1$.
+Simplificar é andar no sentido contrário da equivalência. Em vez de passar a faca em
+cada pedaço, você junta os pedaços de dois em dois, ou de três em três, e é a
+mesma pizza de novo: você divide o de cima e o de baixo pelo mesmo número.
 
 Então dá pra ir cortando pelos critérios, um por vez:
 
@@ -176,9 +182,9 @@ $$
 $$
 
 Listar divisor funciona bem com número pequeno e fica chato rápido. Existe um método
-sistemático, que passa por quebrar o número em fatores primos, e ele é o assunto da
-próxima aula. Se agora te der trabalho achar o MDC de $84$ e $126$, é porque a
-ferramenta boa ainda não chegou.
+sistemático, que passa por quebrar o número em fatores primos, e ele tem aula própria
+mais pra frente, a de primos e fatoração. Se agora te der trabalho achar o MDC de
+$84$ e $126$, é porque a ferramenta boa ainda não chegou.
 
 ## Quem é maior
 
@@ -205,7 +211,7 @@ denominadores, que é exatamente o que a próxima seção ensina a fazer.
 
 ## Somar e subtrair: só junta pedaço do mesmo tamanho
 
-Na aula das <C id="quatro-operacoes">quatro operações</C> eu disse que a soma junta
+Na aula das quatro operações eu disse que a soma junta
 quantidades da mesma natureza, e que somar maçã com laranja não significa nada. Com
 fração isso volta com força: **você só consegue juntar pedaços do mesmo tamanho**.
 
@@ -255,10 +261,11 @@ então $2 \times 3 = 6$ resolveria, e com $4$ e $6$ o produto $24$ também funci
 aí você acaba com uma fração maior pra simplificar depois. O MMC é o caminho mais curto,
 e o produto é o caminho que nunca falha quando você travou.
 
-Subtração não precisa de seção própria, e isso é a <C id="juncao">junção</C> te dando
-troco: subtrair é somar o oposto, então $\frac{5}{6} - \frac{1}{6}$ é
-$\frac{5}{6} + \left(-\frac{1}{6}\right)$, e o procedimento é o mesmo, igualar os
-pedaços e contar.
+Subtrair não precisa de seção própria, porque tirar pedaço é a mesma história de
+juntar pedaço: iguala os tamanhos e conta quantos sobraram. Então
+$\frac{5}{6} - \frac{1}{6} = \frac{4}{6}$, que simplifica pra $\frac{2}{3}$, e
+$\frac{1}{2} - \frac{1}{3}$ passa pelos sextos igual à soma passou, dando
+$\frac{3}{6} - \frac{2}{6} = \frac{1}{6}$.
 
 ## Multiplicar é o mais fácil de todos
 
@@ -274,29 +281,80 @@ então é $\frac{1}{6}$. Os denominadores multiplicaram porque cortar em $3$ e d
 cortar em $2$ é cortar em $6$.
 
 Repara também que eu escrevi "$\frac{1}{2}$ **de** $\frac{1}{3}$", e esse "de" é
-literalmente o sinal de vezes. É por isso que $\frac{3}{4}$ de $20$ resolve na
-multiplicação:
+literalmente o sinal de vezes. **Fração de fração é multiplicação**, e é por isso que
+$\frac{3}{4}$ de $20$ também resolve na multiplicação:
 
 $$
 \frac{3}{4} \cdot 20 \;=\; \frac{60}{4} \;=\; 15
 $$
 
-## Dividir já está resolvido
+E é bom você conferir o resultado pelo tamanho, sempre: $\frac{3}{4}$ é menos que o
+inteiro, então $\frac{3}{4}$ de $20$ tem que dar menos que $20$. Multiplicar por
+fração menor que $1$ **diminui**, e isso é estranho na primeira vez que você vê,
+porque a palavra "multiplicar" carrega uma promessa de aumentar que ela não cumpre.
 
-Essa parte você já sabe desde o esticamento, e é só aplicar: dividir por uma fração é
-multiplicar pelo inverso dela, e o inverso é ela de cabeça pra baixo.
+## Dividir por uma fração: quantos cabem
+
+Chegou o macete mais famoso da escola, o de virar a fração de cabeça pra baixo. Ele
+para de ser macete se você usar a leitura de **quantos cabem**, que é uma das duas
+leituras da divisão que a gente separou na aula das quatro operações.
+
+Começa pequeno: quantos $\frac{1}{4}$ cabem em $1$? Cabem quatro, e isso você responde
+olhando a reta, sem conta nenhuma, porque o inteiro foi cortado justamente em quatro
+pedaços desse tipo.
+
+$$
+1 \div \frac{1}{4} \;=\; 4
+$$
+
+Repara no que acabou de acontecer: **dividir por $\frac{1}{4}$ deu o mesmo que
+multiplicar por $4$**. E não é sorte do $1$: quantos quartos cabem em $3$? Cada
+inteiro tem quatro, então três inteiros têm doze, e $3 \div \frac{1}{4} = 12$, que é
+$3 \cdot 4$.
+
+Agora com numerador maior que um, que é onde o de cima também entra na história.
+Quantos $\frac{2}{3}$ cabem em $1$? O inteiro tem três terços, e cada grupo de
+$\frac{2}{3}$ gasta dois terços, então dá pra montar um grupo inteiro e sobra terço
+pra montar meio grupo: cabem $\frac{3}{2}$.
+
+$$
+1 \div \frac{2}{3} \;=\; \frac{3}{2}
+$$
+
+Que é a fração de cabeça pra baixo. E os dois números viraram de lado por dois motivos
+diferentes, que vale separar: o de baixo subiu porque **quanto menor o pedaço, mais
+deles cabem**, e o de cima desceu porque quanto mais pedaços cada grupo gasta, menos
+grupos cabem. Um faz caber mais, o outro faz caber menos, e o resultado é a fração
+invertida.
+
+Daí sai a regra, e agora ela é a conclusão de uma contagem que você fez com a mão:
+
+$$
+\frac{a}{b} \div \frac{c}{d} \;=\; \frac{a}{b} \cdot \frac{d}{c}
+$$
 
 $$
 \frac{3}{4} \div \frac{2}{5} \;=\; \frac{3}{4} \cdot \frac{5}{2} \;=\; \frac{15}{8}
 $$
 
-E a fração que tem fração dentro, aquela que assusta, é a mesma coisa escrita de outro
-jeito, porque a barra do meio é o sinal de dividir:
+Confere pelo tamanho: você está perguntando quantos $\frac{2}{5}$ cabem em
+$\frac{3}{4}$, e como $\frac{2}{5}$ é menor que $\frac{3}{4}$, tem que caber mais de
+uma vez. O $\frac{15}{8}$ é quase $2$, então bate.
+
+E a fração que tem fração dentro, aquela que assusta na prova, é essa mesma conta com
+outra roupa, porque a barra do meio é o sinal de dividir:
 
 $$
 \frac{\;\frac{3}{4}\;}{\;\frac{2}{5}\;} \;=\; \frac{3}{4} \div \frac{2}{5}
 \;=\; \frac{15}{8}
 $$
+
+Esse virar de cabeça pra baixo tem uma explicação bem mais geral do que a que eu te
+dei aqui, e ela é o assunto da aula de esticamento, que vem depois desta. Lá você vai
+ver que a mesma coisa vale pra qualquer número, inclusive pros inteiros que nem
+parecem fração, e que por causa disso a divisão desaparece de todas as suas contas. Por
+aqui basta você saber por que a fração vira, e é isso que a contagem de "quantos cabem"
+te deu.
 
 ### Por que somar os algarismos funciona no 3 e no 9
 
@@ -330,6 +388,36 @@ No caso: $2 + 5 + 3 = 10$, que não é múltiplo de $9$, então $253$ não é. E
 $9$ também são múltiplos de $3$, o mesmo argumento vale palavra por palavra pro
 critério do $3$.
 
+### Onde o pessoal escorrega
+
+O primeiro erro é o mais comum de todos, e é somar em cima e embaixo:
+
+$$
+\frac{1}{2} + \frac{1}{3} \;\to\; \frac{2}{5} \qquad \text{(errado)}
+$$
+
+O jeito de pegar esse erro sem saber a resposta é olhar o tamanho: $\frac{1}{2}$ já é
+maior que $\frac{2}{5}$, e você somou uma coisa positiva, então é impossível terminar
+menor do que começou. O que está faltando é o significado do de baixo: ele guarda o
+**tamanho do pedaço**, e tamanho de pedaço não entra na contagem, quem entra é a
+quantidade de pedaços. O certo é $\frac{5}{6}$.
+
+O segundo é cortar um número que está somando:
+
+$$
+\frac{3 + 4}{3} \;\to\; 4 \qquad \text{(errado)}
+$$
+
+Aqui o resultado é $\frac{7}{3}$, que não é $4$ nem perto. O de baixo divide o
+numerador inteiro, e nesse numerador o $3$ é dono de um pedaço só, então cortar
+ele é dividir metade da conta e esquecer a outra metade. A regra que salva: só dá pra
+cortar quem multiplica **tudo** que está em cima e **tudo** que está embaixo.
+
+O terceiro é comparar pelo de baixo achando que maior embaixo é maior no total, e
+concluir que $\frac{1}{3} > \frac{1}{2}$. É a intuição de número de contar
+atravessando pra dentro da fração, e ela inverte: mais partes, cada parte menor. Se
+bater a dúvida na prova, volta pra pizza, que ela nunca mente.
+
 
 ---
 
@@ -338,4 +426,6 @@ pedaços e pinta $m$, com duas barras lado a lado pra comparação e pra soma, q
 que faria a seção de somar dispensar meio parágrafo de texto. Esta é a aula mais longa
 do curso, com 70 minutos, e ela cobre o que a escola divide em três. Se em aula ela
 não couber num encontro, o corte é tirar divisibilidade e MDC pra junto de primos e
-fatoração, que já existe e já cobre o método pelos primos.*
+fatoração, que já existe e já cobre o método pelos primos. A divisão por fração é
+ensinada aqui pela contagem de "quantos cabem", de propósito, e a explicação pelo
+inverso fica com o esticamento: quem mexer nas duas, mexa nas duas juntas.*

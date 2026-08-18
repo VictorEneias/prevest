@@ -5,9 +5,9 @@ materia: matematica
 bloco: aritmetica
 prereqs: [conjuntos-numericos]
 nivel: base
-tempo_estimado: 45
+tempo_estimado: 55
 revisado: false
-resumo: As quatro operações vistas pelo significado, e os dois pares em que uma desfaz a outra.
+resumo: As quatro operações vistas pelo significado, a ordem em que uma expressão se resolve, e os dois pares em que uma operação desfaz a outra.
 topicos:
   - significado da adição
   - subtração como distância
@@ -83,8 +83,32 @@ três setas do mesmo tamanho, uma atrás da outra:
 Essa leitura de "repetir" funciona muito bem enquanto o multiplicador é um número de
 contar, e ela começa a ficar estranha quando você multiplica por $\frac{1}{2}$ ou por
 $-3$, porque repetir meia vez não quer dizer nada. Existe uma leitura melhor, que é a
-de **esticar e encolher a seta**, e ela ganha aula própria daqui a duas aulas, então
-por agora fica com a repetição, que dá conta de tudo que a gente vai fazer aqui.
+de **esticar e encolher a seta**, e ela ganha aula própria mais pra frente, depois que
+a fração estiver na mão. Por agora fica com a repetição, que dá conta de tudo que a
+gente vai fazer aqui.
+
+### Por que 3 × 4 dá o mesmo que 4 × 3
+
+Pela leitura de repetir, $3 \times 4$ é somar quatro três vezes, e $4 \times 3$ é
+somar três quatro vezes. São duas histórias diferentes, com setas de tamanhos
+diferentes na reta, e mesmo assim elas terminam no mesmo lugar.
+
+O jeito de ver por que é desenhar um retângulo de 3 linhas com 4 bolinhas em cada:
+
+```
+● ● ● ●
+● ● ● ●
+● ● ● ●
+```
+
+Contando por linha você faz $4 + 4 + 4$. Contando por coluna você faz
+$3 + 3 + 3 + 3$. É o mesmo desenho, só com a cabeça virada, e virar a cabeça não
+cria nem destrói bolinha, então os dois jeitos de contar têm que dar o mesmo número.
+
+Isso tem nome, **comutatividade**, e o retângulo é a demonstração mais honesta dela
+que existe nesse nível. Guarda o desenho, porque ele volta quando você estudar área,
+e guarda a conclusão, porque ela é o que vai te deixar mexer na ordem de uma
+multiplicação sem medo.
 
 ## Dividir tem duas leituras, e as duas importam
 
@@ -121,6 +145,12 @@ segundo é quantidade de bolinhas por pacote. Saber ler dos dois jeitos é o que
 impede de responder a pergunta errada com a conta certa, que é um dos jeitos mais
 tristes de perder ponto.
 
+Repara também que $12 \div 4$ fechou redondo, e a maioria das divisões não fecha. Se
+eu te pedir $3 \div 4$, você não consegue responder com número de contar, e a resposta
+existe: é o $\frac{3}{4}$, que é o assunto de uma aula inteira daqui a pouco. Por
+enquanto guarda que toda divisão tem resposta, e a única exceção é a próxima
+seção.
+
 ## Por que não dá pra dividir por zero
 
 Na aula passada eu falei que na fração o de baixo não pode ser zero, e prometi o
@@ -136,10 +166,81 @@ respostas é tão inútil quanto uma que não aceita nenhuma. Nos dois casos a s
 mesma: **divisão por zero não é conta**, e quando ela aparece no meio de um exercício
 é sinal de que você tem que voltar e ver o que aconteceu antes.
 
+## Em que ordem você resolve, e por quê
+
+Agora que cada operação significa alguma coisa, dá pra entender uma regra que a escola
+costuma entregar decorada. Quando várias operações aparecem na mesma linha, existe uma
+ordem obrigatória de resolver, e essa ordem não foi sorteada.
+
+$$
+2 + 3 \times 4
+$$
+
+Resolvendo da esquerda pra direita você acha $20$, e o resultado certo é $14$. O
+motivo fica claro num problema de verdade: você tem 2 canetas soltas e mais 3 pacotes
+de 4 canetas. As 12 canetas dos pacotes têm que ser contadas antes, porque o $3$ e o
+$4$ juntos descrevem um bloco de canetas, e é o bloco que soma com as 2 soltas.
+E isso é a leitura de repetir aparecendo de novo: **a multiplicação agrupa antes da
+soma porque ela já é uma soma abreviada**, o $3 \times 4$ é um $4 + 4 + 4$ vestido de
+outro jeito, e desmanchar essa roupa antes de misturar com o $2$ é o que mantém a
+conta honesta.
+
+Daí sai a ordem inteira:
+
+| ordem | quem resolve primeiro |
+|---|---|
+| 1º | o que está dentro dos parênteses |
+| 2º | multiplicação e divisão |
+| 3º | soma e subtração |
+
+Parênteses são o jeito que a linguagem matemática tem de mandar você mudar a ordem, e
+é por isso que eles ganham de todo mundo: escrever $(2 + 3) \times 4$ é dizer "some
+primeiro, eu quero mesmo, e o bloco que vai ser repetido é o $5$". Quando a potência
+chegar, algumas aulas na frente, ela entra no topo dessa lista pelo mesmo argumento,
+porque ela é uma multiplicação abreviada.
+
+E dentro do mesmo nível, quando sobrou só multiplicação com divisão, ou só soma com
+subtração, a convenção é ir da esquerda pra direita:
+
+$$
+8 \div 4 \times 2 \;=\; 2 \times 2 \;=\; 4
+$$
+
+Aqui vale você parar um segundo, porque tem uma coisa incômoda: se você resolvesse o
+$4 \times 2$ primeiro acharia $1$, então **a ordem tem poder sobre o resultado**, e
+você é obrigado a lembrar de uma convenção pra não errar. Guarda esse incômodo, que
+ele volta no fim da aula.
+
+### Uma expressão numérica é isso repetido
+
+Expressão numérica é essa mesma ordem aplicada várias vezes até sobrar um número, e
+nada além disso. Olha uma:
+
+$$
+20 - 3 \times (2 + 4) \div 2
+$$
+
+Passo a passo, e cada linha resolve uma coisa só:
+
+| o que eu resolvi | como ficou |
+|---|---|
+| o parêntese, $2 + 4$ | $20 - 3 \times 6 \div 2$ |
+| $3 \times 6$, que vem antes por estar mais à esquerda | $20 - 18 \div 2$ |
+| $18 \div 2$ | $20 - 9$ |
+| a subtração, que era a última da fila | $11$ |
+
+Uma dica de execução que parece perda de tempo e não é: **reescreve a linha inteira a
+cada passo**, inclusive os pedaços que você não mexeu. Erro em expressão numérica quase
+nunca é erro de conta, é erro de cópia, e é sempre um número que ficou pra trás ou um
+sinal que trocou no caminho.
+
 ## Dois pares em que uma desfaz a outra
 
-Pra fechar, repara numa coisa que vai ser o assunto das duas próximas aulas: as
-quatro operações andam em dois pares, e dentro de cada par uma **desfaz** a outra.
+Pra fechar, repara numa coisa que vai ser o assunto das próximas aulas: as quatro
+operações andam em dois pares, e dentro de cada par uma **desfaz** a outra. É isso que
+o nome **operação inversa** quer dizer, e é uma ideia que você vai usar até o fim do
+curso: sempre que uma operação te incomodar numa conta, você tem a inversa dela na mão
+pra desmontar o incômodo, e é assim que se resolve equação.
 
 | par | o desfazer |
 |---|---|
@@ -149,28 +250,44 @@ quatro operações andam em dois pares, e dentro de cada par uma **desfaz** a ou
 E o que vem a seguir é mais forte do que isso. Dentro de cada par não existem duas
 operações separadas, existe **uma só**, escrita de dois jeitos diferentes. A da soma
 com a subtração é a próxima aula, a **junção**, que é o assunto que mais muda o seu
-jeito de pensar nos números. A da multiplicação com a divisão vem logo depois dela.
+jeito de pensar nos números. A da multiplicação com a divisão é o **esticamento**, e
+ela não vem logo em seguida porque pra escrever ela você precisa de fração, então
+frações entra no meio do caminho.
 
-### Por que 3 × 4 dá o mesmo que 4 × 3
+E aquele incômodo do $8 \div 4 \times 2$ é exatamente o que essas duas aulas
+resolvem. Enquanto a subtração e a divisão existirem como operações separadas, a ordem
+manda no resultado e você tem que tomar cuidado; quando as duas viram soma e
+multiplicação, **a ordem para de mandar** e o cuidado deixa de ser necessário.
 
-Pela leitura de repetir, $3 \times 4$ é somar quatro três vezes, e $4 \times 3$ é
-somar três quatro vezes. São duas histórias diferentes, com setas de tamanhos
-diferentes na reta, e mesmo assim elas terminam no mesmo lugar.
+### Onde o pessoal escorrega
 
-O jeito de ver por que é desenhar um retângulo de 3 linhas com 4 bolinhas em cada:
+Os erros desta aula são de leitura, e nenhum deles é erro de conta.
 
-```
-● ● ● ●
-● ● ● ●
-● ● ● ●
-```
+O primeiro é resolver na ordem em que está escrito:
 
-Contando por linha você faz $4 + 4 + 4$. Contando por coluna você faz
-$3 + 3 + 3 + 3$. É o mesmo desenho, só com a cabeça virada, e virar a cabeça não
-cria nem destrói bolinha, então os dois jeitos de contar têm que dar o mesmo número.
+$$
+20 - 3 \times 6 \;\to\; 17 \times 6 = 102 \qquad \text{(errado)}
+$$
 
-Isso tem nome, **comutatividade**, e o retângulo é a demonstração mais honesta dela
-que existe nesse nível. Guarda o desenho, porque ele volta quando você estudar área.
+Quem faz isso não errou nenhuma das duas contas, ele leu o $3$ como uma quantidade
+solta quando o $3$ era a descrição de um bloco de $6$. O certo é $20 - 18 = 2$.
+
+O segundo é achar que a multiplicação tem preferência sobre a divisão:
+
+$$
+8 \div 4 \times 2 \;\to\; 8 \div 8 = 1 \qquad \text{(errado)}
+$$
+
+As duas moram no mesmo nível, e no mesmo nível quem manda é a ordem da escrita, então
+é $2 \times 2 = 4$. Mesma coisa com soma e subtração: em $10 - 4 + 3$ a resposta é
+$9$, e não $3$.
+
+O terceiro não deixa marca na folha e é o mais caro dos três: responder a pergunta
+errada com a conta certa. Em "12 bolinhas em pacotes de 4, quantos pacotes?" a
+resposta é 3 pacotes, e em "12 bolinhas repartidas em 4 pacotes, quantas por pacote?"
+a resposta é 3 bolinhas. A conta é a mesma nas duas e o $3$ significa coisas
+diferentes, então quem não separou as duas leituras da divisão acaba escrevendo a
+unidade errada com o número certo na mão.
 
 
 ---
@@ -178,4 +295,7 @@ que existe nesse nível. Guarda o desenho, porque ele volta quando você estudar
 *Falta nesta página: um interativo de retângulo pra comutatividade, que hoje está
 só como desenho de bolinha. Os algoritmos de conta armada ficam de fora de propósito:
 quem chega neste site está no ensino médio e já arma conta, e o que falta pra ele é
-o significado, que é justamente o que a aula faz.*
+o significado, que é justamente o que a aula faz. A ordem das operações ganhou seção
+própria porque ela é o que abre o gancho que junção e esticamento fecham, e o
+exemplo da expressão numérica ainda não tem potência dentro, porque potências vem
+depois.*

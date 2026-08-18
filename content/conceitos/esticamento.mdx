@@ -3,11 +3,11 @@ titulo: Esticamento
 subtitulo: Por que a divisão não existe
 materia: matematica
 bloco: aritmetica
-prereqs: [quatro-operacoes]
+prereqs: [fracoes, juncao]
 nivel: base
-tempo_estimado: 40
+tempo_estimado: 55
 revisado: false
-resumo: Dividir por um número é multiplicar pelo inverso dele, então multiplicação e divisão são a mesma operação escrita de dois jeitos.
+resumo: Dividir por um número é multiplicar pelo inverso dele, então multiplicação e divisão são a mesma operação escrita de dois jeitos, e a regra de sinais sai junto.
 topicos:
   - inverso de um número
   - divisão como multiplicação
@@ -26,6 +26,11 @@ outro**, e a divisão também deixa de ser uma operação separada. De novo, iss
 mudar o resultado de nenhuma conta sua, e vai mudar o que você consegue fazer com uma
 conta sem medo de errar.
 
+Eu já te adianto que você vai reconhecer uma parte disso. Em <C id="fracoes">frações</C>
+você virou uma fração de cabeça pra baixo pra dividir por ela, e o que a aula de hoje
+faz é te mostrar de onde aquilo vinha, porque virar a fração era um caso particular de
+uma coisa bem maior.
+
 ## Cada número tem um inverso
 
 Na junção o personagem principal foi o **oposto**, que é o número que somado com o
@@ -42,14 +47,18 @@ baixo, e se ele é inteiro, você põe ele embaixo de um $1$. E olha que isso é
 regra dita duas vezes, porque todo inteiro já é uma fração com $1$ embaixo, coisa que
 a gente viu quando falou dos racionais.
 
-Repara no paralelo, que é o coração da aula: **o oposto desfaz uma soma e o inverso
-desfaz uma multiplicação**.
+Repara agora no paralelo, que é o coração da aula: **o oposto desfaz uma soma e o
+inverso desfaz uma multiplicação**. E cada um dos dois pares tem também o seu número
+que não faz nada, que na soma é o $0$ e na multiplicação é o $1$. Esse número tem nome,
+é o **elemento neutro** da operação, e ele é quem dá sentido a tudo: o oposto é o
+parceiro que te leva de volta pro neutro da soma, e o inverso é o parceiro que te leva
+de volta pro neutro da multiplicação.
 
 | | soma | multiplicação |
 |---|---|---|
-| o número que não faz nada | $0$ | $1$ |
+| o elemento neutro, que não faz nada | $0$ | $1$ |
 | o parceiro de cada número | o oposto, $-a$ | o inverso, $\frac{1}{a}$ |
-| a conta que volta pro começo | $a + (-a) = 0$ | $a \cdot \frac{1}{a} = 1$ |
+| a conta que volta pro neutro | $a + (-a) = 0$ | $a \cdot \frac{1}{a} = 1$ |
 
 ## O zero é o único que fica de fora
 
@@ -57,8 +66,9 @@ Tem um número que não tem inverso, e é o zero. Pensa comigo: pra ele ter inve
 precisaria existir algum número que multiplicado por zero desse $1$, e isso não
 existe, porque zero vezes qualquer coisa dá zero.
 
-E aí a proibição de dividir por zero, que na aula das quatro operações a gente viu
-pela leitura de "quantos cabem", aparece pela segunda vez e por outro caminho:
+E aí a proibição de dividir por zero, que na aula das
+<C id="quatro-operacoes">quatro operações</C> a gente viu pela leitura de "quantos
+cabem", aparece pela segunda vez e por outro caminho:
 dividir por zero seria multiplicar pelo inverso do zero, e o zero **não tem** inverso
 pra multiplicar. Quando duas explicações diferentes chegam na mesma proibição, é um
 bom sinal de que você entendeu a proibição, e não decorou.
@@ -77,29 +87,122 @@ $$
 12 \div 3 = 4 \qquad\qquad 12 \cdot \frac{1}{3} = \frac{12}{3} = 4
 $$
 
-<Setas
-  parcelas={[12, -3, -3, -3, -3]}
-  legenda="12 ÷ 3  →  gastei 4 setas de 3 pra voltar até o zero"
-  titulo="A mesma conta pela leitura de quantos cabem"
-  dominio={[-2, 14]}
-/>
-
-E confere naquele caso que a escola costuma ensinar como macete solto, o de dividir
-por uma fração:
+E agora volta naquele caso da aula de frações, o de dividir por uma fração:
 
 $$
 6 \div \frac{2}{3} \;=\; 6 \cdot \frac{3}{2} \;=\; \frac{18}{2} \;=\; 9
 $$
 
-"Dividir por uma fração é multiplicar pelo inverso dela" para de ser um truque que
-você tem que lembrar e passa a ser só a definição sendo aplicada, porque é
-literalmente o que a frase da aula manda fazer. **Isso é esticamento**: toda conta de
-multiplicar e dividir vira uma operação só, a multiplicação, do mesmo jeito que a
-junção transformou soma e subtração numa operação só.
+Lá eu justifiquei o virar de cabeça pra baixo contando quantos pedaços de $\frac{2}{3}$
+cabiam dentro do inteiro, e a justificativa estava correta, porém era uma justificativa
+sobre fração. A frase de hoje é maior do que isso: virar de cabeça pra baixo é
+**achar o inverso**, achar o inverso é a única coisa que a divisão faz, e isso vale pra
+qualquer número, inclusive pros inteiros que nem parecem fração. Dividir por $3$ é
+multiplicar por $\frac{1}{3}$, e você não precisa de uma permissão nova pra cada caso
+novo que aparecer.
+
+**Isso é esticamento**: toda conta de multiplicar e dividir vira uma operação só, a
+multiplicação, do mesmo jeito que a junção transformou soma e subtração numa operação
+só.
+
+## Multiplicar por negativo é virar a seta
+
+Com a divisão fora do caminho, sobrou uma operação pra estudar, e aí vale gastar um
+tempo no caso que todo mundo decora sem entender: o que acontece com os sinais.
+
+Começa pelo caso fácil, que a leitura de repetir já resolve. O $3 \cdot (-3)$ é repetir
+três vezes a seta de $-3$, e três setas de três pra esquerda te deixam no $-9$:
+
+<Setas
+  parcelas={[-3, -3, -3]}
+  legenda="3 × (−3)  →  a mesma seta de −3, repetida três vezes"
+  titulo="Positivo vezes negativo"
+  dominio={[-11, 2]}
+/>
+
+O $(-3) \cdot 3$ dá o mesmo resultado, e pra isso você não precisa de argumento novo:
+o retângulo de bolinhas da aula das quatro operações já garantiu que trocar a ordem
+dos dois fatores não muda o produto.
+
+Agora o caso famoso. Olha o que multiplicar por $-1$ faz com um número qualquer:
+
+$$
+(-1) \cdot 5 = -5 \qquad\qquad (-1) \cdot (-5) = 5
+$$
+
+Multiplicar por $-1$ **vira o número pro outro lado do zero**, ou seja, devolve o
+oposto dele, que é justamente o personagem da junção. E virar duas vezes te deixa
+exatamente onde você começou, e **é por isso que menos com menos dá mais**: são duas
+viradas, e a segunda desfaz a primeira.
+
+Se você preferir enxergar pelo padrão, desce o primeiro fator de um em um e olha a
+coluna da direita:
+
+| conta | resultado |
+|---|---|
+| $3 \cdot (-2)$ | $-6$ |
+| $2 \cdot (-2)$ | $-4$ |
+| $1 \cdot (-2)$ | $-2$ |
+| $0 \cdot (-2)$ | $0$ |
+| $(-1) \cdot (-2)$ | $+2$ |
+| $(-2) \cdot (-2)$ | $+4$ |
+
+Cada vez que o primeiro fator desce $1$, o resultado **sobe $2$**, e ele sobe $2$ em
+todas as linhas, sem pedir licença quando atravessa o zero. Se a linha do
+$(-1) \cdot (-2)$ desse $-2$, a subida de dois em dois quebraria exatamente ali, e não
+existe motivo nenhum pra ela quebrar num lugar e valer em todos os outros.
+
+Na prática você usa isso assim:
+
+| os dois fatores | o produto |
+|---|---|
+| $+$ com $+$ | positivo |
+| $+$ com $-$ | negativo |
+| $-$ com $-$ | positivo |
+
+E dá pra resumir a tabela inteira contando viradas: **quantidade par de menos dá
+positivo, quantidade ímpar dá negativo**. Em $(-2) \cdot (-3) \cdot (-4)$ são três
+viradas, então o resultado é negativo, $-24$.
+
+A divisão herda tudo isso de graça, e esse é o primeiro ganho concreto de ela ter
+virado multiplicação: $-12 \div 3$ é $-12 \cdot \frac{1}{3}$, então vale a mesma
+tabela, e você não precisa de uma segunda regra de sinais pra decorar.
+
+## Cortar em cima e embaixo é multiplicar por 1
+
+Quando você olha $\frac{6 \cdot 5}{3 \cdot 5}$ e corta os dois $5$, isso tem nome,
+**cancelamento**, e é a frase da aula trabalhando por baixo. Reescreve a fração como
+multiplicação, que é o que a barra autoriza:
+
+$$
+\frac{6 \cdot 5}{3 \cdot 5} \;=\; 6 \cdot 5 \cdot \frac{1}{3} \cdot \frac{1}{5}
+$$
+
+E como a ordem da multiplicação é livre, junta o $5$ com o $\frac{1}{5}$:
+
+$$
+6 \cdot \frac{1}{3} \cdot \underbrace{5 \cdot \frac{1}{5}}_{=\;1} \;=\;
+6 \cdot \frac{1}{3} \;=\; 2
+$$
+
+O $5$ não sumiu por decreto: ele **encontrou o inverso dele e virou $1$**, e o $1$ é o
+elemento neutro, então ele pode ir embora sem levar nada. Essa é a diferença entre
+cortar entendendo e cortar rezando, e ela decide o caso em que cortar é proibido:
+
+$$
+\frac{6 + 5}{3 + 5} \;\to\; \frac{6}{3} = 2 \qquad \text{(errado)}
+$$
+
+Esse erro você já viu em frações pelo resultado, porque $\frac{11}{8}$ não é $2$. O que
+o esticamento acrescenta é o motivo: pra virar $1$, o $5$ de cima tinha que estar
+**multiplicando o numerador inteiro**, e num numerador que é $6 + 5$ ele é dono de um
+pedaço só. **Cortar é permitido entre fator e fator**, e num numerador que é soma você
+não tem fator pra cortar, a não ser que dê pra transformar aquela soma num produto,
+que é o assunto da aula de fatoração, muitas aulas na frente.
 
 ## O ganho: a ordem parou de importar
 
-O ganho de verdade é o mesmo que a junção te deu. Olha essa conta:
+Na aula das quatro operações eu te pedi pra guardar um incômodo, e ele era esse:
 
 $$
 8 \div 4 \times 2
@@ -108,7 +211,7 @@ $$
 Do jeito que ela está escrita você é **obrigado** a ir da esquerda pra direita, porque
 se você resolver o $4 \times 2$ primeiro você vai achar $1$, e o resultado certo é
 $4$. Ou seja, com o sinal de dividir no meio da conta, a ordem tem poder sobre o
-resultado e você precisa tomar cuidado.
+resultado e a única coisa que te separa do erro é lembrar de uma convenção.
 
 Agora reescreve a mesma conta trocando a divisão por multiplicação pelo inverso:
 
@@ -134,22 +237,21 @@ $$
 Sempre $4$. O cuidado com a ordem foi embora, e não porque você ficou mais esperto,
 e sim porque você tirou da conta o símbolo que dava poder pra ordem. Isso é a
 **comutatividade da multiplicação**, e ela só fica disponível pra você depois que a
-divisão sai da frente.
+divisão sai da frente. É o mesmo presente que a junção te deu do lado da soma, e agora
+os dois pares estão resolvidos.
 
 ## Onde isso vai te salvar
 
 Vale eu te adiantar onde esse jeito de ver aparece de novo, porque assim você já lê
 as próximas aulas com o olho treinado.
 
-Em fração, $\frac{a}{b}$ já é $a \cdot \frac{1}{b}$, então multiplicar e dividir
-frações deixa de ser duas listas de regras e passa a ser uma. Em cancelamento, quando
-você olha $\frac{6 \cdot 5}{3 \cdot 5}$ e "corta" o $5$, o que você está fazendo é
-reorganizar a multiplicação até o $5 \cdot \frac{1}{5}$ ficar lado a lado e virar
-$1$, e essa é a diferença entre cortar entendendo e cortar rezando. Em equação,
-quando o professor diz que o número que multiplica passa dividindo pro outro lado,
-ele está multiplicando os dois lados pelo inverso. E na Física, aquelas fórmulas com
-barra, tipo $v = \frac{\Delta s}{\Delta t}$, se reorganizam sem susto quando você
-enxerga a barra como multiplicação.
+Em equação, quando o professor diz que o número que multiplica passa dividindo pro
+outro lado, ele está multiplicando os dois lados pelo inverso, e a frase de hoje é o
+que faz isso deixar de ser mágica. Em fração algébrica, com letra em cima e embaixo, o
+cancelamento é a ferramenta principal, e quem corta rezando erra sempre no mesmo
+lugar, que é o numerador com soma dentro. E na Física, aquelas fórmulas com barra,
+tipo $v = \frac{\Delta s}{\Delta t}$, se reorganizam sem susto quando você enxerga a
+barra como multiplicação pelo inverso.
 
 ### O paralelo inteiro entre as duas aulas
 
@@ -160,9 +262,9 @@ pra ser coincidência:
 |---|---|---|
 | operação que sobra | soma | multiplicação |
 | operação que desaparece | subtração | divisão |
-| o número que não faz nada | $0$ | $1$ |
+| o elemento neutro | $0$ | $1$ |
 | o parceiro de cada número | oposto | inverso |
-| a conta que volta pro começo | $a + (-a) = 0$ | $a \cdot \frac{1}{a} = 1$ |
+| a conta que volta pro neutro | $a + (-a) = 0$ | $a \cdot \frac{1}{a} = 1$ |
 | quem fica sem parceiro | ninguém | o zero |
 
 A linha de baixo é a única em que os dois não se comportam igual, e é ela que explica
@@ -172,16 +274,54 @@ multiplicação o zero fica de fora.
 Esse esqueleto repetido tem nome na matemática mais avançada e é um dos assuntos mais
 bonitos que existem, porém o nome não te ajuda agora. O que te ajuda agora é o
 hábito: quando você encontrar uma operação nova pela frente, procura logo quem é o
-número que não faz nada e quem é o parceiro que desfaz. Você vai fazer exatamente
+elemento neutro dela e quem é o parceiro que desfaz. Você vai fazer exatamente
 isso em logaritmo, muitas aulas na frente.
+
+### Onde o pessoal escorrega
+
+O erro número um desta aula não é dela sozinha, é do encontro dela com a junção.
+"Menos com menos dá mais" é uma frase da **multiplicação**, e ela vaza pra soma:
+
+$$
+-3 - 5 \;\to\; +8 \qquad \text{(errado)}
+$$
+
+Aqui não tem multiplicação nenhuma acontecendo. Você está juntando dois números
+negativos, e juntar duas dívidas dá uma dívida maior, $-8$. O que salva é ler o sinal
+do jeito que a junção ensinou: em $-3 - 5$ os dois sinais são de dois números que estão
+sendo juntados, e em $(-3) \cdot (-5)$ eles são de dois números que estão se
+multiplicando, e só no segundo caso as viradas se cancelam.
+
+O segundo é trocar o inverso pelo oposto:
+
+$$
+\text{o inverso de } 4 \text{ é } -4 \qquad \text{(errado)}
+$$
+
+Os dois são "o parceiro que desfaz", e o que muda é a operação de que eles são
+parceiros: o oposto de $4$ é $-4$ e ele desfaz uma soma, o inverso de $4$ é
+$\frac{1}{4}$ e ele desfaz uma multiplicação. Quando bater a dúvida, faz a conta de
+conferência, que é curta: $4 + (-4) = 0$ e $4 \cdot \frac{1}{4} = 1$.
+
+O terceiro é virar a fração errada na hora de dividir:
+
+$$
+6 \div \frac{2}{3} \;\to\; \frac{1}{6} \cdot \frac{2}{3} \qquad \text{(errado)}
+$$
+
+Quem vira de cabeça pra baixo é **o divisor**, e aqui o divisor é o $\frac{2}{3}$: o
+$6$ é quem está sendo dividido, então ele fica como está. E dá pra pegar esse erro sem
+saber a resposta, só pelo tamanho: $\frac{2}{3}$ é menor que um inteiro, então
+dentro de $6$ cabem mais de $6$ pedaços desses, e a resposta tem que ser maior que
+$6$. Deu $9$, então está de pé.
 
 
 ---
 
-*Falta nesta página: a regra de sinais da multiplicação, que passou a ser desta aula
-e ainda não está escrita. Ela cabe aqui porque multiplicar por um número negativo é
-esticar a seta e virar ela, então "menos com menos dá mais" vira uma coisa que dá pra
-ver, e não uma regra pra decorar. Falta também o interativo: uma seta na reta que o
-aluno estica e encolhe por um fator, inclusive entre $0$ e $1$ e negativo, que é
-exatamente o desenho que essa seção pede. E o nome "esticamento" continua provisório,
-é o meu jeito de espelhar a junção.*
+*Falta nesta página: o interativo, que é uma seta na reta que o aluno estica e encolhe
+por um fator, inclusive por fator entre $0$ e $1$ e por fator negativo, que é
+exatamente o desenho que a seção de sinais pede e que hoje está sendo substituído por
+tabela. A regra de sinais e o cancelamento passaram a ser desta aula e agora estão
+escritos, e a divisão por fração é ensinada em frações pela contagem de "quantos
+cabem": quem mexer numa das duas, mexa nas duas juntas. E o nome "esticamento"
+continua provisório, é o meu jeito de espelhar a junção.*
