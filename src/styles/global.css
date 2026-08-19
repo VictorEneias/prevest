@@ -1672,11 +1672,16 @@ html[data-modo='aula'] .tempo-aula {
   position: absolute;
   display: flex;
   align-items: center;
-  padding: 6px 10px 6px 12px;
+  padding: 6px 10px 6px 16px;
   box-sizing: border-box;
-  background: color-mix(in srgb, var(--cor-bloco) var(--mistura-bloco), var(--papel));
+  /* A barra da área é fundo, e não um border-left grosso: com 5px de um lado e
+     1px dos outros três, o canto arredondado virava uma cunha visível na quina
+     de baixo, porque o navegador tem que costurar uma borda grossa numa fina em
+     cima da curva. Como fundo ela é cortada pelo mesmo raio da caixa. */
+  background:
+    linear-gradient(to right, var(--cor-bloco) 0 6px, transparent 6px) border-box,
+    color-mix(in srgb, var(--cor-bloco) var(--mistura-bloco), var(--papel)) border-box;
   border: 1px solid var(--linha);
-  border-left: 5px solid var(--cor-bloco);
   /* o resto do site é de canto quase reto (--raio, 2px); o módulo do mapa é o
      único que foge disso, porque em fileira de oito o canto redondo é o que
      separa uma caixa da outra sem precisar de mais linha */
@@ -1709,7 +1714,6 @@ html[data-modo='aula'] .tempo-aula {
 .mapa-no:hover,
 .mapa-no:focus-visible {
   border-color: var(--tinta);
-  border-left-color: var(--cor-bloco);
   transform: translateY(-1px);
 }
 .mapa-no.acesa {
@@ -1722,7 +1726,6 @@ html[data-modo='aula'] .tempo-aula {
 .mapa-no[data-focado='sim'] {
   border-color: var(--acento);
   border-width: 2px;
-  border-left-width: 5px;
 }
 
 .mapa-legenda {
