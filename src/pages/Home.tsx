@@ -1,82 +1,163 @@
+import { useCallback, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { conceitos } from '../conteudo';
+import { ordenarAreas, rotuloBloco, slotDeCor, type Materia } from '../lib/curriculo';
 import { useTitulo } from '../estado';
 import MapaConceitos from '../components/viz/MapaConceitos';
 
+/**
+ * A home é uma cinemática de uma tela só: o grafo entra como fundo da página e a
+ * rolagem é a câmera. Nos primeiros 80vh o texto sobe e apaga enquanto o mapa
+ * cresce até caber na largura da tela; daí em diante a rolagem vira normal, o
+ * mapa desce e entrega no rodapé.
+ *
+ * Quem anima é o CSS, amarrado na rolagem de verdade (animation-timeline). O
+ * único trabalho do JS aqui é medir: a escala em que o mapa cabe na tela e
+ * quanto ele ainda precisa descer depois disso dependem do tamanho da janela, e
+ * são esses dois números que o CSS não tem como descobrir sozinho.
+ */
 export default function Home() {
   useTitulo();
-  /* A raiz do grafo é a porta de entrada. Sem ela em algum lugar com nome, quem
-     abre a home fica olhando 70 caixas sem saber por qual começar. */
-  const comeco = conceitos.find((c) => c.prereqs.length === 0);
+  const palco = useRef<HTMLDivElement>(null);
+
+  const abertura = conceitos.find((c) => c.prereqs.length === 0);
+
+  /* --esc-fim: escala em que o mapa cabe na largura. --pan: o que sobra pra ele
+     descer depois. Em 1440px dá 0,69 e 527px; em 1920px dá 0,92 e 820px. */
+  useEffect(() => {
+    const medir = () => {
+      const no = palco.current;
+      const tela = no?.querySelector<HTMLElement>('.mapa-tela');
+      if (!no || !tela) return;
+      const largura = tela.offsetWidth;
+      const altura = tela.offsetHeight;
+      if (!largura || !altura) return;
+
+      const escFim = no.clientWidth / largura;
+      const pan = Math.max(0, altura * escFim - no.clientHeight);
+      const estilo = no.parentElement!.style;
+      estilo.setProperty('--esc-fim', String(escFim));
+      estilo.setProperty('--esc-ini', String(escFim * 0.66));
+      estilo.setProperty('--x-ini', `${Math.round(no.clientWidth * 0.21)}px`);
+      estilo.setProperty('--y-ini', '40px');
+      estilo.setProperty('--pan', `${Math.round(pan)}px`);
+      estilo.setProperty('--alt-mapa', String(Math.round(altura * escFim)));
+    };
+    medir();
+    window.addEventListener('resize', medir);
+    return () => window.removeEventListener('resize', medir);
+  }, []);
+
+  /* Clicar no grafo não teleporta: rola até o fim do zoom, e como a animação
+     está amarrada na rolagem, o que se vê é a mesma cinemática mais rápida. */
+  const irProMapa = useCallback(() => {
+    const suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: window.innerHeight * 0.82, behavior: suave ? 'smooth' : 'auto' });
+  }, []);
+
+  /* A legenda de cores sai das áreas que existem de fato no conteúdo. */
+  const areas = ordenarAreas([...new Set(conceitos.map((c) => `${c.materia}/${c.bloco}`))]);
 
   return (
-    <div className="folha folha-larga">
-      <h1 style={{ fontSize: '2.2rem', marginBottom: 'calc(var(--u)*0.75)' }}>Pré-vestibular</h1>
-
+    <>
       <div className="abertura">
-        <p>
-          Até aqui você se virou com todas as suas técnicas e artimanhas para se livrar de
-          conceitos que de primeira pareciam difíceis de lidar. E <b>elas funcionaram</b>!! Porém…
-          o nível subiu, e essas técnicas que serviram de muleta pra você esse tempo todo na
-          verdade te fizeram esquecer como anda. Agora chegou a hora de dar esse passo pra trás.
-          Olhar para esses conceitos, dessa vez explicados de maneira mais simples e intuitiva, e
-          realmente aprender a matemática. Com isso, <b>eu te prometo</b> que aos poucos, aquela
-          matéria que você tinha certeza que não era pra você, e que você simplesmente era ruim
-          nela (o que muitas vezes pode ter feito você criar aversões ou até ódio à matemática),
-          vai acabar se tornando aos poucos cada vez mais suportável e, quem sabe, pode até virar
-          algo que você goste.
-        </p>
+        <div className="abertura-palco" ref={palco}>
+          <div className="abertura-parede" />
+          <div className="abertura-halo" />
 
-        <p>
-          Sei que parece uma realidade muito distante, mas não é! Aqui você vai aprender
-          matemática, dessa vez de verdade, e entender a linguagem que a natureza fala com a
-          gente.
-        </p>
+          <div className="abertura-mapa-b" aria-hidden="true" inert>
+            <div className="abertura-recorte-b">
+              <div className="abertura-pan">
+                <div className="abertura-cam">
+                  <MapaConceitos fundo />
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <p>
-          Por último, você, aluno que já está no ensino médio, talvez esteja pensando que tudo
-          isso não valha a pena: <i>"pra que eu vou voltar lá do início da matemática, já estou
-          tão longe"</i>. Você não terá que ir tão longe para começar a ver os efeitos que
-          realmente reaprender os básicos, ou até mesmo as matérias que você está vendo agora (só
-          que dessa vez de verdade), fazem nas coisas que você será capaz de fazer em pouco tempo.
-          Dê essa chance a si mesmo, você não irá se arrepender.
-        </p>
-      </div>
+          <div className="abertura-mapa">
+            <div className="abertura-recorte">
+              <div className="abertura-pan">
+                <div className="abertura-cam">
+                  <MapaConceitos fundo />
+                </div>
+              </div>
+            </div>
+          </div>
 
-      <div className="portas">
-        {comeco && (
-          <p className="comecar">
-            <Link to={`/conceitos/${comeco.id}`}>
-              Começar por {comeco.titulo} <span aria-hidden="true">→</span>
-            </Link>
-            {comeco.resumo && <span>{comeco.resumo}</span>}
+          <button className="abertura-clique" onClick={irProMapa} aria-label="Ver o mapa inteiro" />
+
+          <section className="abertura-texto">
+            <p className="abertura-et">
+              Matemática · {conceitos.length} aulas
+            </p>
+            <h1>
+              Aprender a<br />
+              matemática
+              <br />
+              de verdade
+            </h1>
+            <p>
+              Até aqui você se virou com todas as suas técnicas e artimanhas para se livrar de
+              conceitos que de primeira pareciam difíceis de lidar. E <b>elas funcionaram</b>!!
+              Porém… o nível subiu, e essas técnicas que serviram de muleta pra você esse tempo
+              todo na verdade te fizeram esquecer como anda.
+            </p>
+            <p>Agora chegou a hora de dar esse passo pra trás, e realmente aprender a matemática.</p>
+            {abertura && (
+              <Link className="abertura-porta" to={`/conceitos/${abertura.id}`}>
+                Começar por {abertura.titulo} <span aria-hidden="true">→</span>
+              </Link>
+            )}
+          </section>
+
+          <p className="abertura-chamado">
+            <span aria-hidden="true">↓</span>
+            <span>
+              role, ou <b>clique no mapa</b>, pra ele vir pra frente
+            </span>
           </p>
-        )}
-        <p className="comecar">
-          <Link to="/indice">
-            Procurar um assunto <span aria-hidden="true">→</span>
-          </Link>
-          <span>
-            Se você já sabe o nome do que está travando, o índice leva direto na aula que
-            cobre.
-          </span>
-        </p>
+
+          <ul className="abertura-legenda">
+            {areas.map((chave) => {
+              const [materia, bloco] = chave.split('/') as [Materia, string];
+              return (
+                <li key={chave} data-slot={slotDeCor(materia, bloco)}>
+                  <i aria-hidden="true" />
+                  {rotuloBloco(bloco)}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
 
-      <p className="nota-secao" style={{ maxWidth: '62ch' }}>
-        Cada caixa é um módulo e cada seta é um pré-requisito. Quanto mais embaixo, mais coisa
-        você atravessa pra chegar ali, porque a ordem é de dependência. Passe o mouse num módulo
-        pra acender a cadeia que sustenta ele, arraste pra andar pelo mapa e role pra aproximar.
-        <b> Nada aqui está bloqueado.</b>
-      </p>
-
-      <MapaConceitos controles altura="66vh" />
-
-      <div className="ficha" style={{ marginTop: 'var(--u)' }}>
-        <span>
-          <b>{conceitos.length}</b> aulas
-        </span>
-      </div>
-    </div>
+      {/* O resto da conversa dele, que não cabe na abertura sem espremer o mapa.
+          Se um dia virar uma página "sobre", é este bloco que se muda de lugar. */}
+      <section className="abertura-continua">
+        <div>
+          <p>
+            Sei que parece uma realidade muito distante, mas não é! Aqui você vai aprender
+            matemática, dessa vez de verdade, e entender a linguagem que a natureza fala com a
+            gente.
+          </p>
+          <p>
+            Por último, você, aluno que já está no ensino médio, talvez esteja pensando que tudo
+            isso não valha a pena: <i>"pra que eu vou voltar lá do início da matemática, já estou
+            tão longe"</i>. Você não terá que ir tão longe para começar a ver os efeitos que
+            realmente reaprender os básicos, ou até mesmo as matérias que você está vendo agora (só
+            que dessa vez de verdade), fazem nas coisas que você será capaz de fazer em pouco
+            tempo. Dê essa chance a si mesmo, você não irá se arrepender.
+          </p>
+          <p>
+            Cada caixa lá em cima é uma aula e cada seta é um pré-requisito. Quanto mais embaixo,
+            mais coisa você atravessa pra chegar ali, porque a ordem é de dependência. Passe o
+            mouse num módulo pra acender a cadeia que sustenta ele. <b>Nada aqui está bloqueado.</b>{' '}
+            Se você já sabe o nome do que está travando, o <Link to="/indice">índice</Link> leva
+            direto na aula que cobre.
+          </p>
+        </div>
+      </section>
+    </>
   );
 }

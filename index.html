@@ -3,8 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="light dark" />
     <title>Pré-vestibular</title>
+    <script>
+      /* O tema entra antes do React montar. Sem isso quem escolheu escuro leva
+         um flash de papel branco toda vez que abre uma aula, que na mesa do
+         aluno, num quarto escuro, é a coisa mais visível do site. */
+      (function () {
+        try {
+          var t =
+            localStorage.getItem('tema') ||
+            (matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro');
+          document.documentElement.dataset.tema = t;
+          document.documentElement.dataset.modo = localStorage.getItem('modo') || 'estudo';
+          document.documentElement.dataset.tamanho = localStorage.getItem('tamanho') || 'normal';
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="raiz"></div>

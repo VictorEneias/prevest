@@ -80,6 +80,16 @@
 
   --raio: 2px;
   --sombra: 0 1px 2px rgba(11, 16, 23, 0.05), 0 4px 16px rgba(11, 16, 23, 0.05);
+
+  /* --- as manchas do fundo da home ---
+     Elas usam as cores que o site já tem (o acento e três áreas do mapa), e a
+     força muda com o tema porque a mesma mistura que aparece sobre o azul-noite
+     some sobre papel claro. */
+  --mancha-acento: 23%;
+  --mancha-roxo: 26%;
+  --mancha-rosa: 19%;
+  --mancha-verde: 20%;
+  --grao: 8%;
 }
 
 html[data-tema='escuro'] {
@@ -124,6 +134,12 @@ html[data-tema='escuro'] {
   --marca-fraco: #2a2413;
 
   --sombra: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.35);
+
+  --mancha-acento: 14%;
+  --mancha-roxo: 16%;
+  --mancha-rosa: 11%;
+  --mancha-verde: 10%;
+  --grao: 10%;
 }
 
 /* Nós dois olhando a mesma tela, na mesa da casa do aluno. */
@@ -1205,3 +1221,450 @@ pre code {
       transition: none;
     }
   }
+
+/* ---------- a abertura da home ----------
+   O grafo é o fundo da página e a rolagem é a câmera. Nos primeiros 80vh o texto
+   sobe e apaga enquanto o mapa cresce até caber na largura da tela; daí em diante
+   a rolagem vira normal e o mapa desce até entregar no rodapé.
+
+   Quem move é a rolagem de verdade, via animation-timeline: scroll(root), e não
+   um script ouvindo o scroll. É por isso que clicar no mapa pode ser um
+   scrollTo suave: ele toca o mesmo trajeto, só que rápido.
+
+   --esc-fim e --pan são medidos em JS na Home, porque dependem do tamanho do
+   mapa e da tela: em 1440px o mapa cabe em 0,69 e sobra 527px pra descer; em
+   1920px cabe em 0,92 e sobram 820px. */
+
+.abertura {
+  position: relative;
+  height: calc(180vh + var(--pan, 0px));
+}
+.abertura-palco {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* o papel de parede fica atrás de tudo, com buraco no miolo do mapa e outro
+   embaixo do texto: é o que faz a cor chegar no canto de baixo à esquerda sem
+   sujar nem o grafo nem a leitura */
+.abertura-parede {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(40% 46% at 12% 22%, color-mix(in srgb, var(--acento) var(--mancha-acento), transparent), transparent 70%),
+    radial-gradient(38% 44% at 76% 8%, color-mix(in srgb, var(--bloco-1) var(--mancha-verde), transparent), transparent 70%),
+    radial-gradient(46% 40% at 88% 82%, color-mix(in srgb, var(--bloco-3) var(--mancha-roxo), transparent), transparent 72%),
+    radial-gradient(44% 46% at 4% 94%, color-mix(in srgb, var(--bloco-5) var(--mancha-rosa), transparent), transparent 74%),
+    radial-gradient(color-mix(in srgb, var(--tinta) var(--grao), transparent) 1.15px, transparent 1.3px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 4px 4px;
+  -webkit-mask-image:
+    radial-gradient(60% 66% at 58% 53%, transparent 0, transparent 32%, rgba(0, 0, 0, 0.5) 62%, #000 88%),
+    radial-gradient(38% 52% at 19% 44%, transparent 0, transparent 24%, rgba(0, 0, 0, 0.55) 60%, #000 92%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(60% 66% at 58% 53%, transparent 0, transparent 32%, rgba(0, 0, 0, 0.5) 62%, #000 88%),
+    radial-gradient(38% 52% at 19% 44%, transparent 0, transparent 24%, rgba(0, 0, 0, 0.55) 60%, #000 92%);
+  mask-composite: intersect;
+  animation: abertura-recua linear both;
+  animation-timeline: scroll(root block);
+  animation-range: 0 80vh;
+}
+
+/* o halo do acento, que separa o grafo do papel sem desenhar borda nenhuma */
+.abertura-halo {
+  position: absolute;
+  z-index: 1;
+  left: 14%;
+  top: -8%;
+  width: 78%;
+  height: 112%;
+  pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--acento) 9%, transparent), transparent 78%);
+}
+
+/* --pluma é o esfumaçado das bordas do grafo e --corte é a beirada do recorte do
+   texto. As duas são declaradas com @property porque só assim elas INTERPOLAM:
+   uma custom property não tipada troca de valor de uma vez, no meio do zoom, e o
+   que se vê é um salto. */
+@property --pluma {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 30%;
+}
+@property --corte {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 32%;
+}
+
+/* Duas cópias do mapa: a nítida some no recorte do texto e a desfocada só existe
+   lá dentro. É isso que deixa o texto legível sem apagar o grafo — embaixo da
+   linha fica um borrão, e não um mapa fraquinho e legível competindo com ela. */
+.abertura-mapa,
+.abertura-mapa-b {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+}
+/* O grafo esfumaça por máscara, e não por um véu pintado por cima: véu com a cor
+   do fundo apagaria o papel de parede junto, que foi como o fundo virou um
+   carimbo no canto na primeira tentativa. */
+.abertura-mapa,
+.abertura-mapa-b {
+  -webkit-mask-image: radial-gradient(
+    76% 80% at 54% 57%,
+    #000 0,
+    #000 var(--pluma),
+    rgba(0, 0, 0, 0.62) calc(var(--pluma) + 26%),
+    rgba(0, 0, 0, 0.2) calc(var(--pluma) + 49%),
+    transparent calc(var(--pluma) + 66%)
+  );
+  mask-image: radial-gradient(
+    76% 80% at 54% 57%,
+    #000 0,
+    #000 var(--pluma),
+    rgba(0, 0, 0, 0.62) calc(var(--pluma) + 26%),
+    rgba(0, 0, 0, 0.2) calc(var(--pluma) + 49%),
+    transparent calc(var(--pluma) + 66%)
+  );
+  animation: abertura-abre-pluma linear both;
+  animation-timeline: scroll(root block);
+  animation-range: 0 80vh;
+}
+.abertura-mapa-b {
+  z-index: 1;
+  filter: blur(4px);
+  opacity: 0.55;
+  animation: abertura-some linear both;
+  animation-timeline: scroll(root block);
+  animation-range: 0 80vh;
+}
+.abertura-recorte,
+.abertura-recorte-b {
+  position: absolute;
+  inset: 0;
+}
+/* sem mask-composite as camadas somam, então o buraco existe só onde as duas
+   dizem buraco: a faixa da esquerda cruzada com a faixa do texto */
+.abertura-recorte {
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, transparent var(--corte), rgba(0, 0, 0, 0.5) calc(var(--corte) + 12%), #000 calc(var(--corte) + 24%)),
+    linear-gradient(to bottom, #000 0, rgba(0, 0, 0, 0.45) 5%, transparent 12%, transparent 66%, rgba(0, 0, 0, 0.5) 72%, #000 79%);
+  mask-image:
+    linear-gradient(to right, transparent 0, transparent var(--corte), rgba(0, 0, 0, 0.5) calc(var(--corte) + 12%), #000 calc(var(--corte) + 24%)),
+    linear-gradient(to bottom, #000 0, rgba(0, 0, 0, 0.45) 5%, transparent 12%, transparent 66%, rgba(0, 0, 0, 0.5) 72%, #000 79%);
+  animation: abertura-abre-recorte linear both;
+  animation-timeline: scroll(root block);
+  animation-range: 0 80vh;
+}
+.abertura-recorte-b {
+  -webkit-mask-image:
+    linear-gradient(to right, #000 0, #000 32%, rgba(0, 0, 0, 0.5) 44%, transparent 56%),
+    linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.55) 5%, #000 12%, #000 66%, rgba(0, 0, 0, 0.5) 72%, transparent 79%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, #000 0, #000 32%, rgba(0, 0, 0, 0.5) 44%, transparent 56%),
+    linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.55) 5%, #000 12%, #000 66%, rgba(0, 0, 0, 0.5) 72%, transparent 79%);
+  mask-composite: intersect;
+}
+
+.abertura-pan {
+  animation: abertura-pan linear both;
+  animation-timeline: scroll(root block);
+  animation-range: 80vh calc(80vh + var(--pan, 0px));
+}
+.abertura-cam {
+  transform-origin: 0 0;
+  transform: translate(var(--x-ini, 20%), var(--y-ini, 40px)) scale(var(--esc-ini, 0.46));
+  animation: abertura-camera linear both;
+  animation-timeline: scroll(root block);
+  animation-range: 0 80vh;
+}
+
+/* Clicar no grafo vale como rolar, e some assim que o zoom acaba pra não roubar
+   o clique dos módulos, que a partir dali são links de verdade. */
+.abertura-clique {
+  position: absolute;
+  z-index: 4;
+  left: 42%;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: zoom-in;
+  animation: abertura-tira-clique linear both;
+  animation-timeline: scroll(root block);
+  animation-range: 0 40vh;
+}
+
+.abertura-texto {
+  position: absolute;
+  z-index: 5;
+  left: calc(var(--u) * 1.5);
+  top: calc(var(--u) * 4.5);
+  width: min(38ch, 44vw);
+  animation: abertura-sobe linear both;
+  animation-timeline: scroll(root block);
+  animation-range: 0 80vh;
+}
+.abertura-et {
+  font-family: var(--f-ui);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--acento);
+  border-top: 3px solid var(--acento);
+  padding-top: 8px;
+  margin: 0 0 calc(var(--u) * 0.75);
+  display: inline-block;
+}
+.abertura-texto h1 {
+  font-family: var(--f-ui);
+  font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin: 0 0 calc(var(--u) * 0.9);
+}
+.abertura-texto p {
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: var(--tinta-media);
+  margin: 0 0 calc(var(--u) * 0.6);
+}
+.abertura-porta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--f-ui);
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--acento);
+  text-decoration: none;
+  border-bottom: 3px solid var(--acento);
+  padding-bottom: 3px;
+  margin-top: 4px;
+}
+
+.abertura-chamado {
+  position: absolute;
+  z-index: 5;
+  left: calc(var(--u) * 1.5);
+  bottom: calc(var(--u) * 1.2);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--f-ui);
+  font-size: 0.72rem;
+  color: var(--tinta-fraca);
+  animation: abertura-some linear both;
+  animation-timeline: scroll(root block);
+  animation-range: 0 34vh;
+}
+.abertura-chamado b {
+  font-weight: 700;
+  color: var(--tinta-media);
+}
+
+.abertura-legenda {
+  position: absolute;
+  z-index: 5;
+  left: calc(var(--u) * 1.5);
+  bottom: calc(var(--u) * 1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--u) * 0.6);
+  list-style: none;
+  margin: 0;
+  padding: 7px 12px;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  background: color-mix(in srgb, var(--papel) 92%, transparent);
+  backdrop-filter: blur(6px);
+  font-family: var(--f-ui);
+  font-size: 0.68rem;
+  color: var(--tinta-media);
+  opacity: 0;
+  animation: abertura-aparece linear both;
+  animation-timeline: scroll(root block);
+  animation-range: 46vh 82vh;
+}
+.abertura-legenda li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.abertura-legenda i {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--cor-bloco);
+}
+
+@keyframes abertura-camera {
+  to {
+    transform: translate(0px, 0px) scale(var(--esc-fim, 0.7));
+  }
+}
+@keyframes abertura-pan {
+  to {
+    transform: translateY(calc(var(--pan, 0px) * -1));
+  }
+}
+@keyframes abertura-sobe {
+  to {
+    transform: translateY(calc(var(--u) * -3));
+    opacity: 0.14;
+  }
+}
+@keyframes abertura-some {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes abertura-recua {
+  to {
+    opacity: 0.28;
+  }
+}
+@keyframes abertura-aparece {
+  to {
+    opacity: 1;
+  }
+}
+/* o recorte tem que sumir junto, senão o mapa termina a cinemática com um buraco
+   permanente do lado esquerdo */
+@keyframes abertura-abre-recorte {
+  to {
+    --corte: -40%;
+  }
+}
+@keyframes abertura-abre-pluma {
+  to {
+    --pluma: 100%;
+  }
+}
+@keyframes abertura-tira-clique {
+  99% {
+    visibility: visible;
+  }
+  to {
+    visibility: hidden;
+  }
+}
+
+/* Sem timeline de rolagem, ou com o sistema pedindo menos movimento, a mesma
+   página vira corte seco: texto em cima, mapa inteiro embaixo, sem animação. */
+@media (prefers-reduced-motion: reduce) {
+  .abertura,
+  .abertura-parede,
+  .abertura-mapa-b,
+  .abertura-recorte,
+  .abertura-pan,
+  .abertura-cam,
+  .abertura-clique,
+  .abertura-texto,
+  .abertura-chamado,
+  .abertura-legenda {
+    animation: none;
+  }
+  .abertura {
+    height: auto;
+  }
+  .abertura-palco {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+  .abertura-mapa {
+    position: relative;
+    height: calc(var(--alt-mapa, 1400px) * 1px);
+  }
+  .abertura-mapa-b,
+  .abertura-clique,
+  .abertura-chamado {
+    display: none;
+  }
+  .abertura-cam {
+    transform: scale(var(--esc-fim, 0.7));
+  }
+  .abertura-mapa,
+  .abertura-recorte {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .abertura-texto {
+    position: static;
+    width: auto;
+    max-width: 62ch;
+    padding: calc(var(--u) * 1.5) calc(var(--u) * 1.5) 0;
+  }
+  .abertura-legenda {
+    position: static;
+    opacity: 1;
+    margin: calc(var(--u) * 0.5) calc(var(--u) * 1.5);
+    display: inline-flex;
+  }
+}
+
+@supports not (animation-timeline: scroll(root block)) {
+  .abertura {
+    height: auto;
+  }
+  .abertura-palco {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+  .abertura-mapa {
+    position: relative;
+    height: calc(var(--alt-mapa, 1400px) * 1px);
+  }
+  .abertura-mapa-b,
+  .abertura-clique,
+  .abertura-chamado {
+    display: none;
+  }
+  .abertura-cam {
+    transform: scale(var(--esc-fim, 0.7));
+  }
+  .abertura-mapa,
+  .abertura-mapa,
+  .abertura-recorte {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .abertura-texto {
+    position: static;
+    width: auto;
+    max-width: 62ch;
+    padding: calc(var(--u) * 1.5) calc(var(--u) * 1.5) 0;
+  }
+  .abertura-legenda {
+    position: static;
+    opacity: 1;
+    margin: calc(var(--u) * 0.5) calc(var(--u) * 1.5);
+    display: inline-flex;
+  }
+}
+
+/* o texto do Victor, inteiro, depois do mapa */
+.abertura-continua {
+  position: relative;
+  z-index: 1;
+  background: var(--papel-fundo);
+  padding: calc(var(--u) * 2) calc(var(--u) * 1.5);
+}
+.abertura-continua > div {
+  max-width: 62ch;
+  margin: 0 auto;
+}
