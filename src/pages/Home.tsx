@@ -197,7 +197,21 @@ export default function Home() {
       eu.dataset.fase = p < 0.5 ? 'abertura' : p < 0.999 ? 'meio' : 'mapa';
     };
 
+    /* Enquanto a rolagem se move o mapa vai simplificado (ver o CSS de
+       data-desenho); 140ms depois que ela para, ele volta ao completo. Escrevo o
+       atributo só na virada, porque o seletor casa com os 168 módulos das duas
+       cópias e revalidar isso a cada quadro seria trocar um custo por outro. */
+    let parada: number | undefined;
+    const marcarMovimento = () => {
+      if (eu.dataset.desenho !== 'simples') eu.dataset.desenho = 'simples';
+      clearTimeout(parada);
+      parada = window.setTimeout(() => {
+        eu.dataset.desenho = 'completo';
+      }, 140);
+    };
+
     const agendar = () => {
+      if (!semCinema.matches) marcarMovimento();
       if (!pendente) pendente = requestAnimationFrame(pintar);
     };
     
@@ -214,6 +228,7 @@ export default function Home() {
 
     return () => {
       if (pendente) cancelAnimationFrame(pendente);
+      clearTimeout(parada);
       window.removeEventListener('scroll', agendar);
       window.removeEventListener('resize', remedir);
       semCinema.removeEventListener('change', remedir);
