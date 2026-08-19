@@ -18,6 +18,7 @@ import {
 
 export type Modo = 'estudo' | 'aula';
 export type Tamanho = 'normal' | 'grande' | 'enorme';
+export type Tema = 'claro' | 'escuro';
 
 const TAMANHOS: Tamanho[] = ['normal', 'grande', 'enorme'];
 
@@ -31,6 +32,9 @@ interface Estado {
   trocarModo: (m: Modo) => void;
   tamanho: Tamanho;
   girarTamanho: () => void;
+  trocarTamanho: (t: Tamanho) => void;
+  tema: Tema;
+  trocarTema: (t: Tema) => void;
   pilha: ItemPilha[];
   abrirConceito: (id: string, titulo: string) => void;
   fecharPainel: () => void;
@@ -49,6 +53,16 @@ const lerGuardado = <T,>(chave: string, padrao: T): T => {
 
 export function ProvedorAula({ children }: { children: ReactNode }) {
   const [modo, setModo] = useState<Modo>(() => lerGuardado('modo', 'estudo'));
+  /* O tema começa no que o sistema já pede: quem deixou o computador no escuro
+     não quer levar um flash de papel branco ao abrir a aula. A escolha manual
+     passa na frente e fica guardada. */
+  const [tema, setTema] = useState<Tema>(() =>
+    lerGuardado<Tema | null>('tema', null) ??
+    (typeof window !== 'undefined' &&
+    window.matchMedia?.('(prefers-color-scheme: dark)').matches
+      ? 'escuro'
+      : 'claro'),
+  );
   const [tamanho, setTamanho] = useState<Tamanho>(() => lerGuardado('tamanho', 'normal'));
   const [pilha, setPilha] = useState<ItemPilha[]>([]);
 
@@ -58,6 +72,13 @@ export function ProvedorAula({ children }: { children: ReactNode }) {
       localStorage.setItem('modo', modo);
     } catch {}
   }, [modo]);
+
+  useEffect(() => {
+    document.documentElement.dataset.tema = tema;
+    try {
+      localStorage.setItem('tema', tema);
+    } catch {}
+  }, [tema]);
 
   useEffect(() => {
     document.documentElement.dataset.tamanho = tamanho;
@@ -105,12 +126,15 @@ export function ProvedorAula({ children }: { children: ReactNode }) {
       trocarModo: setModo,
       tamanho,
       girarTamanho,
+      trocarTamanho: setTamanho,
+      tema,
+      trocarTema: setTema,
       pilha,
       abrirConceito,
       fecharPainel,
       fecharTudo,
     }),
-    [modo, tamanho, girarTamanho, pilha, abrirConceito, fecharPainel, fecharTudo],
+    [modo, tamanho, tema, girarTamanho, pilha, abrirConceito, fecharPainel, fecharTudo],
   );
 
   return <Ctx.Provider value={valor}>{children}</Ctx.Provider>;

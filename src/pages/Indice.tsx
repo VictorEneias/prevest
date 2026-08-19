@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { conceitos } from '../conteudo';
 import { rotuloBloco } from '../lib/curriculo';
 import { useTitulo } from '../estado';
@@ -26,7 +26,15 @@ interface Item {
 
 export default function Indice() {
   useTitulo('Índice de assuntos');
-  const [busca, setBusca] = useState('');
+  /* A busca do topo não procura sozinha: ela manda o texto pra cá por ?q=, que
+     é o mesmo campo desta página. Assim existe uma implementação de busca só. */
+  const [parametros, setParametros] = useSearchParams();
+  const [busca, setBusca] = useState(() => parametros.get('q') ?? '');
+
+  useEffect(() => {
+    const q = parametros.get('q') ?? '';
+    setBusca((atual) => (q && q !== atual ? q : atual));
+  }, [parametros]);
 
   const todos = useMemo<Item[]>(
     () =>
@@ -68,7 +76,10 @@ export default function Indice() {
         placeholder="O que você está procurando?"
         aria-label="Procurar assunto"
         value={busca}
-        onChange={(e) => setBusca(e.target.value)}
+        onChange={(e) => {
+          setBusca(e.target.value);
+          setParametros(e.target.value ? { q: e.target.value } : {}, { replace: true });
+        }}
         autoFocus
       />
 

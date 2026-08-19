@@ -1,6 +1,6 @@
 import { MDXProvider } from '@mdx-js/react';
-import { useEffect, useRef, type ReactNode } from 'react';
-import { Link, Route, Routes, useLocation } from 'react-router-dom';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { Link, NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { componentesMDX } from './components/mdx';
 import { useAula, type ItemPilha } from './estado';
 import Conceito, { PaginaConceito } from './pages/Conceito';
@@ -8,14 +8,14 @@ import Home from './pages/Home';
 import Indice from './pages/Indice';
 
 /**
- * O cromo da aula: topo com os modos, as rotas, e a pilha de painéis por cima.
+ * O cromo do site: cabeçalho, rotas, rodapé e a pilha de painéis por cima.
  *
  * O painel é um componente na pilha, não mais um iframe com uma segunda rota
- * dentro. Por isso o modo, o tamanho da fonte e o estado das questões já valem
- * dentro dele sem ninguém sincronizar nada.
+ * dentro. Por isso o modo, o tamanho da fonte e o tema já valem dentro dele sem
+ * ninguém sincronizar nada.
  */
 export default function App() {
-  const { modo, trocarModo, girarTamanho, pilha, fecharPainel, fecharTudo } = useAula();
+  const { pilha, fecharPainel, fecharTudo } = useAula();
 
   return (
     <MDXProvider components={componentesMDX}>
@@ -24,24 +24,7 @@ export default function App() {
         Pular pro conteúdo
       </a>
 
-      <header className="topo">
-        <Link to="/" className="marca">
-          Pré-vestibular
-        </Link>
-        <Link to="/indice">Índice de assuntos</Link>
-        <span className="espaco" />
-        <div className="barra-modo" role="group" aria-label="Modo de exibição">
-          <button onClick={() => trocarModo('estudo')} aria-pressed={modo === 'estudo'}>
-            Estudo
-          </button>
-          <button onClick={() => trocarModo('aula')} aria-pressed={modo === 'aula'}>
-            Aula
-          </button>
-        </div>
-        <button className="painel-botao" onClick={girarTamanho} title="Tamanho da fonte (Alt+Z)">
-          A↕
-        </button>
-      </header>
+      <Topo />
 
       <main id="conteudo">
         <Routes>
@@ -51,6 +34,8 @@ export default function App() {
           <Route path="*" element={<NaoAchei />} />
         </Routes>
       </main>
+
+      <Rodape />
 
       <div className="pilha-fundo" data-aberto={pilha.length ? 'sim' : 'nao'} onClick={fecharTudo} />
 
@@ -65,6 +50,187 @@ export default function App() {
         />
       ))}
     </MDXProvider>
+  );
+}
+
+/* ---------- cabeçalho ---------- */
+
+const icoBusca = (
+  <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor"
+       strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
+    <circle cx="9" cy="9" r="5.5" />
+    <path d="M13.2 13.2 17 17" />
+  </svg>
+);
+
+const icoConta = (
+  <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor"
+       strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
+    <circle cx="10" cy="7" r="3.2" />
+    <path d="M4 16.5c1.2-2.6 3.4-3.9 6-3.9s4.8 1.3 6 3.9" />
+  </svg>
+);
+
+function Topo() {
+  const navegar = useNavigate();
+  const [busca, setBusca] = useState('');
+
+  return (
+    <header className="topo">
+      <Link to="/" className="marca">
+        Prevest
+      </Link>
+      <nav className="topo-nav" aria-label="Seções">
+        <NavLink to="/" end>
+          Mapa
+        </NavLink>
+        <NavLink to="/indice">Índice</NavLink>
+      </nav>
+
+      <form
+        className="topo-busca"
+        role="search"
+        onSubmit={(e) => {
+          e.preventDefault();
+          navegar(busca.trim() ? `/indice?q=${encodeURIComponent(busca.trim())}` : '/indice');
+        }}
+      >
+        {icoBusca}
+        <input
+          type="search"
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+          placeholder="Procurar um assunto"
+          aria-label="Procurar um assunto"
+        />
+      </form>
+
+      <span className="espaco" />
+      <MenuDaConta />
+    </header>
+  );
+}
+
+/**
+ * O menu do botão de conta. Hoje ele só guarda as três configurações de
+ * exibição; conta de verdade precisa de backend, que este projeto não tem.
+ * Os atalhos (Alt+1, Alt+2, Alt+Z) continuam sendo o caminho rápido — o menu
+ * existe pra quem nunca vai descobrir que eles existem.
+ */
+function MenuDaConta() {
+  const { modo, trocarModo, tamanho, trocarTamanho, tema, trocarTema } = useAula();
+  const [aberto, setAberto] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!aberto) return;
+    const foraOuEsc = (e: Event) => {
+      if (e instanceof KeyboardEvent && e.key !== 'Escape') return;
+      if (e.type === 'pointerdown' && ref.current?.contains(e.target as Node)) return;
+      setAberto(false);
+    };
+    document.addEventListener('pointerdown', foraOuEsc);
+    document.addEventListener('keydown', foraOuEsc);
+    return () => {
+      document.removeEventListener('pointerdown', foraOuEsc);
+      document.removeEventListener('keydown', foraOuEsc);
+    };
+  }, [aberto]);
+
+  return (
+    <div className="conta" ref={ref}>
+      <button
+        className="conta-botao"
+        onClick={() => setAberto((a) => !a)}
+        aria-expanded={aberto}
+        aria-haspopup="menu"
+        aria-label="Como a página aparece"
+      >
+        {icoConta}
+      </button>
+
+      {aberto && (
+        <div className="conta-menu" role="menu">
+          <p className="conta-secao">Como a página aparece</p>
+
+          <div className="conta-linha">
+            <span>
+              Modo<span className="conta-atalho">Alt+1 / Alt+2</span>
+            </span>
+            <div className="seg" role="group" aria-label="Modo de exibição">
+              <button onClick={() => trocarModo('estudo')} aria-pressed={modo === 'estudo'}>
+                Estudo
+              </button>
+              <button onClick={() => trocarModo('aula')} aria-pressed={modo === 'aula'}>
+                Aula
+              </button>
+            </div>
+          </div>
+
+          <div className="conta-linha">
+            <span>
+              Letra<span className="conta-atalho">Alt+Z</span>
+            </span>
+            <div className="seg" role="group" aria-label="Tamanho da letra">
+              {(['normal', 'grande', 'enorme'] as const).map((t, i) => (
+                <button
+                  key={t}
+                  onClick={() => trocarTamanho(t)}
+                  aria-pressed={tamanho === t}
+                  aria-label={t}
+                  style={{ fontSize: `${0.6 + i * 0.12}rem` }}
+                >
+                  A
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="conta-linha">
+            <span>Tema</span>
+            <div className="seg" role="group" aria-label="Tema">
+              <button onClick={() => trocarTema('claro')} aria-pressed={tema === 'claro'}>
+                Claro
+              </button>
+              <button onClick={() => trocarTema('escuro')} aria-pressed={tema === 'escuro'}>
+                Escuro
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------- rodapé ---------- */
+
+function Rodape() {
+  return (
+    <footer className="rodape">
+      <div className="rodape-grade">
+        <div className="rodape-col">
+          <p className="rodape-marca">Prevest</p>
+          <p className="rodape-frase">
+            Aula particular de matemática, uma aula por conceito, na ordem em que um depende do
+            outro.
+          </p>
+        </div>
+        <div className="rodape-col">
+          <p className="rodape-tit">O curso</p>
+          <Link to="/">Mapa das aulas</Link>
+          <Link to="/indice">Índice de assuntos</Link>
+        </div>
+        <div className="rodape-col">
+          <p className="rodape-tit">Falar comigo</p>
+          <a href="mailto:victor.eneias@gmail.com">victor.eneias@gmail.com</a>
+        </div>
+      </div>
+      <div className="rodape-fim">
+        <span>© {new Date().getFullYear()} Prevest</span>
+        <span>Feito para aula 1-a-1, na mesa da casa do aluno.</span>
+      </div>
+    </footer>
   );
 }
 

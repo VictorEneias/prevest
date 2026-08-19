@@ -1,30 +1,36 @@
-/* Sistema visual: caderno de escola.
-   Grade de 24px, azul = positivo, vermelho = negativo, grafite = pré-requisito,
-   marca-texto = rascunho. Azul e vermelho são as cores mais fortes do site
-   porque sinal é o conceito que sustenta o currículo inteiro, de junção a vetor,
-   e é um par que deutan e protan enxergam separado. */
+/* Sistema visual: azul-noite e âmbar, Archivo na interface e Newsreader no texto.
+   O tema claro e o escuro são a MESMA lista de variáveis com valores diferentes,
+   e nenhum componente sabe qual dos dois está ligado — é por isso que a reta
+   numérica, o mapa e as caixas de fração viraram escuro sem eu tocar neles.
+   Azul e vermelho continuam reservados pra sinal, e é por isso que o cromo do
+   site (link, foco, porta de entrada) ganhou um --acento só dele: link azul
+   competia com o azul que quer dizer positivo dentro das figuras. */
 
-@import '@fontsource-variable/space-grotesk';
-@import '@fontsource-variable/source-serif-4';
+@import '@fontsource-variable/archivo';
+@import '@fontsource-variable/newsreader';
 
 :root {
   /* --- unidade da grade: TUDO é múltiplo disso --- */
   --u: 24px;
 
   /* --- papel --- */
-  --papel: #fcfcfa;
-  --papel-fundo: #f4f5f2;
-  --grade: #d9e2e0;
-  --grade-forte: #c3d2cf;
-  --linha: #e2e4e0;
+  --papel: #ffffff;
+  --papel-fundo: #eceff4;
+  --grade: #e3e7ee;
+  --grade-forte: #d3dae4;
+  --linha: #dbe1e9;
 
   /* --- tinta --- */
-  --tinta: #14181f;
-  --tinta-media: #454d59;
-  /* Era #78808c, que dá 3,88:1 sobre o papel e não passa em AA. Este dá 5,02:1,
-     e é a cor de quase todo texto pequeno do site: ficha, rótulo de seção,
-     legenda do mapa e as marcas da reta numérica. */
-  --tinta-fraca: #666e7a;
+  --tinta: #0b1017;
+  --tinta-media: #35485c;
+  /* 4,9:1 sobre o papel: é a cor de quase todo texto pequeno do site, da ficha
+     à legenda do mapa, e abaixo disso o AA cai */
+  --tinta-fraca: #61748a;
+
+  /* --- acento: o cromo, e só ele --- */
+  --acento: #a35c00;
+  --acento-fraco: #f7ead9;
+  --acento-medio: #e0ab6a;
 
   /* --- o par de sinal --- */
   --azul: #1b4fd8;
@@ -52,6 +58,9 @@
   --bloco-3: #4a3aa7;
   --bloco-4: #8a5a00;
   --bloco-5: #b5327f;
+  /* quanto da cor da área entra no fundo do módulo: no claro 6% já separa, no
+     escuro some, então o tema troca este número junto com o resto */
+  --mistura-bloco: 6%;
 
   /* --- grafite: pré-requisitos --- */
   --grafite: #5a6472;
@@ -62,15 +71,59 @@
   --marca-fraco: #fdf5d9;
 
   /* --- tipografia --- */
-  --f-ui: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
-  --f-texto: 'Source Serif 4 Variable', ui-serif, Georgia, serif;
-  --f-num: 'Space Grotesk Variable', ui-monospace, monospace;
+  --f-ui: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
+  --f-texto: 'Newsreader Variable', ui-serif, Georgia, serif;
+  --f-num: 'Archivo Variable', ui-monospace, monospace;
 
   --t-base: 18px;
-  --t-linha: 1.62;
+  --t-linha: 1.6;
 
-  --raio: 3px;
-  --sombra: 0 1px 2px rgba(20, 24, 31, 0.05), 0 4px 16px rgba(20, 24, 31, 0.05);
+  --raio: 2px;
+  --sombra: 0 1px 2px rgba(11, 16, 23, 0.05), 0 4px 16px rgba(11, 16, 23, 0.05);
+}
+
+html[data-tema='escuro'] {
+  --papel: #121a25;
+  --papel-fundo: #0b1017;
+  --grade: #121a25;
+  --grade-forte: #1e2937;
+  --linha: #1e2937;
+
+  --tinta: #e9eff7;
+  --tinta-media: #b3c2d3;
+  --tinta-fraca: #8496a9;
+
+  --acento: #ffb454;
+  --acento-fraco: #2a2113;
+  --acento-medio: #7a5a2a;
+
+  /* o par de sinal clareia junto: #1b4fd8 sobre #121a25 é quase invisível */
+  --azul: #7aa2ff;
+  --azul-fraco: #16203a;
+  --azul-medio: #3f5a9e;
+  --vermelho: #ff7a6b;
+  --vermelho-fraco: #331a1a;
+  --vermelho-medio: #8f4038;
+
+  --verde: #4bd08a;
+  --verde-fraco: #12261c;
+  --verde-medio: #2f7a52;
+
+  --bloco-0: #8b97a5;
+  --bloco-1: #2fd39a;
+  --bloco-2: #ff8a55;
+  --bloco-3: #8f7ff0;
+  --bloco-4: #d5a13a;
+  --bloco-5: #f062b0;
+  --mistura-bloco: 26%;
+
+  --grafite: #8496a9;
+  --grafite-fraco: #1a2430;
+
+  --marca: #f5cf4d;
+  --marca-fraco: #2a2413;
+
+  --sombra: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 
 /* Nós dois olhando a mesma tela, na mesa da casa do aluno. */
@@ -196,7 +249,11 @@ th {
   background-repeat: no-repeat, repeat-x;
 }
 
-/* ---------- cabeçalho ---------- */
+/* ---------- cabeçalho ----------
+   Da esquerda pra direita: marca, as páginas, a busca e o botão de conta. O modo
+   de exibição e o tamanho da letra saíram da barra e foram pro menu do botão de
+   conta: eles são configuração, e configuração no meio do caminho rouba espaço
+   da busca, que é o que o aluno usa toda aula. Os atalhos continuam valendo. */
 
 .topo {
   position: sticky;
@@ -204,28 +261,240 @@ th {
   z-index: 40;
   display: flex;
   align-items: center;
-  gap: var(--u);
-  padding: calc(var(--u) * 0.5) calc(var(--u) * 1.5);
+  gap: calc(var(--u) * 0.9);
+  padding: calc(var(--u) * 0.4) calc(var(--u) * 1.5);
   background: color-mix(in srgb, var(--papel) 88%, transparent);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(9px);
   border-bottom: 1px solid var(--linha);
   font-family: var(--f-ui);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
 }
 .topo a {
   color: var(--tinta-media);
   text-decoration: none;
 }
 .topo a:hover {
-  color: var(--azul);
+  color: var(--acento);
 }
 .topo .marca {
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
   color: var(--tinta);
 }
 .topo .espaco {
   flex: 1;
+}
+
+.topo-nav {
+  display: flex;
+  gap: calc(var(--u) * 0.75);
+  align-items: center;
+}
+.topo-nav a {
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-size: 0.66rem;
+  font-weight: 500;
+  padding: 3px 0;
+}
+.topo-nav a[aria-current='page'] {
+  color: var(--tinta);
+  font-weight: 700;
+  box-shadow: inset 0 -2px 0 var(--acento);
+}
+
+/* A busca do topo procura nos 762 tópicos, e não nos 84 títulos: quem chega com
+   "distância de ponto a reta" na cabeça não sabe que isso mora numa aula
+   chamada "A reta no plano". Quem faz a procura é a página do índice, então o
+   campo daqui só leva o texto pra lá. */
+.topo-busca {
+  flex: 1;
+  max-width: calc(var(--u) * 15);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  background: var(--papel);
+  color: var(--tinta-fraca);
+}
+.topo-busca:focus-within {
+  border-color: var(--acento);
+  box-shadow: 0 0 0 3px var(--acento-fraco);
+}
+.topo-busca input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--tinta);
+  outline: none;
+}
+.topo-busca input::placeholder {
+  color: var(--tinta-fraca);
+}
+
+/* ---------- o botão de conta e o menu dele ---------- */
+
+.conta {
+  position: relative;
+}
+.conta-botao {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--linha);
+  background: var(--papel);
+  color: var(--tinta-media);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+.conta-botao:hover,
+.conta-botao[aria-expanded='true'] {
+  border-color: var(--tinta);
+  color: var(--tinta);
+}
+
+.conta-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: calc(var(--u) * 12);
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra), 0 12px 28px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  z-index: 45;
+}
+.conta-secao {
+  padding: calc(var(--u) * 0.45) calc(var(--u) * 0.55) 2px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+}
+.conta-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--u) * 0.4);
+  padding: 5px calc(var(--u) * 0.55) calc(var(--u) * 0.4);
+}
+.conta-linha > span {
+  font-size: 0.74rem;
+  color: var(--tinta-media);
+}
+.conta-atalho {
+  font-size: 0.62rem;
+  color: var(--tinta-fraca);
+  margin-left: 5px;
+}
+.conta-nota {
+  border-top: 1px solid var(--linha);
+  padding: calc(var(--u) * 0.4) calc(var(--u) * 0.55);
+  font-family: var(--f-texto);
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--tinta-fraca);
+}
+
+/* o segmentado, que serve pros três controles do menu */
+.seg {
+  display: flex;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  overflow: hidden;
+  flex: none;
+}
+.seg button {
+  font: inherit;
+  font-size: 0.68rem;
+  padding: 3px 9px;
+  border: 0;
+  background: var(--papel);
+  color: var(--tinta-media);
+  cursor: pointer;
+}
+.seg button + button {
+  border-left: 1px solid var(--linha);
+}
+.seg button[aria-pressed='true'] {
+  background: var(--tinta);
+  color: var(--papel);
+}
+
+/* ---------- rodapé ---------- */
+
+.rodape {
+  border-top: 1px solid var(--linha);
+  background: var(--papel);
+  padding: calc(var(--u) * 1.75) calc(var(--u) * 1.5) var(--u);
+  font-family: var(--f-ui);
+}
+.rodape-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--u) * 8)), 1fr));
+  gap: calc(var(--u) * 1.5);
+  max-width: calc(var(--u) * 62);
+  margin: 0 auto;
+}
+.rodape-col {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.rodape-marca {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  color: var(--tinta);
+  margin: 0;
+}
+.rodape-frase {
+  font-family: var(--f-texto);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--tinta-fraca);
+  margin: 0;
+  max-width: 30ch;
+}
+.rodape-tit {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  margin: 0 0 2px;
+}
+.rodape-col a {
+  font-size: 0.78rem;
+  color: var(--tinta-media);
+  text-decoration: none;
+}
+.rodape-col a:hover {
+  color: var(--acento);
+}
+.rodape-fim {
+  max-width: calc(var(--u) * 62);
+  margin: calc(var(--u) * 1.25) auto 0;
+  padding-top: calc(var(--u) * 0.5);
+  border-top: 1px solid var(--linha);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: calc(var(--u) * 0.4);
+  font-size: 0.7rem;
+  color: var(--tinta-fraca);
 }
 
 /* ---------- <C>: link de pré-requisito ----------
@@ -402,13 +671,13 @@ th {
   font-family: var(--f-ui);
   font-weight: 600;
   font-size: 1.02rem;
-  color: var(--azul);
+  color: var(--acento);
   text-decoration: none;
-  border-bottom: 2px solid var(--azul-medio);
+  border-bottom: 2px solid var(--acento-medio);
   padding-bottom: 2px;
 }
 .comecar a:hover {
-  border-bottom-color: var(--azul);
+  border-bottom-color: var(--acento);
 }
 .comecar > span {
   font-size: 0.88rem;
@@ -444,29 +713,6 @@ html[data-modo='aula'] .tempo-leitura {
 }
 html[data-modo='aula'] .tempo-aula {
   display: inline;
-}
-
-/* ---------- barra de modo ---------- */
-
-.barra-modo {
-  display: flex;
-  gap: 3px;
-  font-family: var(--f-ui);
-  font-size: 0.7rem;
-}
-.barra-modo button {
-  border: 1px solid var(--linha);
-  background: var(--papel);
-  color: var(--tinta-fraca);
-  padding: 3px 10px;
-  border-radius: var(--raio);
-  cursor: pointer;
-  font: inherit;
-}
-.barra-modo button[aria-pressed='true'] {
-  background: var(--tinta);
-  border-color: var(--tinta);
-  color: var(--papel);
 }
 
 /* ---------- metadados / cartão de cabeçalho do conceito ---------- */
@@ -544,7 +790,7 @@ html[data-modo='aula'] .tempo-aula {
   line-height: 1.35;
 }
 .indice-lista a:hover {
-  background: var(--azul-fraco);
+  background: var(--acento-fraco);
 }
 .indice-topico {
   flex: 1;
@@ -647,7 +893,7 @@ pre code {
 /* ---------- acessibilidade ---------- */
 
 :focus-visible {
-  outline: 2px solid var(--azul);
+  outline: 2px solid var(--acento);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -722,7 +968,7 @@ pre code {
     transform 0.12s ease;
 }
 .cartao:hover {
-  border-color: var(--azul);
+  border-color: var(--acento);
   transform: translateY(-1px);
 }
 .cartao h3 {
@@ -867,7 +1113,7 @@ pre code {
     align-items: center;
     padding: 6px 10px 6px 12px;
     box-sizing: border-box;
-    background: color-mix(in srgb, var(--cor-bloco) 6%, var(--papel));
+    background: color-mix(in srgb, var(--cor-bloco) var(--mistura-bloco), var(--papel));
     border: 1px solid var(--linha);
     border-left: 4px solid var(--cor-bloco);
     border-radius: var(--raio);
