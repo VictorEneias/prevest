@@ -1043,6 +1043,9 @@ pre code {
   /* entra quando o mapa vira o assunto e sai na descida, senão ela fica
      tapando o nome de dois módulos lá embaixo */
   opacity: 0;
+  /* ela é rótulo, não controle: sem isto o retângulo dela roubava o clique dos
+     módulos do canto de baixo mesmo estando em opacidade zero */
+  pointer-events: none;
 }
 .abertura-legenda li {
   display: flex;

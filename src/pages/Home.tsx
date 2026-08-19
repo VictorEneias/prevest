@@ -126,6 +126,7 @@ export default function Home() {
 
     const entre = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
     let pendente = 0;
+    let textoFora = false;
 
     /* Modo leve: eu não tenho como testar aqui em cima de GPU de verdade, e a
        conta muda com a densidade da tela — numa tela de densidade 2 cada camada
@@ -159,6 +160,8 @@ export default function Home() {
         /* style inline vence folha de estilo, então no layout achatado eu limpo
            o que escrevi e devolvo o comando pro CSS */
         for (const el of animados) el?.removeAttribute('style');
+        if (texto) texto.inert = false;
+        textoFora = false;
         delete eu.dataset.fase;
         return;
       }
@@ -178,8 +181,20 @@ export default function Home() {
       for (const pn of pans) pn.style.transform = `translateY(${-Math.round(panPx * q)}px)`;
 
       if (texto) {
-        texto.style.opacity = String(entre(1 - p * 1.45));
+        const opaco = entre(1 - p * 1.45);
+        texto.style.opacity = String(opaco);
         texto.style.transform = `translateY(${Math.round(p * -72)}px)`;
+        /* O texto some aos 69% do zoom, e até agosto ele continuava tapando o
+           mapa até o zoom acabar: dava pra ver os módulos daquele canto e não
+           dava pra clicar neles. Do lado direito isso nunca aconteceu porque lá
+           quem estava na frente era o alvo de clique, que sai na metade. Uso
+           inert, e não pointer-events, porque assim o link "Começar por" também
+           sai do Tab enquanto está invisível. Só escrevo na virada. */
+        const fora = opaco === 0;
+        if (fora !== textoFora) {
+          textoFora = fora;
+          texto.inert = fora;
+        }
       }
       /* a bruma segura até quase o fim do zoom: é ela que impede um módulo
          nítido de cruzar uma linha de texto que ainda dá pra ler */
