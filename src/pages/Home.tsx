@@ -82,9 +82,11 @@ export default function Home() {
       const larguraPalco = cena.clientWidth || window.innerWidth;
       const alturaPalco = semCinema.matches ? window.innerHeight : cena.clientHeight;
       const escFim = larguraPalco / largura;
-      /* a câmera para embaixo do cabeçalho, senão a primeira fileira de módulos
-         termina o zoom cortada por ele */
-      const yFim = document.querySelector<HTMLElement>('.topo')?.offsetHeight ?? 58;
+      /* A câmera para abaixo do cabeçalho, mais um respiro: encostada nele, a
+         primeira fileira de módulos e o rótulo da área ficam grudados na barra.
+         O respiro é proporcional à tela pra não sumir em monitor grande. */
+      const cabecalho = document.querySelector<HTMLElement>('.topo')?.offsetHeight ?? 58;
+      const yFim = cabecalho + Math.round(window.innerHeight * 0.07);
 
       zoomPx = Math.max(1, Math.round(window.innerHeight * 0.8));
       panPx = Math.max(0, Math.round(altura * escFim + yFim - alturaPalco));
