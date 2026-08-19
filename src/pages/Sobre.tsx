@@ -48,6 +48,13 @@ export default function Sobre() {
       <h2>Como o curso está organizado</h2>
 
       <p>
+        Isto aqui é uma apostila: você lê sozinho, no seu tempo, quantas vezes precisar. O que ela
+        tem de diferente é o tamanho da explicação, porque em vez de te entregar a regra pronta ela
+        para pra dizer de onde a regra veio, e as figuras daqui você mexe com a mão pra ver o que
+        muda.
+      </p>
+
+      <p>
         São <b>{conceitos.length} aulas</b> e <b>{topicos} tópicos</b>. Cada aula é um conceito, e a
         ordem entre elas é de dependência: uma aula aponta para as que você precisa ter visto antes,
         e é isso que o mapa desenha. Quanto mais embaixo no mapa, mais coisa você atravessa pra
@@ -62,10 +69,10 @@ export default function Sobre() {
       </p>
 
       <p>
-        A página de cada aula tem dois modos. Em <b>Estudo</b> aparece tudo, que é como você lê em
-        casa. Em <b>Aula</b> some a prosa e ficam só os títulos, as fórmulas e as figuras, que é o
-        esqueleto que eu projeto enquanto explico. Os dois trocam no menu do canto, ou no Alt+1 e
-        Alt+2.
+        A página de cada aula tem dois modos, e o seu é o <b>Estudo</b>, que mostra tudo. O outro,
+        o <b>Aula</b>, esconde a prosa e deixa só os títulos, as fórmulas e as figuras: ele é pra
+        quem está com a página projetada explicando pra alguém, e serve de esqueleto enquanto a
+        explicação vem falada. Os dois trocam no menu do canto, ou no Alt+1 e Alt+2.
       </p>
 
       <Link className="simples-volta" to="/">

@@ -157,7 +157,7 @@ html[data-tema='escuro'] {
   --sombra-alta: 0 14px 34px rgba(0, 0, 0, 0.5);
 }
 
-/* Nós dois olhando a mesma tela, na mesa da casa do aluno. */
+/* Pra quem lê de longe da tela, e pra quando duas pessoas estão olhando a mesma. */
 html[data-tamanho='grande'] {
   --t-base: 21px;
 }

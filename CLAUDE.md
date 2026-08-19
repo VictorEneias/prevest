@@ -7,8 +7,22 @@ qualquer arquivo em `content/`.
 
 ## 1. O que este projeto é
 
-Material de aula presencial 1-a-1 para pré-vestibular (FUVEST), Matemática e
-Física. Roda em localhost num notebook levado à casa do aluno.
+Uma apostila de Matemática e Física para pré-vestibular (FUVEST), com explicação
+mais simples e mais detalhada do que a do livro, feita pro aluno ler sozinho.
+Exercícios entram quando voltarem (seção 7).
+
+**Quem usa o site é o aluno estudando.** Isso vale pra 99% de quem vai abrir a
+página, e é o que decide como o site fala: ele fala com quem está lendo pra
+aprender, e não com quem está dando aula. Frase de rodapé, texto de página e
+comentário nenhum devem descrever o site como "material pra dar aula", porque
+isso é verdade só pro Victor e na tela desorienta o resto.
+
+**O Modo Aula é a exceção, e ele é uma ferramenta em cima da apostila**, não a
+razão dela existir: é o Victor projetando a página enquanto explica. Está
+previsto que um dia a conta escolha entre aluno e professor, e que o Modo Aula
+só apareça pra professor. Enquanto conta não existe, o modo fica no menu pra
+todo mundo, e a página que fala dele (`/sobre`) já diz que ele é pra quem está
+explicando pra alguém.
 
 **O aluno está no ensino médio.** Ou prestando vestibular, ou tentando acompanhar
 a escola. Isso é premissa de projeto e não frase pra escrever na página: nada de
@@ -24,16 +38,19 @@ junção, escalamento, fração. O que sai é o que ele já faz sozinho.
 é julgada por uma pergunta só: *isso reduz o atrito de escrever conteúdo?* Se a
 resposta for não, não faça.
 
-O professor é Victor. Ele explica bem falando, tem visão espacial forte e o
-gargalo dele é não conseguir mostrar o que imagina. **Os componentes interativos
-existem pra resolver isso** — não são enfeite, são o produto.
+Quem escreve é o Victor, que também dá aula particular com o site aberto. Ele
+explica bem falando, tem visão espacial forte e o gargalo dele é não conseguir
+mostrar o que imagina. **Os componentes interativos existem pra resolver
+isso**: não são enfeite, são o produto.
 
 ### Não-objetivos (não implemente, mesmo se parecer útil)
 
-- Login, contas, banco de dados, backend
+- Login, contas, banco de dados, backend, **até o Victor pedir.** A conta com
+  papel de aluno ou professor está no plano dele, e `/entrar` e `/criar-conta`
+  já existem como página de "ainda não existe". Continua valendo não construir
+  isso por conta própria
 - Dashboard de progresso do aluno, gamificação, pontuação
 - Multi-tenant, pagamento, qualquer coisa de SaaS
-- Dark mode
 - Um CMS ou painel admin — o CMS é o VS Code
 
 Se algo disso for pedido, pergunte antes de construir: quase sempre não melhora

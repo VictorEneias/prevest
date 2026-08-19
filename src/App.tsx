@@ -295,8 +295,8 @@ function Rodape() {
         <div className="rodape-col">
           <p className="rodape-marca">Prevest</p>
           <p className="rodape-frase">
-            Aula particular de matemática, uma aula por conceito, na ordem em que um depende do
-            outro.
+            Uma apostila de matemática pra estudar sozinho: um conceito por página, explicado com
+            calma, na ordem em que um depende do outro.
           </p>
         </div>
         <div className="rodape-col">
@@ -321,7 +321,7 @@ function Rodape() {
       </div>
       <div className="rodape-fim">
         <span>© {new Date().getFullYear()} Prevest</span>
-        <span>Feito para aula 1-a-1, na mesa da casa do aluno.</span>
+        <span>Pra ler no seu tempo, quantas vezes precisar.</span>
       </div>
     </footer>
   );
