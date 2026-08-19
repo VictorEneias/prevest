@@ -1691,6 +1691,8 @@ html[data-modo='aula'] .tempo-aula {
   border-right-style: dashed;
   border-bottom-style: dashed;
 }
+/* estes dois números entram na conta da altura do módulo, no MapaConceitos:
+   mexer aqui sem mexer lá faz o título voltar a vazar da caixa */
 .mapa-no-titulo {
   font-size: 0.76rem;
   font-weight: 600;

@@ -248,9 +248,17 @@ export default function Home() {
     window.addEventListener('resize', remedir);
     semCinema.addEventListener('change', remedir);
 
+    /* O mapa muda de altura sem a janela mudar de tamanho: o módulo engorda com
+       o Alt+Z. Sem isto o Alt+Z na home deixava a descida parando antes do
+       rodapé do grafo, porque o `pan` continuava medido na altura antiga. */
+    const tela = cena.querySelector<HTMLElement>('.abertura-mapa .mapa-tela');
+    const olho = tela ? new ResizeObserver(remedir) : null;
+    if (tela) olho?.observe(tela);
+
     return () => {
       if (pendente) cancelAnimationFrame(pendente);
       clearTimeout(parada);
+      olho?.disconnect();
       window.removeEventListener('scroll', agendar);
       window.removeEventListener('resize', remedir);
       semCinema.removeEventListener('change', remedir);

@@ -64,6 +64,7 @@ export interface Mapa {
 
 export const MEDIDAS = {
   noW: 156,
+  /** A da letra normal. Quem manda de verdade é o `alturaNo` do calcularLayout. */
   noH: 52,
   gapX: 30,
   /* O vão entre fileiras é onde as setas andam de lado, e cada uma ocupa uma
@@ -84,8 +85,13 @@ export const MEDIDAS = {
 };
 
 const M = MEDIDAS;
-const passoY = M.noH + M.gapY;
-const yDaCamada = (ci: number) => M.pad + ci * passoY;
+/** A altura de fábrica, pra quem chama o layout sem dizer o tamanho da letra. */
+const MEDIDAS_PADRAO = { noH: MEDIDAS.noH };
+/* passoY é função, e não constante de módulo, porque a altura do módulo muda
+   com o tamanho da letra do site: quem chama passa `alturaNo` e o mapa inteiro
+   se reacomoda. */
+const passoY = () => M.noH + M.gapY;
+const yDaCamada = (ci: number) => M.pad + ci * passoY();
 
 /* ------------------------------------------------------------------ *
  * O grafo, antes de virar desenho
@@ -986,7 +992,7 @@ function cantosDaRota(corrente: Corrente, l: Ligacoes): [number, number][] {
 const desvioCurto = (x0: number, x1: number) => Math.abs(x1 - x0) < M.degrauMinimo;
 
 /** Em que vão cai um ponto: o de baixo da fileira `ci`. */
-const vaoDe = (y: number) => Math.floor((y - M.pad) / passoY);
+const vaoDe = (y: number) => Math.floor((y - M.pad) / passoY());
 
 /** Um canal por (vão, ponto de chegada, lado de onde vem). */
 const chaveDoCanal = (ci: number, x0: number, x1: number) =>
@@ -1182,8 +1188,12 @@ function desenharSetas(l: Ligacoes): ArestaLayout[] {
 
 export function calcularLayout(
   conceitos: ConceitoBruto[],
-  opcoes: { foco?: string } = {},
+  opcoes: { foco?: string; alturaNo?: number } = {},
 ): Mapa {
+  /* O módulo engorda junto com a letra: com a letra enorme um título de duas
+     linhas não cabia nos 52px e vazava pra fora da caixa. Escrevo no M porque o
+     cálculo inteiro roda daqui pra baixo, sem nada assíncrono no meio. */
+  M.noH = opcoes.alturaNo ?? MEDIDAS_PADRAO.noH;
   if (!conceitos.length) {
     return { nos: [], arestas: [], areas: [], largura: 0, altura: 0 };
   }
@@ -1245,6 +1255,6 @@ export function calcularLayout(
     arestas,
     areas,
     largura: Math.max(...malha.camadas.flat().map((it) => it.x + it.w / 2)) + M.pad,
-    altura: M.pad * 2 + nCamadas * passoY - M.gapY,
+    altura: M.pad * 2 + nCamadas * passoY() - M.gapY,
   };
 }

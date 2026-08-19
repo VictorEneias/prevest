@@ -670,6 +670,11 @@ conceito (`src/pages/Conceito.tsx`). Está documentado aqui porque é onde o
   44. O comprimento somado das setas SOBE 5% (uma seta cede um pouco pra caber no
   tronco da irmã) — é o preço, e ele compra as quatro paralelas que desciam o mapa
   inteiro dizendo a mesma coisa.
+- **A caixa do módulo engorda com a letra do site.** A altura sai de duas linhas
+  do título no tamanho da letra escolhida (52px no normal, 57 no grande e 65 no
+  enorme), e o mapa inteiro se reacomoda: com 52 fixo, quem lia na letra enorme
+  via o título vazando pra fora da caixa. A conta está no `MapaConceitos` e
+  depende do `font-size` e da entrelinha do `.mapa-no-titulo`.
 - **As setas já vêm reduzidas.** Elo redundante não é desenhado (regra 3 da seção
   3), então o que você vê é só a dependência mais próxima.
 - **Passar o mouse acende a cadeia inteira** — sobe pelos pré-requisitos e desce

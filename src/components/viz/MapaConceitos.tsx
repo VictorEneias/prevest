@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { conceitos } from '../../conteudo';
+import { BASE_PX, useAula } from '../../estado';
 import { calcularLayout, vizinhanca, type ConceitoBruto } from '../../lib/layout-grafo';
 import type { Materia } from '../../lib/curriculo';
 
@@ -43,6 +44,15 @@ export default function MapaConceitos({
 }: MapaConceitosProps) {
   const molduraRef = useRef<HTMLDivElement>(null);
   const telaRef = useRef<HTMLDivElement>(null);
+  const { tamanho } = useAula();
+
+  /* A caixa do módulo engorda junto com a letra do site. A conta é duas linhas
+     do título (0.76rem, entrelinha 1.2, ambos no .mapa-no-titulo) mais os 19px
+     de moldura e folga que ele sempre teve: dá exatamente os 52 de antes na
+     letra normal, 57 na grande e 65 na enorme. Duas linhas, e não três, porque
+     é o que 79 dos 84 títulos usam; os cinco que passam disso continuam com as
+     reticências do line-clamp. */
+  const alturaNo = Math.round(2 * 1.2 * 0.76 * BASE_PX[tamanho]) + 19;
   const buscaRef = useRef<HTMLInputElement>(null);
 
   const { mapa, rotulosArea, caixas, pais, filhos, buscavel } = useMemo(() => {
@@ -57,7 +67,7 @@ export default function MapaConceitos({
     }));
 
     const conjunto = foco ? vizinhanca(todos, foco, raio) : todos;
-    const mapa = calcularLayout(conjunto, { foco });
+    const mapa = calcularLayout(conjunto, { foco, alturaNo });
 
     /* Adjacência pro acender, já reduzida: é exatamente o que está desenhado. */
     const pais: Record<string, string[]> = {};
@@ -98,7 +108,7 @@ export default function MapaConceitos({
     }
 
     return { mapa, rotulosArea, caixas, pais, filhos, buscavel };
-  }, [foco, raio]);
+  }, [foco, raio, alturaNo]);
 
   const vazio = mapa.nos.length === 0;
 

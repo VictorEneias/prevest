@@ -22,6 +22,11 @@ export type Tema = 'claro' | 'escuro';
 
 const TAMANHOS: Tamanho[] = ['normal', 'grande', 'enorme'];
 
+/** Espelha o --t-base de cada tamanho no global.css. Quem precisa disso em
+ *  número é o mapa, que calcula a altura do módulo antes de existir DOM pra
+ *  medir. Se um dos três mudar lá, muda aqui junto. */
+export const BASE_PX: Record<Tamanho, number> = { normal: 18, grande: 21, enorme: 25 };
+
 export interface ItemPilha {
   id: string;
   titulo: string;
