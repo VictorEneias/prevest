@@ -1021,7 +1021,9 @@ pre code {
 }
 
 /* a legenda entra quando o mapa vira o assunto, e não antes: no começo ela
-   competiria com o texto pelo mesmo canto */
+   competiria com o texto pelo mesmo canto. Depois disso ela fica: quem desce
+   pra ver os módulos de baixo é justamente quem precisa do nome das cores, e
+   a descida termina com o mapa acima dela (o `rodape` do Home.tsx). */
 .abertura-legenda {
   position: absolute;
   z-index: 6;
@@ -1040,8 +1042,6 @@ pre code {
   font-family: var(--f-ui);
   font-size: 0.68rem;
   color: var(--tinta-media);
-  /* entra quando o mapa vira o assunto e sai na descida, senão ela fica
-     tapando o nome de dois módulos lá embaixo */
   opacity: 0;
   /* ela é rótulo, não controle: sem isto o retângulo dela roubava o clique dos
      módulos do canto de baixo mesmo estando em opacidade zero */

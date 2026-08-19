@@ -111,7 +111,14 @@ export default function Home() {
       yIni = Math.round(window.innerHeight * 0.05);
       yFim = cabecalho + Math.round(window.innerHeight * 0.07);
       zoomPx = Math.max(1, Math.round(window.innerHeight * 0.8));
-      panPx = Math.max(0, Math.round(altura * escFim + yFim - alturaPalco));
+      /* A legenda mora no rodapé do palco e fica acesa até o fim, então a
+         descida precisa terminar com o mapa inteiro ACIMA dela: somo a altura
+         dela mais um respiro no tanto que a câmera desce, e a página cresce
+         junto porque a altura dela é 180vh + --pan. Antes eu resolvia apagando
+         a legenda ao longo da descida, o que tirava o rótulo das cores
+         justamente de quem tinha descido pra ver os módulos de baixo. */
+      const rodape = !semCinema.matches && legenda ? alturaPalco - legenda.offsetTop + 14 : 0;
+      panPx = Math.max(0, Math.round(altura * escFim + yFim + rodape - alturaPalco));
 
       /* o CSS usa estes pra pintar o primeiro quadro e pra montar o layout
          achatado; do movimento em diante quem manda é o style inline */
@@ -202,7 +209,7 @@ export default function Home() {
       if (parede) parede.style.opacity = String(1 - 0.72 * p);
       if (desfocado) desfocado.style.opacity = String(Math.min(0.55, entre((0.85 - p) * 1.1)));
       if (chamado) chamado.style.opacity = String(entre(1 - p * 3));
-      if (legenda) legenda.style.opacity = String(entre((p - 0.55) * 2.6) * (1 - q * 0.9));
+      if (legenda) legenda.style.opacity = String(entre((p - 0.55) * 2.6));
       if (clique) clique.style.opacity = String(entre(1 - p));
 
       /* Três fases: na abertura o clique no grafo vale como rolagem; passada a
@@ -292,12 +299,10 @@ export default function Home() {
         <button className="abertura-clique" onClick={irProMapa} aria-label="Ver o mapa inteiro" />
 
         <section className="abertura-texto">
-          <p className="abertura-et">Matemática · {conceitos.length} aulas</p>
+          <p className="abertura-et">Matemática</p>
           <h1>
-            Aprender a<br />
-            matemática
-            <br />
-            de verdade
+            Entendendo<br />
+            a lógica
           </h1>
           <p>
             Até aqui você se virou com todas as suas técnicas e artimanhas para se livrar de
