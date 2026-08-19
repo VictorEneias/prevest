@@ -1,30 +1,44 @@
-/* Sistema visual: azul-noite e âmbar, Archivo na interface e Newsreader no texto.
-   O tema claro e o escuro são a MESMA lista de variáveis com valores diferentes,
-   e nenhum componente sabe qual dos dois está ligado — é por isso que a reta
-   numérica, o mapa e as caixas de fração viraram escuro sem eu tocar neles.
-   Azul e vermelho continuam reservados pra sinal, e é por isso que o cromo do
-   site (link, foco, porta de entrada) ganhou um --acento só dele: link azul
-   competia com o azul que quer dizer positivo dentro das figuras. */
+/* O sistema visual do site, escrito de uma vez só.
+ *
+ * Duas coisas mandam aqui. A primeira: o tema claro e o escuro são a MESMA lista
+ * de variáveis com valores diferentes, e nenhum componente sabe qual dos dois
+ * está ligado — é por isso que a reta numérica, as caixas de fração e o mapa
+ * viraram escuro sem ninguém tocar neles. A segunda: azul e vermelho são
+ * reservados pra SINAL, porque dentro das figuras eles querem dizer positivo e
+ * negativo; o cromo do site (link, foco, porta de entrada) usa o --acento, que
+ * é âmbar, justamente pra não competir com esse significado.
+ *
+ * Os dez componentes de visualização carregam o próprio CSS num <style> dentro
+ * do JSX. O que eles esperam deste arquivo são as variáveis, mais duas classes:
+ * .elo-conceito (do <C>) e .mapa-* (do <MapaConceitos>). Renomear variável aqui
+ * quebra figura lá.
+ */
 
 @import '@fontsource-variable/archivo';
 @import '@fontsource-variable/newsreader';
 
+/* ==================================================================
+   1. tokens
+   ================================================================== */
+
 :root {
-  /* --- unidade da grade: TUDO é múltiplo disso --- */
+  /* unidade da grade: quase toda medida do site é múltiplo disto */
   --u: 24px;
+  /* a coluna de leitura. Acima de 70ch o olho perde a volta da linha. */
+  --medida: 66ch;
 
   /* --- papel --- */
   --papel: #ffffff;
   --papel-fundo: #eceff4;
   --grade: #e3e7ee;
-  --grade-forte: #d3dae4;
+  --grade-forte: #ccd5df;
   --linha: #dbe1e9;
 
-  /* --- tinta --- */
+  /* --- tinta ---
+     A fraca é a cor de quase todo texto pequeno (ficha, legenda, rótulo de
+     seção). #61748a dá 4,8:1 sobre o papel; abaixo disso o AA cai. */
   --tinta: #0b1017;
   --tinta-media: #35485c;
-  /* 4,9:1 sobre o papel: é a cor de quase todo texto pequeno do site, da ficha
-     à legenda do mapa, e abaixo disso o AA cai */
   --tinta-fraca: #61748a;
 
   /* --- acento: o cromo, e só ele --- */
@@ -32,7 +46,7 @@
   --acento-fraco: #f7ead9;
   --acento-medio: #e0ab6a;
 
-  /* --- o par de sinal --- */
+  /* --- o par de sinal, que é do conteúdo e não do cromo --- */
   --azul: #1b4fd8;
   --azul-fraco: #e4ebfc;
   --azul-medio: #a9c0f4;
@@ -40,18 +54,17 @@
   --vermelho-fraco: #fce6e3;
   --vermelho-medio: #f3ada4;
 
-  /* --- acerto: só pra correção de exercício, nunca pra sinal ---
+  /* --- acerto: só pra correção de exercício, nunca pra sinal.
      Deutan e protan não separam verde de vermelho, então todo estado que usa
-     esse par carrega junto um glifo (✓ ✗) e uma frase. */
+     esse par carrega junto um glifo e uma frase. --- */
   --verde: #1a7f4b;
   --verde-fraco: #e4f4ea;
   --verde-medio: #9ed3b5;
 
-  /* --- blocos do mapa: paleta categórica ---
-     Cinco é o teto, testado contra o papel nas três formas de daltonismo. Azul
-     e vermelho ficam reservados pra sinal e o amarelo pro rascunho, e nenhum
-     sexto tom se separa dos outros. Área que passar disso cai em --bloco-0 e se
-     identifica pelo rótulo, que é o canal principal de qualquer jeito. */
+  /* --- as cinco áreas do mapa ---
+     Cinco é o teto medido: a paleta foi validada contra o papel nas três formas
+     de daltonismo, e nenhum sexto tom se separa dos outros. Área que passar
+     disso cai no --bloco-0 e se identifica pelo rótulo. */
   --bloco-0: #78808c;
   --bloco-1: #1baf7a;
   --bloco-2: #eb6834;
@@ -62,13 +75,23 @@
      escuro some, então o tema troca este número junto com o resto */
   --mistura-bloco: 6%;
 
-  /* --- grafite: pré-requisitos --- */
+  /* --- grafite: pré-requisito, seta do mapa --- */
   --grafite: #5a6472;
   --grafite-fraco: #eceef1;
 
   /* --- marca-texto: rascunho --- */
   --marca: #f5cf4d;
   --marca-fraco: #fdf5d9;
+
+  /* --- as manchas do fundo da home ---
+     Elas usam cores que o site já tem (o acento e três áreas), e a força muda
+     com o tema porque a mesma mistura que aparece sobre o azul-noite some sobre
+     papel claro. */
+  --mancha-acento: 23%;
+  --mancha-verde: 20%;
+  --mancha-roxo: 26%;
+  --mancha-rosa: 19%;
+  --grao: 8%;
 
   /* --- tipografia --- */
   --f-ui: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
@@ -79,24 +102,15 @@
   --t-linha: 1.6;
 
   --raio: 2px;
-  --sombra: 0 1px 2px rgba(11, 16, 23, 0.05), 0 4px 16px rgba(11, 16, 23, 0.05);
-
-  /* --- as manchas do fundo da home ---
-     Elas usam as cores que o site já tem (o acento e três áreas do mapa), e a
-     força muda com o tema porque a mesma mistura que aparece sobre o azul-noite
-     some sobre papel claro. */
-  --mancha-acento: 23%;
-  --mancha-roxo: 26%;
-  --mancha-rosa: 19%;
-  --mancha-verde: 20%;
-  --grao: 8%;
+  --sombra: 0 1px 2px rgba(11, 16, 23, 0.06), 0 4px 16px rgba(11, 16, 23, 0.05);
+  --sombra-alta: 0 12px 30px rgba(11, 16, 23, 0.14);
 }
 
 html[data-tema='escuro'] {
   --papel: #121a25;
   --papel-fundo: #0b1017;
-  --grade: #121a25;
-  --grade-forte: #1e2937;
+  --grade: #1a2430;
+  --grade-forte: #2b3a4a;
   --linha: #1e2937;
 
   --tinta: #e9eff7;
@@ -133,22 +147,42 @@ html[data-tema='escuro'] {
   --marca: #f5cf4d;
   --marca-fraco: #2a2413;
 
-  --sombra: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.35);
-
   --mancha-acento: 14%;
+  --mancha-verde: 10%;
   --mancha-roxo: 16%;
   --mancha-rosa: 11%;
-  --mancha-verde: 10%;
   --grao: 10%;
+
+  --sombra: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.3);
+  --sombra-alta: 0 14px 34px rgba(0, 0, 0, 0.5);
 }
 
 /* Nós dois olhando a mesma tela, na mesa da casa do aluno. */
 html[data-tamanho='grande'] {
-  --t-base: 22px;
+  --t-base: 21px;
 }
 html[data-tamanho='enorme'] {
-  --t-base: 27px;
+  --t-base: 25px;
 }
+
+/* --pluma é o esfumaçado das bordas do grafo e --corte é a beirada do recorte
+   do texto na home. As duas são declaradas com @property porque só assim elas
+   INTERPOLAM: uma custom property sem tipo troca de valor de uma vez, no meio
+   do zoom, e o que se vê é um salto. */
+@property --pluma {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 30%;
+}
+@property --corte {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 32%;
+}
+
+/* ==================================================================
+   2. base
+   ================================================================== */
 
 *,
 *::before,
@@ -163,41 +197,85 @@ html {
 
 body {
   margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   font-family: var(--f-texto);
+  font-size: 1rem;
   line-height: var(--t-linha);
   color: var(--tinta);
-  background-color: var(--papel-fundo);
-  /* A grade do caderno, de contraste baixo de propósito: ela só orienta. */
-  background-image:
-    linear-gradient(var(--grade) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grade) 1px, transparent 1px);
-  background-size: var(--u) var(--u);
-  background-position: -1px -1px;
+  background: var(--papel-fundo);
   -webkit-font-smoothing: antialiased;
 }
 
-/* ---------- tipografia ---------- */
+#raiz {
+  display: contents;
+}
+
+main {
+  flex: 1;
+}
+
+:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+  border-radius: var(--raio);
+}
+
+.pular {
+  position: absolute;
+  left: -9999px;
+  z-index: 60;
+  font-family: var(--f-ui);
+  font-size: 0.8rem;
+  padding: 8px 14px;
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  color: var(--tinta);
+  text-decoration: none;
+}
+.pular:focus {
+  left: calc(var(--u) * 0.5);
+  top: calc(var(--u) * 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ==================================================================
+   3. tipografia de conteúdo
+   ================================================================== */
 
 h1,
 h2,
 h3,
 h4 {
   font-family: var(--f-ui);
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
   color: var(--tinta);
-  margin: calc(var(--u) * 1.5) 0 calc(var(--u) * 0.5);
+  margin: calc(var(--u) * 1.6) 0 calc(var(--u) * 0.5);
+  text-wrap: balance;
 }
 h1 {
-  font-size: 2.1rem;
-  letter-spacing: -0.03em;
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
 }
 h2 {
   font-size: 1.42rem;
 }
 h3 {
-  font-size: 1.1rem;
+  font-size: 1.08rem;
+  letter-spacing: -0.02em;
+}
+h4 {
+  font-size: 0.94rem;
+  color: var(--tinta-media);
 }
 h1:first-child,
 h2:first-child,
@@ -208,8 +286,35 @@ h3:first-child {
 p {
   margin: 0 0 var(--u);
 }
-strong {
+strong,
+b {
   font-weight: 600;
+  color: var(--tinta);
+}
+
+a {
+  color: var(--acento);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+ul,
+ol {
+  margin: 0 0 var(--u);
+  padding-left: calc(var(--u) * 1.1);
+}
+li {
+  margin-bottom: calc(var(--u) * 0.25);
+}
+li::marker {
+  color: var(--tinta-fraca);
+}
+
+blockquote {
+  margin: 0 0 var(--u);
+  padding: calc(var(--u) * 0.25) 0 calc(var(--u) * 0.25) var(--u);
+  border-left: 3px solid var(--acento-medio);
+  color: var(--tinta-media);
 }
 
 /* Números tabulares: coluna de conta não pode dançar. */
@@ -220,42 +325,66 @@ th {
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------- estrutura da página ---------- */
-
-.folha {
-  max-width: calc(var(--u) * 34);
-  margin: 0 auto;
-  padding: calc(var(--u) * 2) calc(var(--u) * 1.5) calc(var(--u) * 4);
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 var(--u);
+  font-size: 0.88rem;
+}
+th,
+td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--linha);
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  font-family: var(--f-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  border-bottom-color: var(--grade-forte);
+}
+/* Metade das tabelas do conteúdo não tem cabeçalho de verdade, e o markdown
+   inventa um vazio. */
+thead:not(:has(th:not(:empty))) {
+  display: none;
 }
 
-/* O mapa da home precisa de largura: 816px espremem as áreas. */
-.folha-larga {
-  max-width: calc(var(--u) * 62);
-}
-
-/* A prosa fica em papel liso, senão a grade atrapalha a leitura. */
-.papel {
-  background: var(--papel);
+code {
+  font-family: var(--f-num);
+  font-size: 0.86em;
+  background: var(--grafite-fraco);
   border: 1px solid var(--linha);
   border-radius: var(--raio);
-  padding: calc(var(--u) * 1.5);
-  box-shadow: var(--sombra);
+  padding: 1px 5px;
+}
+pre {
+  margin: 0 0 var(--u);
+  padding: calc(var(--u) * 0.6);
+  background: var(--grafite-fraco);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  overflow-x: auto;
+  font-size: 0.84rem;
+}
+pre code {
+  background: none;
+  border: 0;
+  padding: 0;
 }
 
-/* ---------- a régua ----------
-   Toda divisória do site é uma reta numérica graduada, que é o objeto que a
-   gente mais usa em aula.                                                  */
+/* A divisória do site é uma reta numérica graduada, que é o objeto que a gente
+   mais usa em aula. */
 .regua {
   height: calc(var(--u) * 0.75);
   border: 0;
   margin: calc(var(--u) * 1.5) 0;
   background-image:
     linear-gradient(var(--grade-forte), var(--grade-forte)),
-    repeating-linear-gradient(
-      90deg,
-      var(--grade-forte) 0 1px,
-      transparent 1px var(--u)
-    );
+    repeating-linear-gradient(90deg, var(--grade-forte) 0 1px, transparent 1px var(--u));
   background-size:
     100% 1px,
     100% 9px;
@@ -265,11 +394,9 @@ th {
   background-repeat: no-repeat, repeat-x;
 }
 
-/* ---------- cabeçalho ----------
-   Da esquerda pra direita: marca, as páginas, a busca e o botão de conta. O modo
-   de exibição e o tamanho da letra saíram da barra e foram pro menu do botão de
-   conta: eles são configuração, e configuração no meio do caminho rouba espaço
-   da busca, que é o que o aluno usa toda aula. Os atalhos continuam valendo. */
+/* ==================================================================
+   4. cromo: cabeçalho, menu da conta, rodapé
+   ================================================================== */
 
 .topo {
   position: sticky;
@@ -278,42 +405,41 @@ th {
   display: flex;
   align-items: center;
   gap: calc(var(--u) * 0.9);
-  padding: calc(var(--u) * 0.4) calc(var(--u) * 1.5);
-  background: color-mix(in srgb, var(--papel) 88%, transparent);
-  backdrop-filter: blur(9px);
+  height: calc(var(--u) * 2.4);
+  padding: 0 calc(var(--u) * 1.5);
+  background: color-mix(in srgb, var(--papel) 86%, transparent);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--linha);
   font-family: var(--f-ui);
-  font-size: 0.78rem;
 }
-.topo a {
-  color: var(--tinta-media);
-  text-decoration: none;
-}
-.topo a:hover {
-  color: var(--acento);
-}
-.topo .marca {
+
+.marca {
   font-weight: 800;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.045em;
   text-transform: uppercase;
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--tinta);
-}
-.topo .espaco {
-  flex: 1;
+  text-decoration: none;
+  flex: none;
 }
 
 .topo-nav {
   display: flex;
-  gap: calc(var(--u) * 0.75);
+  gap: calc(var(--u) * 0.8);
   align-items: center;
+  flex: none;
 }
 .topo-nav a {
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
   font-size: 0.66rem;
   font-weight: 500;
-  padding: 3px 0;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tinta-media);
+  text-decoration: none;
+  padding: 4px 0;
+}
+.topo-nav a:hover {
+  color: var(--tinta);
 }
 .topo-nav a[aria-current='page'] {
   color: var(--tinta);
@@ -321,9 +447,9 @@ th {
   box-shadow: inset 0 -2px 0 var(--acento);
 }
 
-/* A busca do topo procura nos 762 tópicos, e não nos 84 títulos: quem chega com
+/* A busca procura nos tópicos, e não nos títulos das aulas: quem chega com
    "distância de ponto a reta" na cabeça não sabe que isso mora numa aula
-   chamada "A reta no plano". Quem faz a procura é a página do índice, então o
+   chamada "A reta no plano". Quem procura de fato é a página do índice, então o
    campo daqui só leva o texto pra lá. */
 .topo-busca {
   flex: 1;
@@ -347,21 +473,24 @@ th {
   border: 0;
   background: none;
   font: inherit;
+  font-size: 0.78rem;
   color: var(--tinta);
   outline: none;
 }
 .topo-busca input::placeholder {
   color: var(--tinta-fraca);
 }
-
-/* ---------- o botão de conta e o menu dele ---------- */
+.topo-espaco {
+  flex: 1;
+}
 
 .conta {
   position: relative;
+  flex: none;
 }
 .conta-botao {
-  width: 32px;
-  height: 32px;
+  width: calc(var(--u) * 1.5);
+  height: calc(var(--u) * 1.5);
   border-radius: 50%;
   border: 1px solid var(--linha);
   background: var(--papel);
@@ -381,20 +510,55 @@ th {
 .conta-menu {
   position: absolute;
   right: 0;
-  top: calc(100% + 8px);
+  top: calc(100% + 9px);
   width: calc(var(--u) * 12);
   background: var(--papel);
   border: 1px solid var(--linha);
   border-radius: var(--raio);
-  box-shadow: var(--sombra), 0 12px 28px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--sombra), var(--sombra-alta);
   overflow: hidden;
   z-index: 45;
+  animation: conta-entra 0.12s ease-out;
+}
+@keyframes conta-entra {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .conta-menu {
+    animation: none;
+  }
+}
+
+.conta-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 9px calc(var(--u) * 0.55);
+  font-family: var(--f-ui);
+  font-size: 0.8rem;
+  color: var(--tinta-media);
+  text-decoration: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+.conta-item:hover {
+  background: var(--acento-fraco);
+  color: var(--tinta);
 }
 .conta-secao {
   padding: calc(var(--u) * 0.45) calc(var(--u) * 0.55) 2px;
-  font-size: 0.6rem;
+  margin: 0;
+  border-top: 1px solid var(--linha);
+  font-family: var(--f-ui);
+  font-size: 0.58rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--tinta-fraca);
 }
@@ -404,26 +568,19 @@ th {
   justify-content: space-between;
   gap: calc(var(--u) * 0.4);
   padding: 5px calc(var(--u) * 0.55) calc(var(--u) * 0.4);
+  font-family: var(--f-ui);
 }
 .conta-linha > span {
   font-size: 0.74rem;
   color: var(--tinta-media);
 }
 .conta-atalho {
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   color: var(--tinta-fraca);
-  margin-left: 5px;
-}
-.conta-nota {
-  border-top: 1px solid var(--linha);
-  padding: calc(var(--u) * 0.4) calc(var(--u) * 0.55);
-  font-family: var(--f-texto);
-  font-size: 0.74rem;
-  line-height: 1.4;
-  color: var(--tinta-fraca);
+  margin-left: 6px;
 }
 
-/* o segmentado, que serve pros três controles do menu */
+/* o segmentado serve pros três controles do menu */
 .seg {
   display: flex;
   border: 1px solid var(--linha);
@@ -432,9 +589,10 @@ th {
   flex: none;
 }
 .seg button {
-  font: inherit;
+  font-family: var(--f-ui);
   font-size: 0.68rem;
-  padding: 3px 9px;
+  line-height: 1;
+  padding: 5px 9px;
   border: 0;
   background: var(--papel);
   color: var(--tinta-media);
@@ -443,24 +601,27 @@ th {
 .seg button + button {
   border-left: 1px solid var(--linha);
 }
+.seg button:hover {
+  color: var(--tinta);
+}
 .seg button[aria-pressed='true'] {
   background: var(--tinta);
   color: var(--papel);
 }
 
-/* ---------- rodapé ---------- */
-
 .rodape {
+  position: relative;
+  z-index: 1;
   border-top: 1px solid var(--linha);
   background: var(--papel);
-  padding: calc(var(--u) * 1.75) calc(var(--u) * 1.5) var(--u);
+  padding: calc(var(--u) * 1.9) calc(var(--u) * 1.5) calc(var(--u) * 0.9);
   font-family: var(--f-ui);
 }
 .rodape-grade {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--u) * 8)), 1fr));
-  gap: calc(var(--u) * 1.5);
-  max-width: calc(var(--u) * 62);
+  gap: calc(var(--u) * 1.4);
+  max-width: calc(var(--u) * 58);
   margin: 0 auto;
 }
 .rodape-col {
@@ -470,27 +631,27 @@ th {
 }
 .rodape-marca {
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
   text-transform: uppercase;
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--tinta);
   margin: 0;
 }
 .rodape-frase {
   font-family: var(--f-texto);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   line-height: 1.5;
   color: var(--tinta-fraca);
   margin: 0;
   max-width: 30ch;
 }
 .rodape-tit {
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--tinta-fraca);
-  margin: 0 0 2px;
+  margin: 0 0 3px;
 }
 .rodape-col a {
   font-size: 0.78rem;
@@ -501,8 +662,8 @@ th {
   color: var(--acento);
 }
 .rodape-fim {
-  max-width: calc(var(--u) * 62);
-  margin: calc(var(--u) * 1.25) auto 0;
+  max-width: calc(var(--u) * 58);
+  margin: calc(var(--u) * 1.2) auto 0;
   padding-top: calc(var(--u) * 0.5);
   border-top: 1px solid var(--linha);
   display: flex;
@@ -513,726 +674,19 @@ th {
   color: var(--tinta-fraca);
 }
 
-/* ---------- <C>: link de pré-requisito ----------
-   Grafite pontilhado, que é a anotação a lápis na margem. Fica diferente de um
-   link normal porque o comportamento é outro: abre painel em vez de navegar. */
+/* ==================================================================
+   5. a abertura da home
+   ==================================================================
+   O grafo é o fundo da página e a rolagem é a câmera. Nos primeiros 80vh o
+   texto sobe e apaga enquanto o mapa cresce até caber na largura da tela; daí
+   em diante a rolagem vira normal e o mapa desce até entregar no rodapé.
 
-.elo-conceito {
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: 0;
-  padding: 0 1px;
-  cursor: pointer;
-  border-bottom: 1.5px dotted var(--grafite);
-  transition: background-color 0.12s ease;
-}
-.elo-conceito::after {
-  content: '↘';
-  font-family: var(--f-ui);
-  font-size: 0.62em;
-  color: var(--grafite);
-  vertical-align: super;
-  margin-left: 1px;
-}
-.elo-conceito:hover,
-.elo-conceito:focus-visible {
-  background: var(--grafite-fraco);
-  border-bottom-style: solid;
-}
-.elo-conceito[data-quebrado='sim'] {
-  border-bottom-color: var(--vermelho);
-  background: var(--vermelho-fraco);
-}
-
-/* ---------- pilha de painéis ---------- */
-
-.pilha-fundo {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  background: rgba(20, 24, 31, 0.28);
-  display: none;
-}
-.pilha-fundo[data-aberto='sim'] {
-  display: block;
-}
-
-.painel {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: min(calc(var(--u) * 27), 92vw);
-  background: var(--papel);
-  border-left: 1px solid var(--linha);
-  box-shadow: -8px 0 32px rgba(20, 24, 31, 0.12);
-  display: flex;
-  flex-direction: column;
-  z-index: 51;
-  animation: entra-painel 0.18s ease-out;
-}
-@keyframes entra-painel {
-  from {
-    transform: translateX(18px);
-    opacity: 0;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .painel {
-    animation: none;
-  }
-  html {
-    scroll-behavior: auto;
-  }
-}
-
-.painel-topo {
-  display: flex;
-  align-items: center;
-  gap: calc(var(--u) * 0.5);
-  padding: calc(var(--u) * 0.5) calc(var(--u) * 0.75);
-  border-bottom: 1px solid var(--linha);
-  font-family: var(--f-ui);
-  font-size: 0.72rem;
-  background: var(--papel-fundo);
-}
-.painel-trilha {
-  flex: 1;
-  color: var(--tinta-fraca);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.painel-trilha b {
-  color: var(--tinta);
-  font-weight: 600;
-}
-.painel-botao {
-  font-family: var(--f-ui);
-  font-size: 0.72rem;
-  border: 1px solid var(--linha);
-  background: var(--papel);
-  color: var(--tinta-media);
-  border-radius: var(--raio);
-  padding: 3px 9px;
-  cursor: pointer;
-}
-.painel-botao:hover {
-  border-color: var(--grafite);
-  color: var(--tinta);
-}
-/* O corpo do painel é a própria página do conceito, sem cromo e sem grade de
-   fundo, pra ela não competir com a página que está atrás. */
-.painel-corpo {
-  flex: 1;
-  overflow: auto;
-  background: var(--papel);
-}
-.painel-corpo .folha {
-  padding: calc(var(--u) * 0.75) var(--u) calc(var(--u) * 2);
-  max-width: none;
-}
-.painel-corpo .papel {
-  border: 0;
-  box-shadow: none;
-  padding: 0;
-}
-
-/* ---------- selo de rascunho ----------
-   O aviso é pra mim, e quem lê a tela junto é o aluno: um bloco de quatro linhas
-   dizendo que nada foi conferido derruba a confiança dele no material bem antes
-   de me ajudar em alguma coisa. O que fazer com o rascunho está no CLAUDE.md. */
-
-.rascunho {
-  display: flex;
-  align-items: baseline;
-  gap: calc(var(--u) * 0.4);
-  font-family: var(--f-ui);
-  font-size: 0.74rem;
-  color: var(--tinta-media);
-  background: var(--marca-fraco);
-  border-left: 3px solid var(--marca);
-  border-radius: 0 var(--raio) var(--raio) 0;
-  padding: 4px calc(var(--u) * 0.5);
-  margin: 0 0 var(--u);
-}
-.rascunho b {
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-size: 0.68rem;
-  color: var(--tinta);
-}
-
-/* ---------- as duas portas de entrada da home ----------
-   Uma pra quem vai começar do começo e outra pra quem chegou com uma dúvida com
-   nome. As duas juntas porque são a mesma pergunta feita de dois jeitos. */
-
-.portas {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--u) * 13)), 1fr));
-  gap: var(--u);
-  margin-bottom: calc(var(--u) * 1.25);
-}
-
-.comecar {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  max-width: 62ch;
-  margin: 0;
-}
-.comecar a {
-  align-self: flex-start;
-  font-family: var(--f-ui);
-  font-weight: 600;
-  font-size: 1.02rem;
-  color: var(--acento);
-  text-decoration: none;
-  border-bottom: 2px solid var(--acento-medio);
-  padding-bottom: 2px;
-}
-.comecar a:hover {
-  border-bottom-color: var(--acento);
-}
-.comecar > span {
-  font-size: 0.88rem;
-  color: var(--tinta-media);
-}
-
-/* ---------- Modo Aula ----------
-   Em aula fica na tela só o esqueleto: título, fórmula em bloco e figura. A prosa
-   continua no arquivo, pro aluno reler em casa.
-
-   Antes isso dependia de o texto estar embrulhado num <Explicacao>, então quem
-   escrevia a aula precisava saber que existem dois modos. Agora quem faz o
-   trabalho é o seletor e o .mdx não sabe de nada: escreve parágrafo e pronto. A
-   fórmula de bloco do KaTeX é irmã do <p> e não filha, então ela sobrevive. */
-html[data-modo='aula'] .aula > p,
-html[data-modo='aula'] .aula > ul,
-html[data-modo='aula'] .aula > ol,
-html[data-modo='aula'] .aula > table,
-html[data-modo='aula'] .aula > blockquote,
-html[data-modo='aula'] .aula > pre {
-  display: none;
-}
-
-/* O tempo da ficha muda de dono junto com o modo. Em estudo o aluno vê só quanto
-   ele leva pra ler a página, e em aula eu vejo quanto a aula toma. Mostrar os
-   dois pro aluno desencoraja: ele lê "45 min de aula" na aula de conjuntos e
-   acha que é o tempo dele, quando o dele é 23. */
-.tempo-aula {
-  display: none;
-}
-html[data-modo='aula'] .tempo-leitura {
-  display: none;
-}
-html[data-modo='aula'] .tempo-aula {
-  display: inline;
-}
-
-/* ---------- metadados / cartão de cabeçalho do conceito ---------- */
-
-.ficha {
-  font-family: var(--f-ui);
-  font-size: 0.74rem;
-  color: var(--tinta-fraca);
-  display: flex;
-  flex-wrap: wrap;
-  gap: calc(var(--u) * 0.6);
-  margin-bottom: var(--u);
-}
-.ficha span b {
-  color: var(--tinta-media);
-  font-weight: 600;
-}
-
-.prereq-lista {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 0 0 var(--u);
-  padding: 0;
-  list-style: none;
-}
-.prereq-lista li {
-  margin: 0;
-}
-
-/* ---------- índice de assuntos ----------
-   A lista do fim do livro. Três colunas por linha: o assunto procurado, a aula
-   que cobre ele, e a área, que é o que dá o contexto sem precisar clicar. */
-
-.indice-busca {
-  width: 100%;
-  max-width: calc(var(--u) * 22);
-  font-size: 1rem;
-  padding: 8px 12px;
-  margin-bottom: calc(var(--u) * 0.5);
-}
-
-.indice-grupo {
-  margin-bottom: calc(var(--u) * 1.25);
-}
-.indice-letra {
-  font-size: 0.86rem;
-  letter-spacing: 0.14em;
-  color: var(--tinta-fraca);
-  border-bottom: 1px solid var(--grade-forte);
-  padding-bottom: 3px;
-  margin: 0 0 calc(var(--u) * 0.4);
-}
-.indice-lista {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  columns: 2;
-  column-gap: calc(var(--u) * 1.5);
-}
-.indice-lista li {
-  margin: 0;
-  break-inside: avoid;
-}
-.indice-lista a {
-  display: flex;
-  align-items: baseline;
-  gap: calc(var(--u) * 0.4);
-  padding: 3px 6px;
-  border-radius: var(--raio);
-  text-decoration: none;
-  color: var(--tinta);
-  font-family: var(--f-ui);
-  font-size: 0.82rem;
-  line-height: 1.35;
-}
-.indice-lista a:hover {
-  background: var(--acento-fraco);
-}
-.indice-topico {
-  flex: 1;
-}
-.indice-aula {
-  color: var(--tinta-media);
-  font-size: 0.76rem;
-  text-align: right;
-}
-.indice-area {
-  flex: none;
-  width: calc(var(--u) * 4);
-  color: var(--tinta-fraca);
-  font-size: 0.7rem;
-  text-align: right;
-}
-
-@media (max-width: 720px) {
-  .indice-lista {
-    columns: 1;
-  }
-  .indice-area {
-    display: none;
-  }
-}
-
-/* ---------- tópicos da aula ----------
-   O índice remissivo da aula, em chip: a lista é longa e o aluno lê batendo o
-   olho, procurando o assunto que ele veio buscar. */
-
-.topicos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  list-style: none;
-  margin: 0 0 var(--u);
-  padding: 0;
-}
-.topicos li {
-  margin: 0;
-  font-family: var(--f-ui);
-  font-size: 0.76rem;
-  color: var(--tinta-media);
-  background: var(--papel-fundo);
-  border: 1px solid var(--linha);
-  border-radius: var(--raio);
-  padding: 2px 8px;
-}
-
-/* ---------- tabelas ---------- */
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: var(--f-ui);
-  font-size: 0.82rem;
-  margin: 0 0 var(--u);
-}
-th,
-td {
-  text-align: left;
-  padding: 7px 10px;
-  border-bottom: 1px solid var(--linha);
-}
-th {
-  font-weight: 600;
-  color: var(--tinta-media);
-  border-bottom-color: var(--grade-forte);
-}
-/* Metade das tabelas do conteúdo não tem cabeçalho de verdade, e o markdown
-   obriga a escrever a linha do mesmo jeito. Some com ela em vez de obrigar cada
-   aula a inventar um título de coluna. */
-thead:not(:has(th:not(:empty))) {
-  display: none;
-}
-
-/* ---------- código / expressões ---------- */
-
-code {
-  font-family: var(--f-num);
-  font-size: 0.9em;
-  background: var(--papel-fundo);
-  border: 1px solid var(--linha);
-  border-radius: var(--raio);
-  padding: 1px 5px;
-}
-pre {
-  background: var(--papel-fundo);
-  border: 1px solid var(--linha);
-  border-radius: var(--raio);
-  padding: calc(var(--u) * 0.6);
-  overflow-x: auto;
-}
-pre code {
-  background: none;
-  border: 0;
-  padding: 0;
-}
-
-/* ---------- acessibilidade ---------- */
-
-:focus-visible {
-  outline: 2px solid var(--acento);
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-
-.pular {
-  position: absolute;
-  left: -9999px;
-}
-.pular:focus {
-  left: 8px;
-  top: 8px;
-  z-index: 99;
-  background: var(--papel);
-  padding: 8px 12px;
-  border: 1px solid var(--tinta);
-}
-
-/* ---------- abertura da home ----------
-   A conversa com o aluno antes do mapa. Fica na serifada e um pouco maior que o
-   corpo, porque é a única parte do site em que eu falo com ele sem ser sobre
-   conta nenhuma. */
-
-.abertura {
-  max-width: 62ch;
-  font-size: 1.06rem;
-  margin-bottom: calc(var(--u) * 1.25);
-}
-.abertura p:last-child {
-  margin-bottom: 0;
-}
-.abertura i {
-  color: var(--tinta-media);
-}
-
-/* ---------- rótulo de seção da página de conceito ---------- */
-
-.rotulo-secao {
-  font-family: var(--f-ui);
-  font-size: 0.74rem;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--tinta-fraca);
-  margin-bottom: 6px;
-}
-.nota-secao {
-  font-family: var(--f-ui);
-  font-size: 0.8rem;
-  color: var(--tinta-media);
-  margin-bottom: calc(var(--u) * 0.5);
-}
-
-/* ---------- índice inicial ---------- */
-
-.blocos {
-  display: grid;
-  gap: var(--u);
-  grid-template-columns: repeat(auto-fill, minmax(calc(var(--u) * 11), 1fr));
-  padding: 0;
-  list-style: none;
-}
-.cartao {
-  display: block;
-  background: var(--papel);
-  border: 1px solid var(--linha);
-  border-radius: var(--raio);
-  padding: calc(var(--u) * 0.75);
-  text-decoration: none;
-  color: inherit;
-  box-shadow: var(--sombra);
-  transition:
-    border-color 0.12s ease,
-    transform 0.12s ease;
-}
-.cartao:hover {
-  border-color: var(--acento);
-  transform: translateY(-1px);
-}
-.cartao h3 {
-  margin: 0 0 4px;
-  font-size: 0.98rem;
-}
-.cartao p {
-  margin: 0;
-  font-size: 0.82rem;
-  color: var(--tinta-media);
-  line-height: 1.45;
-}
-.cartao .selo {
-  font-family: var(--f-ui);
-  font-size: 0.66rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--tinta-fraca);
-  display: block;
-  margin-bottom: 6px;
-}
-.cartao[data-revisado='nao'] {
-  border-left: 3px solid var(--marca);
-}
-
-/* ---------- mapa de conceitos ----------
-   Vinha do <style> escopado do componente Astro; sem Astro, escopo de CSS
-   deixou de existir e ele mora aqui, junto do resto do sistema visual. */
-
-  .mapa {
-    --mapa-altura: 62vh;
-    margin: 0 0 var(--u);
-  }
-
-  .mapa-controles {
-    display: flex;
-    gap: calc(var(--u) * 0.4);
-    align-items: center;
-    margin-bottom: calc(var(--u) * 0.5);
-    flex-wrap: wrap;
-  }
-  .mapa-busca {
-    flex: 1;
-    min-width: 180px;
-    font-family: var(--f-ui);
-    font-size: 0.84rem;
-    padding: 5px 10px;
-    border: 1px solid var(--linha);
-    border-radius: var(--raio);
-    background: var(--papel);
-    color: var(--tinta);
-  }
-  .mapa-botoes {
-    display: flex;
-    gap: 3px;
-  }
-  .mapa-botoes button {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--f-ui);
-    font-size: 0.72rem;
-    border: 1px solid var(--linha);
-    background: var(--papel);
-    color: var(--tinta-media);
-    padding: 5px 11px;
-    border-radius: var(--raio);
-    cursor: pointer;
-  }
-  .mapa-botoes button:hover {
-    border-color: var(--grafite);
-    color: var(--tinta);
-  }
-
-  .mapa-moldura {
-    position: relative;
-    overflow: hidden;
-    height: var(--mapa-altura);
-    background: var(--papel);
-    border: 1px solid var(--linha);
-    border-radius: var(--raio);
-    box-shadow: var(--sombra);
-    cursor: grab;
-    touch-action: none;
-  }
-  .mapa-moldura[data-arrastando] {
-    cursor: grabbing;
-  }
-
-  .mapa-tela {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform-origin: 0 0;
-  }
-  .mapa-svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    overflow: visible;
-  }
-
-  /* ---- áreas ----
-     Sem mancha de fundo: como o x só desembaraça o desenho, os módulos de uma
-     área ficam espalhados e a mancha viraria um borrão por cima de tudo. A área
-     se identifica pela cor do módulo e pelo rótulo. */
-  .mapa-area-rotulo {
-    font-family: var(--f-ui);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    fill: var(--tinta-media);
-  }
-  .mapa-area-traco {
-    stroke: var(--cor-bloco);
-    stroke-width: 3;
-    stroke-linecap: round;
-  }
-
-  /* ---- setas ---- */
-  .mapa-aresta {
-    fill: none;
-    stroke: var(--grafite);
-    stroke-width: 1.4;
-    opacity: 0.32;
-  }
-  .mapa-aresta.acesa {
-    stroke: var(--tinta);
-    opacity: 1;
-    stroke-width: 2;
-  }
-  .mapa-aresta.apagada {
-    opacity: 0.06;
-  }
-
-  /* ---- módulos ---- */
-  .mapa-no {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    padding: 6px 10px 6px 12px;
-    box-sizing: border-box;
-    background: color-mix(in srgb, var(--cor-bloco) var(--mistura-bloco), var(--papel));
-    border: 1px solid var(--linha);
-    border-left: 4px solid var(--cor-bloco);
-    border-radius: var(--raio);
-    text-decoration: none;
-    color: var(--tinta);
-    font-family: var(--f-ui);
-    box-shadow: var(--sombra);
-    transition: border-color 0.12s ease, transform 0.12s ease;
-  }
-  /* rascunho é tracejado e não cor: o amarelo colidiria com a paleta das áreas
-     e verde com vermelho não serve pra daltônico */
-  .mapa-no[data-revisado='nao'] {
-    border-top-style: dashed;
-    border-right-style: dashed;
-    border-bottom-style: dashed;
-  }
-  .mapa-no-titulo {
-    font-size: 0.76rem;
-    font-weight: 600;
-    line-height: 1.2;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .mapa-no:hover,
-  .mapa-no:focus-visible {
-    border-color: var(--tinta);
-    border-left-color: var(--cor-bloco);
-    transform: translateY(-1px);
-  }
-  .mapa-no.acesa {
-    border-color: var(--tinta);
-    z-index: 2;
-  }
-  .mapa-no.apagada {
-    opacity: 0.14;
-  }
-  .mapa-no[data-focado='sim'] {
-    border-color: var(--tinta);
-    border-width: 2px;
-    border-left-width: 4px;
-  }
-
-  /* ---- legenda ---- */
-  .mapa-legenda {
-    display: flex;
-    flex-wrap: wrap;
-    gap: calc(var(--u) * 0.6);
-    list-style: none;
-    padding: 0;
-    margin: calc(var(--u) * 0.5) 0 0;
-    font-family: var(--f-ui);
-    font-size: 0.74rem;
-    color: var(--tinta-media);
-  }
-  .mapa-legenda li {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .mapa-legenda-cor {
-    width: 11px;
-    height: 11px;
-    border-radius: 2px;
-    background: var(--cor-bloco);
-  }
-  .mapa-legenda-rascunho .mapa-legenda-cor {
-    background: var(--papel);
-    border: 1px dashed var(--tinta-fraca);
-  }
-
-  .mapa-vazio {
-    font-family: var(--f-ui);
-    font-size: 0.84rem;
-    color: var(--tinta-fraca);
-  }
-
-  [data-slot='0'] { --cor-bloco: var(--bloco-0); }
-  [data-slot='1'] { --cor-bloco: var(--bloco-1); }
-  [data-slot='2'] { --cor-bloco: var(--bloco-2); }
-  [data-slot='3'] { --cor-bloco: var(--bloco-3); }
-  [data-slot='4'] { --cor-bloco: var(--bloco-4); }
-  [data-slot='5'] { --cor-bloco: var(--bloco-5); }
-
-  @media (prefers-reduced-motion: reduce) {
-    .mapa-no {
-      transition: none;
-    }
-  }
-
-/* ---------- a abertura da home ----------
-   O grafo é o fundo da página e a rolagem é a câmera. Nos primeiros 80vh o texto
-   sobe e apaga enquanto o mapa cresce até caber na largura da tela; daí em diante
-   a rolagem vira normal e o mapa desce até entregar no rodapé.
-
-   Quem move é a rolagem de verdade, via animation-timeline: scroll(root), e não
-   um script ouvindo o scroll. É por isso que clicar no mapa pode ser um
+   Quem anima é o CSS, amarrado na rolagem de verdade (animation-timeline), e
+   não um script ouvindo o scroll. É por isso que clicar no grafo pode ser um
    scrollTo suave: ele toca o mesmo trajeto, só que rápido.
 
    --esc-fim e --pan são medidos em JS na Home, porque dependem do tamanho do
-   mapa e da tela: em 1440px o mapa cabe em 0,69 e sobra 527px pra descer; em
+   mapa e da tela: em 1440px o mapa cabe em 0,69 e sobram 527px pra descer; em
    1920px cabe em 0,92 e sobram 820px. */
 
 .abertura {
@@ -1246,19 +700,36 @@ pre code {
   overflow: hidden;
 }
 
-/* o papel de parede fica atrás de tudo, com buraco no miolo do mapa e outro
-   embaixo do texto: é o que faz a cor chegar no canto de baixo à esquerda sem
-   sujar nem o grafo nem a leitura */
+/* O papel de parede fica atrás de tudo, com buraco no miolo do mapa e outro
+   embaixo do texto. Ele nunca é coberto por véu pintado com a cor do fundo: foi
+   assim que, na primeira tentativa, a cor virou um carimbo no canto direito e
+   sumiu do canto de baixo à esquerda. */
 .abertura-parede {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(40% 46% at 12% 22%, color-mix(in srgb, var(--acento) var(--mancha-acento), transparent), transparent 70%),
-    radial-gradient(38% 44% at 76% 8%, color-mix(in srgb, var(--bloco-1) var(--mancha-verde), transparent), transparent 70%),
-    radial-gradient(46% 40% at 88% 82%, color-mix(in srgb, var(--bloco-3) var(--mancha-roxo), transparent), transparent 72%),
-    radial-gradient(44% 46% at 4% 94%, color-mix(in srgb, var(--bloco-5) var(--mancha-rosa), transparent), transparent 74%),
+    radial-gradient(
+      40% 46% at 12% 22%,
+      color-mix(in srgb, var(--acento) var(--mancha-acento), transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      38% 44% at 76% 8%,
+      color-mix(in srgb, var(--bloco-1) var(--mancha-verde), transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      46% 40% at 88% 82%,
+      color-mix(in srgb, var(--bloco-3) var(--mancha-roxo), transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      44% 46% at 4% 94%,
+      color-mix(in srgb, var(--bloco-5) var(--mancha-rosa), transparent),
+      transparent 74%
+    ),
     radial-gradient(color-mix(in srgb, var(--tinta) var(--grao), transparent) 1.15px, transparent 1.3px);
   background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 4px 4px;
   -webkit-mask-image:
@@ -1274,7 +745,7 @@ pre code {
   animation-range: 0 80vh;
 }
 
-/* o halo do acento, que separa o grafo do papel sem desenhar borda nenhuma */
+/* o halo separa o grafo do papel sem desenhar borda nenhuma */
 .abertura-halo {
   position: absolute;
   z-index: 1;
@@ -1283,39 +754,24 @@ pre code {
   width: 78%;
   height: 112%;
   pointer-events: none;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--acento) 9%, transparent), transparent 78%);
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--acento) 9%, transparent),
+    transparent 78%
+  );
 }
 
-/* --pluma é o esfumaçado das bordas do grafo e --corte é a beirada do recorte do
-   texto. As duas são declaradas com @property porque só assim elas INTERPOLAM:
-   uma custom property não tipada troca de valor de uma vez, no meio do zoom, e o
-   que se vê é um salto. */
-@property --pluma {
-  syntax: '<percentage>';
-  inherits: true;
-  initial-value: 30%;
-}
-@property --corte {
-  syntax: '<percentage>';
-  inherits: true;
-  initial-value: 32%;
-}
-
-/* Duas cópias do mapa: a nítida some no recorte do texto e a desfocada só existe
-   lá dentro. É isso que deixa o texto legível sem apagar o grafo — embaixo da
-   linha fica um borrão, e não um mapa fraquinho e legível competindo com ela. */
+/* Duas cópias do mapa: a nítida some no recorte do texto e a desfocada só
+   existe lá dentro. É isso que deixa o texto legível sem apagar o grafo —
+   embaixo da linha fica um borrão, e não um mapa fraquinho e legível
+   competindo com a leitura. O grafo esfumaça por máscara própria, nunca por véu
+   pintado, pra não comer o papel de parede junto. */
 .abertura-mapa,
 .abertura-mapa-b {
   position: absolute;
   inset: 0;
   z-index: 2;
   overflow: hidden;
-}
-/* O grafo esfumaça por máscara, e não por um véu pintado por cima: véu com a cor
-   do fundo apagaria o papel de parede junto, que foi como o fundo virou um
-   carimbo no canto na primeira tentativa. */
-.abertura-mapa,
-.abertura-mapa-b {
   -webkit-mask-image: radial-gradient(
     76% 80% at 54% 57%,
     #000 0,
@@ -1336,10 +792,13 @@ pre code {
   animation-timeline: scroll(root block);
   animation-range: 0 80vh;
 }
+/* o recorte é pequeno, então recortar a caixa antes de desfocar poupa o
+   navegador de borrar uma tela inteira a cada quadro da rolagem */
 .abertura-mapa-b {
   z-index: 1;
   filter: blur(4px);
   opacity: 0.55;
+  clip-path: inset(0 38% 18% 0);
   animation: abertura-some linear both;
   animation-timeline: scroll(root block);
   animation-range: 0 80vh;
@@ -1349,15 +808,45 @@ pre code {
   position: absolute;
   inset: 0;
 }
-/* sem mask-composite as camadas somam, então o buraco existe só onde as duas
-   dizem buraco: a faixa da esquerda cruzada com a faixa do texto */
+/* Sem mask-composite as camadas SOMAM, então o buraco existe só onde as duas
+   dizem buraco: a faixa da esquerda cruzada com a faixa do texto. A vertical
+   acaba em 66%, que é onde o link "Começar por" termina — ir além disso borrava
+   um pedaço de mapa que não tem nada por cima. */
 .abertura-recorte {
   -webkit-mask-image:
-    linear-gradient(to right, transparent 0, transparent var(--corte), rgba(0, 0, 0, 0.5) calc(var(--corte) + 12%), #000 calc(var(--corte) + 24%)),
-    linear-gradient(to bottom, #000 0, rgba(0, 0, 0, 0.45) 5%, transparent 12%, transparent 66%, rgba(0, 0, 0, 0.5) 72%, #000 79%);
+    linear-gradient(
+      to right,
+      transparent 0,
+      transparent var(--corte),
+      rgba(0, 0, 0, 0.5) calc(var(--corte) + 12%),
+      #000 calc(var(--corte) + 24%)
+    ),
+    linear-gradient(
+      to bottom,
+      #000 0,
+      rgba(0, 0, 0, 0.45) 5%,
+      transparent 12%,
+      transparent 66%,
+      rgba(0, 0, 0, 0.5) 72%,
+      #000 79%
+    );
   mask-image:
-    linear-gradient(to right, transparent 0, transparent var(--corte), rgba(0, 0, 0, 0.5) calc(var(--corte) + 12%), #000 calc(var(--corte) + 24%)),
-    linear-gradient(to bottom, #000 0, rgba(0, 0, 0, 0.45) 5%, transparent 12%, transparent 66%, rgba(0, 0, 0, 0.5) 72%, #000 79%);
+    linear-gradient(
+      to right,
+      transparent 0,
+      transparent var(--corte),
+      rgba(0, 0, 0, 0.5) calc(var(--corte) + 12%),
+      #000 calc(var(--corte) + 24%)
+    ),
+    linear-gradient(
+      to bottom,
+      #000 0,
+      rgba(0, 0, 0, 0.45) 5%,
+      transparent 12%,
+      transparent 66%,
+      rgba(0, 0, 0, 0.5) 72%,
+      #000 79%
+    );
   animation: abertura-abre-recorte linear both;
   animation-timeline: scroll(root block);
   animation-range: 0 80vh;
@@ -1365,11 +854,27 @@ pre code {
 .abertura-recorte-b {
   -webkit-mask-image:
     linear-gradient(to right, #000 0, #000 32%, rgba(0, 0, 0, 0.5) 44%, transparent 56%),
-    linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.55) 5%, #000 12%, #000 66%, rgba(0, 0, 0, 0.5) 72%, transparent 79%);
+    linear-gradient(
+      to bottom,
+      transparent 0,
+      rgba(0, 0, 0, 0.55) 5%,
+      #000 12%,
+      #000 66%,
+      rgba(0, 0, 0, 0.5) 72%,
+      transparent 79%
+    );
   -webkit-mask-composite: source-in;
   mask-image:
     linear-gradient(to right, #000 0, #000 32%, rgba(0, 0, 0, 0.5) 44%, transparent 56%),
-    linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.55) 5%, #000 12%, #000 66%, rgba(0, 0, 0, 0.5) 72%, transparent 79%);
+    linear-gradient(
+      to bottom,
+      transparent 0,
+      rgba(0, 0, 0, 0.55) 5%,
+      #000 12%,
+      #000 66%,
+      rgba(0, 0, 0, 0.5) 72%,
+      transparent 79%
+    );
   mask-composite: intersect;
 }
 
@@ -1380,14 +885,15 @@ pre code {
 }
 .abertura-cam {
   transform-origin: 0 0;
-  transform: translate(var(--x-ini, 20%), var(--y-ini, 40px)) scale(var(--esc-ini, 0.46));
+  transform: translate(var(--x-ini, 21%), var(--y-ini, 40px)) scale(var(--esc-ini, 0.46));
+  will-change: transform;
   animation: abertura-camera linear both;
   animation-timeline: scroll(root block);
   animation-range: 0 80vh;
 }
 
-/* Clicar no grafo vale como rolar, e some assim que o zoom acaba pra não roubar
-   o clique dos módulos, que a partir dali são links de verdade. */
+/* Clicar no grafo vale como rolar, e o alvo some assim que o zoom acaba, pra
+   não roubar o clique dos módulos — que a partir dali são links de verdade. */
 .abertura-clique {
   position: absolute;
   z-index: 4;
@@ -1408,13 +914,14 @@ pre code {
   position: absolute;
   z-index: 5;
   left: calc(var(--u) * 1.5);
-  top: calc(var(--u) * 4.5);
-  width: min(38ch, 44vw);
+  top: calc(var(--u) * 4.2);
+  width: min(34ch, 42vw);
   animation: abertura-sobe linear both;
   animation-timeline: scroll(root block);
   animation-range: 0 80vh;
 }
 .abertura-et {
+  display: inline-block;
   font-family: var(--f-ui);
   font-size: 0.62rem;
   font-weight: 700;
@@ -1423,20 +930,18 @@ pre code {
   color: var(--acento);
   border-top: 3px solid var(--acento);
   padding-top: 8px;
-  margin: 0 0 calc(var(--u) * 0.75);
-  display: inline-block;
+  margin: 0 0 calc(var(--u) * 0.8);
 }
 .abertura-texto h1 {
-  font-family: var(--f-ui);
-  font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+  font-size: clamp(2.1rem, 4.2vw, 3.3rem);
   line-height: 0.92;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.05em;
   font-weight: 800;
   text-transform: uppercase;
   margin: 0 0 calc(var(--u) * 0.9);
 }
 .abertura-texto p {
-  font-size: 0.98rem;
+  font-size: 0.96rem;
   line-height: 1.5;
   color: var(--tinta-media);
   margin: 0 0 calc(var(--u) * 0.6);
@@ -1447,12 +952,16 @@ pre code {
   gap: 8px;
   font-family: var(--f-ui);
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   color: var(--acento);
   text-decoration: none;
   border-bottom: 3px solid var(--acento);
   padding-bottom: 3px;
   margin-top: 4px;
+}
+.abertura-porta:hover {
+  color: var(--tinta);
+  border-bottom-color: var(--tinta);
 }
 
 .abertura-chamado {
@@ -1463,6 +972,7 @@ pre code {
   display: flex;
   align-items: center;
   gap: 9px;
+  margin: 0;
   font-family: var(--f-ui);
   font-size: 0.72rem;
   color: var(--tinta-fraca);
@@ -1488,7 +998,7 @@ pre code {
   padding: 7px 12px;
   border: 1px solid var(--linha);
   border-radius: var(--raio);
-  background: color-mix(in srgb, var(--papel) 92%, transparent);
+  background: color-mix(in srgb, var(--papel) 90%, transparent);
   backdrop-filter: blur(6px);
   font-family: var(--f-ui);
   font-size: 0.68rem;
@@ -1502,6 +1012,7 @@ pre code {
   display: flex;
   align-items: center;
   gap: 6px;
+  margin: 0;
 }
 .abertura-legenda i {
   width: 9px;
@@ -1541,8 +1052,6 @@ pre code {
     opacity: 1;
   }
 }
-/* o recorte tem que sumir junto, senão o mapa termina a cinemática com um buraco
-   permanente do lado esquerdo */
 @keyframes abertura-abre-recorte {
   to {
     --corte: -40%;
@@ -1563,10 +1072,11 @@ pre code {
 }
 
 /* Sem timeline de rolagem, ou com o sistema pedindo menos movimento, a mesma
-   página vira corte seco: texto em cima, mapa inteiro embaixo, sem animação. */
+   página vira corte seco: texto em cima, mapa inteiro embaixo, zero animação. */
 @media (prefers-reduced-motion: reduce) {
   .abertura,
   .abertura-parede,
+  .abertura-mapa,
   .abertura-mapa-b,
   .abertura-recorte,
   .abertura-pan,
@@ -1587,7 +1097,7 @@ pre code {
   }
   .abertura-mapa {
     position: relative;
-    height: calc(var(--alt-mapa, 1400px) * 1px);
+    height: calc(var(--alt-mapa, 1400) * 1px);
   }
   .abertura-mapa-b,
   .abertura-clique,
@@ -1605,13 +1115,13 @@ pre code {
   .abertura-texto {
     position: static;
     width: auto;
-    max-width: 62ch;
+    max-width: var(--medida);
     padding: calc(var(--u) * 1.5) calc(var(--u) * 1.5) 0;
   }
   .abertura-legenda {
     position: static;
     opacity: 1;
-    margin: calc(var(--u) * 0.5) calc(var(--u) * 1.5);
+    margin: calc(var(--u) * 0.6) calc(var(--u) * 1.5);
     display: inline-flex;
   }
 }
@@ -1627,7 +1137,7 @@ pre code {
   }
   .abertura-mapa {
     position: relative;
-    height: calc(var(--alt-mapa, 1400px) * 1px);
+    height: calc(var(--alt-mapa, 1400) * 1px);
   }
   .abertura-mapa-b,
   .abertura-clique,
@@ -1638,7 +1148,6 @@ pre code {
     transform: scale(var(--esc-fim, 0.7));
   }
   .abertura-mapa,
-  .abertura-mapa,
   .abertura-recorte {
     -webkit-mask-image: none;
     mask-image: none;
@@ -1646,25 +1155,711 @@ pre code {
   .abertura-texto {
     position: static;
     width: auto;
-    max-width: 62ch;
+    max-width: var(--medida);
     padding: calc(var(--u) * 1.5) calc(var(--u) * 1.5) 0;
   }
   .abertura-legenda {
     position: static;
     opacity: 1;
-    margin: calc(var(--u) * 0.5) calc(var(--u) * 1.5);
+    margin: calc(var(--u) * 0.6) calc(var(--u) * 1.5);
     display: inline-flex;
   }
 }
 
-/* o texto do Victor, inteiro, depois do mapa */
-.abertura-continua {
-  position: relative;
-  z-index: 1;
-  background: var(--papel-fundo);
-  padding: calc(var(--u) * 2) calc(var(--u) * 1.5);
+/* Abaixo de 900px o texto não cabe ao lado do grafo, então a cinemática sai e a
+   abertura vira uma página comum. */
+@media (max-width: 900px) {
+  .abertura {
+    height: auto;
+  }
+  .abertura-palco {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+  .abertura-parede,
+  .abertura-mapa-b,
+  .abertura-clique,
+  .abertura-chamado {
+    display: none;
+  }
+  .abertura-mapa {
+    position: relative;
+    height: 70vh;
+    animation: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .abertura-cam,
+  .abertura-pan,
+  .abertura-recorte {
+    animation: none;
+  }
+  .abertura-recorte {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .abertura-cam {
+    transform: scale(var(--esc-fim, 0.7));
+  }
+  .abertura-texto {
+    position: static;
+    width: auto;
+    animation: none;
+    padding: calc(var(--u) * 1.2) calc(var(--u) * 1) 0;
+  }
+  .abertura-legenda {
+    position: static;
+    opacity: 1;
+    animation: none;
+    margin: calc(var(--u) * 0.6) calc(var(--u) * 1);
+    display: inline-flex;
+  }
 }
-.abertura-continua > div {
-  max-width: 62ch;
+
+/* ==================================================================
+   6. a página de aula
+   ================================================================== */
+
+.folha {
+  max-width: calc(var(--u) * 40);
   margin: 0 auto;
+  padding: calc(var(--u) * 2) calc(var(--u) * 1.5) calc(var(--u) * 4);
+}
+.folha-larga {
+  max-width: calc(var(--u) * 62);
+}
+
+/* A prosa fica em papel liso, com a coluna estreita: é a folha em cima da mesa. */
+.papel {
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: calc(var(--u) * 1.75) calc(var(--u) * 1.75) calc(var(--u) * 2);
+  box-shadow: var(--sombra);
+}
+/* A medida de leitura vale pra prosa, e não pro bloco inteiro: a figura, a
+   tabela e o interativo precisam da largura toda do papel. Capar o .aula inteiro
+   espremia a reta numérica em 600px. */
+.papel > p,
+.papel > ul,
+.papel > ol,
+.aula > p,
+.aula > ul,
+.aula > ol,
+.aula > blockquote,
+.aula > h2,
+.aula > h3,
+.aula > h4 {
+  max-width: var(--medida);
+}
+
+.aula-etiqueta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--f-ui);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--acento);
+  border-top: 3px solid var(--acento);
+  padding-top: 8px;
+  margin: 0 0 calc(var(--u) * 0.7);
+  width: fit-content;
+}
+.aula-subtitulo {
+  font-size: 1.06rem;
+  color: var(--tinta-media);
+  margin: calc(var(--u) * -0.4) 0 var(--u);
+  max-width: var(--medida);
+}
+
+/* A ficha: matéria, área, nível e tempo. */
+.ficha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--u) * 0.35);
+  margin: 0 0 calc(var(--u) * 0.9);
+  padding: 0;
+  list-style: none;
+}
+.ficha li,
+.ficha span {
+  font-family: var(--f-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: var(--tinta-media);
+  background: var(--papel-fundo);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 3px 9px;
+}
+.ficha b {
+  color: var(--tinta);
+  font-weight: 700;
+}
+
+.rotulo-secao {
+  font-family: var(--f-ui);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  margin: calc(var(--u) * 1.2) 0 calc(var(--u) * 0.4);
+}
+.nota-secao {
+  font-size: 0.88rem;
+  color: var(--tinta-fraca);
+  max-width: var(--medida);
+}
+
+.topicos,
+.prereq-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--u) * 0.3);
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--u);
+}
+.topicos li {
+  font-family: var(--f-ui);
+  font-size: 0.72rem;
+  color: var(--tinta-media);
+  background: var(--papel-fundo);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 3px 9px;
+  margin: 0;
+}
+.prereq-lista li {
+  margin: 0;
+}
+.prereq-lista .elo-conceito {
+  font-family: var(--f-ui);
+  font-size: 0.78rem;
+  background: var(--grafite-fraco);
+  border: 1px solid var(--linha);
+  border-bottom: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 4px 10px;
+}
+.prereq-lista .elo-conceito:hover {
+  border-color: var(--grafite);
+}
+
+/* O aviso é pra mim, e quem lê a tela junto é o aluno: um bloco de quatro linhas
+   dizendo que nada foi conferido derruba a confiança dele no material bem antes
+   de me ajudar em alguma coisa. */
+.rascunho {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--u) * 0.4);
+  font-family: var(--f-ui);
+  font-size: 0.74rem;
+  color: var(--tinta-media);
+  background: var(--marca-fraco);
+  border-left: 3px solid var(--marca);
+  border-radius: 0 var(--raio) var(--raio) 0;
+  padding: 5px calc(var(--u) * 0.5);
+  margin: 0 0 var(--u);
+  width: fit-content;
+}
+.rascunho b {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.66rem;
+  color: var(--tinta);
+}
+
+.vizinhanca {
+  margin-top: calc(var(--u) * 1.5);
+}
+
+/* ==================================================================
+   7. o índice de assuntos
+   ================================================================== */
+
+.indice-busca {
+  width: 100%;
+  max-width: calc(var(--u) * 20);
+  font-family: var(--f-ui);
+  font-size: 0.86rem;
+  padding: 8px 12px;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  background: var(--papel);
+  color: var(--tinta);
+  margin-bottom: calc(var(--u) * 0.6);
+}
+.indice-busca:focus-visible {
+  border-color: var(--acento);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--acento-fraco);
+}
+
+.indice-grupo {
+  margin-bottom: calc(var(--u) * 1.2);
+}
+.indice-letra {
+  font-family: var(--f-ui);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: var(--acento);
+  border-bottom: 1px solid var(--linha);
+  padding-bottom: 5px;
+  margin: 0 0 calc(var(--u) * 0.5);
+}
+.indice-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--u) * 13), 1fr));
+  gap: 2px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.indice-lista li {
+  margin: 0;
+}
+.indice-lista a {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: var(--raio);
+  text-decoration: none;
+  color: var(--tinta);
+  font-family: var(--f-ui);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+.indice-lista a:hover {
+  background: var(--acento-fraco);
+}
+.indice-topico {
+  flex: 1;
+}
+.indice-aula {
+  font-size: 0.68rem;
+  color: var(--tinta-fraca);
+  text-align: right;
+}
+.indice-area {
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  flex: none;
+}
+
+@media (max-width: 720px) {
+  .indice-aula,
+  .indice-area {
+    display: none;
+  }
+}
+
+/* ==================================================================
+   8. páginas simples
+   ================================================================== */
+
+.simples {
+  max-width: var(--medida);
+  margin: 0 auto;
+  padding: calc(var(--u) * 3) calc(var(--u) * 1.5) calc(var(--u) * 4);
+}
+.simples-volta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--f-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: var(--u);
+}
+
+/* ==================================================================
+   9. pilha de painéis
+   ================================================================== */
+
+.pilha-fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(4, 8, 13, 0.42);
+  display: none;
+}
+.pilha-fundo[data-aberto='sim'] {
+  display: block;
+}
+
+.painel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(calc(var(--u) * 28), 92vw);
+  background: var(--papel);
+  border-left: 1px solid var(--linha);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.22);
+  display: flex;
+  flex-direction: column;
+  z-index: 51;
+  animation: entra-painel 0.18s ease-out;
+}
+@keyframes entra-painel {
+  from {
+    transform: translateX(18px);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .painel {
+    animation: none;
+  }
+}
+
+.painel-topo {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.4);
+  padding: calc(var(--u) * 0.5) calc(var(--u) * 0.75);
+  border-bottom: 1px solid var(--linha);
+  font-family: var(--f-ui);
+  font-size: 0.72rem;
+  background: var(--papel-fundo);
+}
+.painel-trilha {
+  flex: 1;
+  color: var(--tinta-fraca);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.painel-trilha b {
+  color: var(--tinta);
+  font-weight: 700;
+}
+.painel-botao {
+  font-family: var(--f-ui);
+  font-size: 0.7rem;
+  border: 1px solid var(--linha);
+  background: var(--papel);
+  color: var(--tinta-media);
+  border-radius: var(--raio);
+  padding: 4px 10px;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.painel-botao:hover {
+  border-color: var(--tinta);
+  color: var(--tinta);
+}
+/* O corpo do painel é a própria página do conceito, sem o cromo dela. */
+.painel-corpo {
+  flex: 1;
+  overflow: auto;
+  background: var(--papel);
+}
+.painel-corpo .folha {
+  padding: var(--u) calc(var(--u) * 1.25) calc(var(--u) * 2);
+  max-width: none;
+}
+.painel-corpo .papel {
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  background: none;
+}
+
+/* ==================================================================
+   10. Modo Aula
+   ==================================================================
+   Em aula fica na tela só o esqueleto: título, fórmula em bloco e figura. A
+   prosa continua no arquivo, pro aluno reler em casa. Quem faz o trabalho é o
+   seletor, e o .mdx não sabe que existem dois modos: escreve parágrafo e pronto.
+   A fórmula de bloco do KaTeX é irmã do <p> e não filha, então ela sobrevive. */
+
+html[data-modo='aula'] .aula > p,
+html[data-modo='aula'] .aula > ul,
+html[data-modo='aula'] .aula > ol,
+html[data-modo='aula'] .aula > table,
+html[data-modo='aula'] .aula > blockquote,
+html[data-modo='aula'] .aula > pre {
+  display: none;
+}
+
+/* O tempo da ficha muda de dono junto com o modo: em estudo o aluno vê quanto
+   ele leva pra ler, e em aula eu vejo quanto a aula toma. Mostrar os dois pro
+   aluno desencoraja quem ia sentar pra ler 23 minutos. */
+.tempo-aula {
+  display: none;
+}
+html[data-modo='aula'] .tempo-leitura {
+  display: none;
+}
+html[data-modo='aula'] .tempo-aula {
+  display: inline-block;
+}
+
+/* ==================================================================
+   11. o elo de pré-requisito, do <C>
+   ==================================================================
+   Grafite pontilhado, que é a anotação a lápis na margem. Fica diferente de um
+   link normal porque o comportamento é outro: abre painel em vez de navegar. */
+
+.elo-conceito {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0 1px;
+  cursor: pointer;
+  border-bottom: 1.5px dotted var(--grafite);
+  transition: background-color 0.12s ease;
+}
+.elo-conceito::after {
+  content: '↘';
+  font-family: var(--f-ui);
+  font-size: 0.62em;
+  color: var(--grafite);
+  vertical-align: super;
+  margin-left: 1px;
+}
+.elo-conceito:hover,
+.elo-conceito:focus-visible {
+  background: var(--grafite-fraco);
+  border-bottom-style: solid;
+}
+.elo-conceito[data-quebrado='sim'] {
+  border-bottom-color: var(--vermelho);
+  background: var(--vermelho-fraco);
+}
+
+/* ==================================================================
+   12. o mapa de conceitos
+   ================================================================== */
+
+.mapa {
+  --mapa-altura: 62vh;
+  margin: 0 0 var(--u);
+}
+
+.mapa-controles {
+  display: flex;
+  gap: calc(var(--u) * 0.3);
+  align-items: center;
+  margin-bottom: calc(var(--u) * 0.5);
+  flex-wrap: wrap;
+}
+.mapa-busca {
+  flex: 1;
+  min-width: 180px;
+  font-family: var(--f-ui);
+  font-size: 0.82rem;
+  padding: 6px 10px;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  background: var(--papel);
+  color: var(--tinta);
+}
+.mapa-botoes {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+.mapa-botoes button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--f-ui);
+  font-size: 0.68rem;
+  border: 1px solid var(--linha);
+  background: var(--papel);
+  color: var(--tinta-media);
+  padding: 5px 11px;
+  border-radius: var(--raio);
+  cursor: pointer;
+}
+.mapa-botoes button:hover {
+  border-color: var(--tinta);
+  color: var(--tinta);
+}
+
+.mapa-moldura {
+  position: relative;
+  overflow: hidden;
+  height: var(--mapa-altura);
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  cursor: grab;
+  touch-action: none;
+}
+.mapa-moldura[data-arrastando] {
+  cursor: grabbing;
+}
+
+.mapa-tela {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+.mapa-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  overflow: visible;
+}
+
+/* Sem mancha de fundo por área: como o eixo x só serve pra desembaraçar as
+   setas, os módulos de uma área ficam espalhados e a mancha viraria um borrão
+   por cima de tudo. A área se identifica pela cor do módulo e pelo rótulo. */
+.mapa-area-rotulo {
+  font-family: var(--f-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  fill: var(--tinta-fraca);
+}
+.mapa-area-traco {
+  stroke: var(--cor-bloco);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.mapa-aresta {
+  fill: none;
+  stroke: var(--grafite);
+  stroke-width: 1.4;
+  opacity: 0.32;
+}
+.mapa-aresta.acesa {
+  stroke: var(--tinta);
+  opacity: 1;
+  stroke-width: 2;
+}
+.mapa-aresta.apagada {
+  opacity: 0.06;
+}
+
+.mapa-no {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  padding: 6px 10px 6px 12px;
+  box-sizing: border-box;
+  background: color-mix(in srgb, var(--cor-bloco) var(--mistura-bloco), var(--papel));
+  border: 1px solid var(--linha);
+  border-left: 5px solid var(--cor-bloco);
+  border-radius: var(--raio);
+  text-decoration: none;
+  color: var(--tinta);
+  font-family: var(--f-ui);
+  box-shadow: var(--sombra);
+  transition: border-color 0.12s ease, transform 0.12s ease;
+}
+/* rascunho é contorno tracejado e nunca cor: o amarelo colidiria com a paleta
+   das áreas, e verde com vermelho não serve pra daltônico */
+.mapa-no[data-revisado='nao'] {
+  border-top-style: dashed;
+  border-right-style: dashed;
+  border-bottom-style: dashed;
+}
+.mapa-no-titulo {
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.mapa-no:hover,
+.mapa-no:focus-visible {
+  border-color: var(--tinta);
+  border-left-color: var(--cor-bloco);
+  transform: translateY(-1px);
+}
+.mapa-no.acesa {
+  border-color: var(--tinta);
+  z-index: 2;
+}
+.mapa-no.apagada {
+  opacity: 0.14;
+}
+.mapa-no[data-focado='sim'] {
+  border-color: var(--acento);
+  border-width: 2px;
+  border-left-width: 5px;
+}
+
+.mapa-legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--u) * 0.6);
+  list-style: none;
+  padding: 0;
+  margin: calc(var(--u) * 0.5) 0 0;
+  font-family: var(--f-ui);
+  font-size: 0.72rem;
+  color: var(--tinta-fraca);
+}
+.mapa-legenda li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+.mapa-legenda-cor {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  background: var(--cor-bloco);
+}
+.mapa-legenda-rascunho .mapa-legenda-cor {
+  background: var(--papel);
+  border: 1px dashed var(--tinta-fraca);
+}
+
+.mapa-vazio {
+  font-family: var(--f-ui);
+  font-size: 0.84rem;
+  color: var(--tinta-fraca);
+}
+
+[data-slot='0'] {
+  --cor-bloco: var(--bloco-0);
+}
+[data-slot='1'] {
+  --cor-bloco: var(--bloco-1);
+}
+[data-slot='2'] {
+  --cor-bloco: var(--bloco-2);
+}
+[data-slot='3'] {
+  --cor-bloco: var(--bloco-3);
+}
+[data-slot='4'] {
+  --cor-bloco: var(--bloco-4);
+}
+[data-slot='5'] {
+  --cor-bloco: var(--bloco-5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mapa-no {
+    transition: none;
+  }
 }

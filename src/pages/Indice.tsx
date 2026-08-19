@@ -1,17 +1,20 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { conceitos } from '../conteudo';
-import { rotuloBloco } from '../lib/curriculo';
+import { rotuloBloco, slotDeCor } from '../lib/curriculo';
 import { useTitulo } from '../estado';
 
 /**
  * O índice remissivo do site.
  *
- * O mapa tem 84 aulas e serve pra ver como o curso se encaixa. Ele não serve
- * pra quem chega com uma dúvida específica: quem quer distância de ponto a reta
- * ia percorrer a linha de geometria, não achar nada com esse nome e sair fora.
- * Aqui estão os 762 tópicos que as aulas declaram cobrir, cada um levando pra
+ * O mapa tem uma aula por caixa e serve pra ver como o curso se encaixa. Ele não
+ * serve pra quem chega com uma dúvida com nome: quem quer distância de ponto a
+ * reta ia percorrer a linha de geometria, não achar nada com esse nome e sair
+ * fora. Aqui estão os tópicos que as aulas declaram cobrir, cada um levando pra
  * aula que cobre. É a lista do fim do livro, não o sumário.
+ *
+ * A busca do cabeçalho não procura sozinha: ela manda o texto pra cá pelo ?q=,
+ * que é este mesmo campo. Assim existe uma implementação de busca só.
  */
 
 const semAcento = (s: string) =>
@@ -22,12 +25,11 @@ interface Item {
   id: string;
   aula: string;
   bloco: string;
+  slot: number;
 }
 
 export default function Indice() {
   useTitulo('Índice de assuntos');
-  /* A busca do topo não procura sozinha: ela manda o texto pra cá por ?q=, que
-     é o mesmo campo desta página. Assim existe uma implementação de busca só. */
   const [parametros, setParametros] = useSearchParams();
   const [busca, setBusca] = useState(() => parametros.get('q') ?? '');
 
@@ -39,7 +41,15 @@ export default function Indice() {
   const todos = useMemo<Item[]>(
     () =>
       conceitos
-        .flatMap((c) => c.topicos.map((t) => ({ topico: t, id: c.id, aula: c.titulo, bloco: c.bloco })))
+        .flatMap((c) =>
+          c.topicos.map((t) => ({
+            topico: t,
+            id: c.id,
+            aula: c.titulo,
+            bloco: c.bloco,
+            slot: slotDeCor(c.materia, c.bloco),
+          })),
+        )
         .sort((a, b) => a.topico.localeCompare(b.topico, 'pt-BR')),
     [],
   );
@@ -63,16 +73,17 @@ export default function Indice() {
 
   return (
     <div className="folha folha-larga">
+      <p className="aula-etiqueta">índice remissivo</p>
       <h1>Índice de assuntos</h1>
-      <p className="nota-secao" style={{ maxWidth: '62ch' }}>
-        Tudo que as aulas cobrem, em ordem alfabética. Se você sabe o nome do que está
-        travando, procure aqui. Se quer ver como uma coisa leva na outra, o{' '}
-        <Link to="/">mapa</Link> faz esse trabalho.
+      <p className="nota-secao">
+        Tudo que as aulas cobrem, em ordem alfabética. Se você sabe o nome do que está travando,
+        procure aqui. Se quer ver como uma coisa leva na outra, o <Link to="/">mapa</Link> faz esse
+        trabalho.
       </p>
 
       <input
         type="search"
-        className="mapa-busca indice-busca"
+        className="indice-busca"
         placeholder="O que você está procurando?"
         aria-label="Procurar assunto"
         value={busca}
@@ -83,12 +94,12 @@ export default function Indice() {
         autoFocus
       />
 
-      <p className="ficha">
-        <span>
+      <ul className="ficha">
+        <li>
           <b>{achados.length}</b> {achados.length === 1 ? 'assunto' : 'assuntos'}
           {busca.trim() && ` de ${todos.length}`}
-        </span>
-      </p>
+        </li>
+      </ul>
 
       {achados.length === 0 ? (
         <p>
@@ -104,7 +115,7 @@ export default function Indice() {
             <ul className="indice-lista">
               {itens.map((i, k) => (
                 <li key={`${i.id}-${k}`}>
-                  <Link to={`/conceitos/${i.id}`}>
+                  <Link to={`/conceitos/${i.id}`} data-slot={i.slot}>
                     <span className="indice-topico">{i.topico}</span>
                     <span className="indice-aula">{i.aula}</span>
                     <span className="indice-area">{rotuloBloco(i.bloco)}</span>

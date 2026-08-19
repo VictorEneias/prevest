@@ -140,11 +140,11 @@ export function ProvedorAula({ children }: { children: ReactNode }) {
   return <Ctx.Provider value={valor}>{children}</Ctx.Provider>;
 }
 
-/** O título da aba. Com quatro páginas abertas em aula, "Pré-vestibular" em
- *  todas elas não ajuda ninguém a achar a certa. */
+/** O título da aba. Com quatro páginas abertas em aula, o mesmo título em todas
+ *  elas não ajuda ninguém a achar a certa. */
 export function useTitulo(titulo?: string) {
   useEffect(() => {
-    document.title = titulo ? `${titulo} · Pré-vestibular` : 'Pré-vestibular';
+    document.title = titulo ? `${titulo} · Prevest` : 'Prevest — aprender a matemática de verdade';
   }, [titulo]);
 }
 

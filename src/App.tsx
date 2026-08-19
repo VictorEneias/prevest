@@ -4,15 +4,17 @@ import { Link, NavLink, Route, Routes, useLocation, useNavigate } from 'react-ro
 import { componentesMDX } from './components/mdx';
 import { useAula, type ItemPilha } from './estado';
 import Conceito, { PaginaConceito } from './pages/Conceito';
+import EmBreve from './pages/EmBreve';
 import Home from './pages/Home';
 import Indice from './pages/Indice';
+import Sobre from './pages/Sobre';
 
 /**
  * O cromo do site: cabeçalho, rotas, rodapé e a pilha de painéis por cima.
  *
- * O painel é um componente na pilha, não mais um iframe com uma segunda rota
- * dentro. Por isso o modo, o tamanho da fonte e o tema já valem dentro dele sem
- * ninguém sincronizar nada.
+ * O painel é um componente na pilha, não um iframe com uma segunda rota dentro.
+ * Por isso o modo, o tamanho da letra e o tema já valem dentro dele sem ninguém
+ * sincronizar nada.
  */
 export default function App() {
   const { pilha, fecharPainel, fecharTudo } = useAula();
@@ -31,6 +33,52 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/indice" element={<Indice />} />
           <Route path="/conceitos/:id" element={<PaginaConceito />} />
+          <Route path="/sobre" element={<Sobre />} />
+          <Route
+            path="/exercicios"
+            element={
+              <EmBreve titulo="Exercícios">
+                Os exercícios saíram do site em agosto, junto com as camadas, enquanto o currículo
+                era refeito. Quando voltarem, cada um vem com a escada de dicas, a resolução e o
+                raciocínio antes da conta.
+              </EmBreve>
+            }
+          />
+          <Route
+            path="/entrar"
+            element={
+              <EmBreve titulo="Entrar">
+                Ainda não existe conta neste site. Por enquanto o que você ajusta (modo, tamanho da
+                letra e tema) fica guardado no seu próprio navegador.
+              </EmBreve>
+            }
+          />
+          <Route
+            path="/criar-conta"
+            element={
+              <EmBreve titulo="Criar conta">
+                Ainda não existe conta neste site. Por enquanto o que você ajusta fica guardado no
+                seu próprio navegador.
+              </EmBreve>
+            }
+          />
+          <Route
+            path="/perfil"
+            element={<EmBreve titulo="Meu perfil">Ainda não existe conta neste site.</EmBreve>}
+          />
+          <Route
+            path="/termos"
+            element={<EmBreve titulo="Termos de uso">Ainda não escrevi esta página.</EmBreve>}
+          />
+          <Route
+            path="/privacidade"
+            element={
+              <EmBreve titulo="Privacidade">
+                O site não coleta nada. Não tem conta, não tem servidor e não tem rastreador: o que
+                você ajusta fica no seu navegador e não sai dele.
+              </EmBreve>
+            }
+          />
           <Route path="*" element={<NaoAchei />} />
         </Routes>
       </main>
@@ -53,23 +101,42 @@ export default function App() {
   );
 }
 
-/* ---------- cabeçalho ---------- */
+/* ---------- ícones ----------
+   Traçados na mão numa grade de 20px, na espessura do texto de interface. */
 
 const icoBusca = (
-  <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor"
-       strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 20 20"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    aria-hidden="true"
+  >
     <circle cx="9" cy="9" r="5.5" />
     <path d="M13.2 13.2 17 17" />
   </svg>
 );
 
 const icoConta = (
-  <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor"
-       strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
+  <svg
+    width="17"
+    height="17"
+    viewBox="0 0 20 20"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    aria-hidden="true"
+  >
     <circle cx="10" cy="7" r="3.2" />
     <path d="M4 16.5c1.2-2.6 3.4-3.9 6-3.9s4.8 1.3 6 3.9" />
   </svg>
 );
+
+/* ---------- cabeçalho ---------- */
 
 function Topo() {
   const navegar = useNavigate();
@@ -80,19 +147,25 @@ function Topo() {
       <Link to="/" className="marca">
         Prevest
       </Link>
+
       <nav className="topo-nav" aria-label="Seções">
         <NavLink to="/" end>
           Mapa
         </NavLink>
+        <NavLink to="/exercicios">Exercícios</NavLink>
         <NavLink to="/indice">Índice</NavLink>
       </nav>
 
+      {/* O campo daqui não procura: ele leva o texto pro índice, que é onde a
+          busca de verdade mora. Duas implementações de busca no mesmo site é o
+          jeito mais rápido de uma delas ficar pra trás. */}
       <form
         className="topo-busca"
         role="search"
         onSubmit={(e) => {
           e.preventDefault();
-          navegar(busca.trim() ? `/indice?q=${encodeURIComponent(busca.trim())}` : '/indice');
+          const q = busca.trim();
+          navegar(q ? `/indice?q=${encodeURIComponent(q)}` : '/indice');
         }}
       >
         {icoBusca}
@@ -105,17 +178,20 @@ function Topo() {
         />
       </form>
 
-      <span className="espaco" />
+      <span className="topo-espaco" />
       <MenuDaConta />
     </header>
   );
 }
 
 /**
- * O menu do botão de conta. Hoje ele só guarda as três configurações de
- * exibição; conta de verdade precisa de backend, que este projeto não tem.
- * Os atalhos (Alt+1, Alt+2, Alt+Z) continuam sendo o caminho rápido — o menu
- * existe pra quem nunca vai descobrir que eles existem.
+ * O menu do botão de conta. Entrar e criar conta estão aqui como porta que ainda
+ * não abre: conta de verdade é backend, banco e autenticação, e este projeto não
+ * tem nada disso. O que funciona são as três configurações de exibição.
+ *
+ * Os atalhos (Alt+1, Alt+2, Alt+Z) continuam sendo o caminho rápido; o menu
+ * existe pra quem nunca vai descobrir que eles existem, e é por isso que cada
+ * atalho está escrito ao lado do controle.
  */
 function MenuDaConta() {
   const { modo, trocarModo, tamanho, trocarTamanho, tema, trocarTema } = useAula();
@@ -124,16 +200,16 @@ function MenuDaConta() {
 
   useEffect(() => {
     if (!aberto) return;
-    const foraOuEsc = (e: Event) => {
+    const fechar = (e: Event) => {
       if (e instanceof KeyboardEvent && e.key !== 'Escape') return;
       if (e.type === 'pointerdown' && ref.current?.contains(e.target as Node)) return;
       setAberto(false);
     };
-    document.addEventListener('pointerdown', foraOuEsc);
-    document.addEventListener('keydown', foraOuEsc);
+    document.addEventListener('pointerdown', fechar);
+    document.addEventListener('keydown', fechar);
     return () => {
-      document.removeEventListener('pointerdown', foraOuEsc);
-      document.removeEventListener('keydown', foraOuEsc);
+      document.removeEventListener('pointerdown', fechar);
+      document.removeEventListener('keydown', fechar);
     };
   }, [aberto]);
 
@@ -144,13 +220,20 @@ function MenuDaConta() {
         onClick={() => setAberto((a) => !a)}
         aria-expanded={aberto}
         aria-haspopup="menu"
-        aria-label="Como a página aparece"
+        aria-label="Conta e configurações"
       >
         {icoConta}
       </button>
 
       {aberto && (
         <div className="conta-menu" role="menu">
+          <Link className="conta-item" to="/entrar" onClick={() => setAberto(false)}>
+            Entrar
+          </Link>
+          <Link className="conta-item" to="/criar-conta" onClick={() => setAberto(false)}>
+            Criar conta
+          </Link>
+
           <p className="conta-secao">Como a página aparece</p>
 
           <div className="conta-linha">
@@ -177,8 +260,8 @@ function MenuDaConta() {
                   key={t}
                   onClick={() => trocarTamanho(t)}
                   aria-pressed={tamanho === t}
-                  aria-label={t}
-                  style={{ fontSize: `${0.6 + i * 0.12}rem` }}
+                  aria-label={`Letra ${t}`}
+                  style={{ fontSize: `${0.6 + i * 0.13}rem` }}
                 >
                   A
                 </button>
@@ -220,10 +303,20 @@ function Rodape() {
           <p className="rodape-tit">O curso</p>
           <Link to="/">Mapa das aulas</Link>
           <Link to="/indice">Índice de assuntos</Link>
+          <Link to="/exercicios">Exercícios</Link>
+          <Link to="/sobre">Sobre o projeto</Link>
         </div>
         <div className="rodape-col">
           <p className="rodape-tit">Falar comigo</p>
           <a href="mailto:victor.eneias@gmail.com">victor.eneias@gmail.com</a>
+          <a href="mailto:victor.eneias@gmail.com?subject=Aula%20de%20matem%C3%A1tica">
+            Marcar uma aula
+          </a>
+        </div>
+        <div className="rodape-col">
+          <p className="rodape-tit">Miudezas</p>
+          <Link to="/termos">Termos de uso</Link>
+          <Link to="/privacidade">Privacidade</Link>
         </div>
       </div>
       <div className="rodape-fim">
@@ -234,8 +327,8 @@ function Rodape() {
   );
 }
 
-/** O router não zera o scroll sozinho, então clicar num módulo do mapa do rodapé
- *  abria a página seguinte já no meio dela. */
+/** O router não zera o scroll sozinho, então clicar num módulo do mapa abria a
+ *  página seguinte já no meio dela. */
 function VoltarProTopo() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -306,13 +399,12 @@ function Painel({
 
 function NaoAchei() {
   return (
-    <div className="folha">
-      <article className="papel">
-        <h1>Essa página não existe</h1>
-        <p>
-          <Link to="/">Voltar pro mapa</Link>
-        </p>
-      </article>
+    <div className="simples">
+      <h1>Essa página não existe</h1>
+      <p>Talvez o endereço tenha mudado, ou o link esteja quebrado.</p>
+      <Link className="simples-volta" to="/">
+        <span aria-hidden="true">←</span> Voltar pro mapa
+      </Link>
     </div>
   );
 }

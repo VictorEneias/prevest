@@ -19,10 +19,9 @@ export function PaginaConceito() {
 }
 
 /**
- * A página de um conceito. A mesma serve de página inteira e de conteúdo de
- * painel: no painel eu corto o cromo (título grande, ficha, mapa do rodapé) e
- * deixo só o que o aluno precisa ler pra desentalar. Antes isso era uma segunda
- * rota carregada dentro de um iframe.
+ * A página de uma aula. A mesma serve de página inteira e de conteúdo de painel:
+ * no painel eu corto o cromo (título grande, ficha, mapa do rodapé) e deixo só o
+ * que o aluno precisa ler pra desentalar.
  */
 export default function Conceito({
   id,
@@ -37,7 +36,7 @@ export default function Conceito({
     return (
       <div className="folha">
         <article className="papel">
-          <h1>Conceito não encontrado</h1>
+          <h1>Aula não encontrada</h1>
           <p>
             Não existe <code>content/conceitos/{id}.mdx</code>. Rode <code>npm run grafo</code> pra
             ver quem aponta pra esse id.
@@ -54,8 +53,9 @@ export default function Conceito({
     return (
       <div className="folha">
         <article className="papel">
+          <p className="aula-etiqueta">{rotuloBloco(c.bloco)}</p>
           <h2>{c.titulo}</h2>
-          {c.resumo && <p style={{ color: 'var(--tinta-media)' }}>{c.resumo}</p>}
+          {c.resumo && <p className="aula-subtitulo">{c.resumo}</p>}
           <hr className="regua" />
           <div className="aula">
             <Corpo />
@@ -74,28 +74,25 @@ export default function Conceito({
           </p>
         )}
 
+        <p className="aula-etiqueta">
+          {ROTULO_MATERIA[c.materia]} · {rotuloBloco(c.bloco)}
+        </p>
         <h1>{c.titulo}</h1>
-        {c.subtitulo && (
-          <p style={{ color: 'var(--tinta-media)', marginTop: 'calc(var(--u)*-0.5)' }}>
-            {c.subtitulo}
-          </p>
-        )}
+        {c.subtitulo && <p className="aula-subtitulo">{c.subtitulo}</p>}
 
-        <div className="ficha">
-          <span>
-            <b>{ROTULO_MATERIA[c.materia]}</b> · {rotuloBloco(c.bloco)}
-          </span>
-          <span>{NIVEL[c.nivel]}</span>
-          {/* os dois tempos entram, e quem escolhe qual aparece é o modo: quem
-              troca é o CSS, em global.css */}
-          {c.tempo_leitura && <span className="tempo-leitura">{c.tempo_leitura} min de leitura</span>}
-          {c.tempo_estimado && <span className="tempo-aula">{c.tempo_estimado} min de aula</span>}
+        {/* Os dois tempos entram, e quem escolhe qual aparece é o modo: em
+            estudo o aluno vê o de leitura, em aula eu vejo o meu. Quem troca é
+            o CSS, como todo o resto do Modo Aula. */}
+        <ul className="ficha">
+          <li>{NIVEL[c.nivel]}</li>
+          {c.tempo_leitura && <li className="tempo-leitura">{c.tempo_leitura} min de leitura</li>}
+          {c.tempo_estimado && <li className="tempo-aula">{c.tempo_estimado} min de aula</li>}
           {c.itens_fuvest !== undefined && (
-            <span>
+            <li>
               <b>{c.itens_fuvest}</b> itens FUVEST
-            </span>
+            </li>
           )}
-        </div>
+        </ul>
 
         {c.topicos.length > 0 && (
           <>
@@ -127,15 +124,15 @@ export default function Conceito({
         </div>
 
         {(filhos.length > 0 || c.prereqs.length > 0) && (
-          <>
+          <div className="vizinhanca">
             <hr className="regua" />
-            <p className="rotulo-secao">Onde este módulo se encaixa</p>
+            <p className="rotulo-secao">Onde esta aula se encaixa</p>
             <p className="nota-secao">
-              Nada aqui está bloqueado. É só o que se conecta a este módulo: o que vem antes, em
-              cima, e o que continua a partir dele, embaixo.
+              Nada aqui está bloqueado. É só o que se conecta a esta aula: o que vem antes, em cima,
+              e o que continua a partir dela, embaixo.
             </p>
             <MapaConceitos foco={c.id} raio={1} altura="34vh" />
-          </>
+          </div>
         )}
       </article>
     </div>
