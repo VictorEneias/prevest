@@ -1677,7 +1677,10 @@ html[data-modo='aula'] .tempo-aula {
   background: color-mix(in srgb, var(--cor-bloco) var(--mistura-bloco), var(--papel));
   border: 1px solid var(--linha);
   border-left: 5px solid var(--cor-bloco);
-  border-radius: var(--raio);
+  /* o resto do site é de canto quase reto (--raio, 2px); o módulo do mapa é o
+     único que foge disso, porque em fileira de oito o canto redondo é o que
+     separa uma caixa da outra sem precisar de mais linha */
+  border-radius: 6px;
   text-decoration: none;
   color: var(--tinta);
   font-family: var(--f-ui);
