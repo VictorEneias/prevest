@@ -63,12 +63,32 @@ export default function Home() {
        página comum, e é o CSS que faz isso — aqui eu só paro de escrever. */
     const semCinema = window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 900px)');
 
+    /* Os elementos que mudam por quadro, achados uma vez só. Escrever direto no
+       style deles é o que evita a revalidação de estilo da subárvore inteira:
+       uma variável CSS num ancestral invalidaria os 84 módulos do mapa, duas
+       vezes, a cada quadro de rolagem. */
+    const cams = [...cena.querySelectorAll<HTMLElement>('.abertura-cam')];
+    const pans = [...cena.querySelectorAll<HTMLElement>('.abertura-pan')];
+    const texto = cena.querySelector<HTMLElement>('.abertura-texto');
+    const bruma = cena.querySelector<HTMLElement>('.abertura-bruma');
+    const parede = cena.querySelector<HTMLElement>('.abertura-parede');
+    const desfocado = cena.querySelector<HTMLElement>('.abertura-mapa-b');
+    const chamado = cena.querySelector<HTMLElement>('.abertura-chamado');
+    const legenda = cena.querySelector<HTMLElement>('.abertura-legenda');
+    const clique = cena.querySelector<HTMLElement>('.abertura-clique');
+    const animados = [...cams, ...pans, texto, bruma, parede, desfocado, chamado, legenda, clique];
+
+    let escIni = 0.46;
+    let escFim = 0.7;
+    let xIni = 300;
+    let yIni = 40;
+    let yFim = 58;
     let zoomPx = 1;
     let panPx = 0;
 
-    /* Os dois números que o CSS não tem como descobrir: a escala em que o mapa
-       cabe na largura e quanto ele ainda precisa descer depois disso. Em 1440px
-       dá 0,69 e 527px; em 1920px, 0,92 e 820px. */
+    /* Os números que o CSS não tem como descobrir: a escala em que o mapa cabe
+       na largura e quanto ele ainda precisa descer depois disso. Em 1440px dá
+       0,69 e 527px; em 1920px, 0,92 e 820px. */
     const medir = () => {
       /* a cópia nítida, e não a primeira que aparecer: no layout estreito a
          desfocada some com display:none e mede zero, e aí a medição inteira
@@ -81,22 +101,25 @@ export default function Home() {
 
       const larguraPalco = cena.clientWidth || window.innerWidth;
       const alturaPalco = semCinema.matches ? window.innerHeight : cena.clientHeight;
-      const escFim = larguraPalco / largura;
       /* A câmera para abaixo do cabeçalho, mais um respiro: encostada nele, a
-         primeira fileira de módulos e o rótulo da área ficam grudados na barra.
-         O respiro é proporcional à tela pra não sumir em monitor grande. */
+         primeira fileira de módulos e o rótulo da área ficam grudados na barra. */
       const cabecalho = document.querySelector<HTMLElement>('.topo')?.offsetHeight ?? 58;
-      const yFim = cabecalho + Math.round(window.innerHeight * 0.07);
 
+      escFim = larguraPalco / largura;
+      escIni = escFim * 0.66;
+      xIni = Math.round(larguraPalco * 0.21);
+      yIni = Math.round(window.innerHeight * 0.05);
+      yFim = cabecalho + Math.round(window.innerHeight * 0.07);
       zoomPx = Math.max(1, Math.round(window.innerHeight * 0.8));
       panPx = Math.max(0, Math.round(altura * escFim + yFim - alturaPalco));
 
+      /* o CSS usa estes pra pintar o primeiro quadro e pra montar o layout
+         achatado; do movimento em diante quem manda é o style inline */
       const e = eu.style;
       e.setProperty('--esc-fim', String(escFim));
-      e.setProperty('--esc-ini', String(escFim * 0.66));
-      e.setProperty('--x-ini', `${Math.round(larguraPalco * 0.21)}px`);
-      e.setProperty('--y-ini', `${Math.round(window.innerHeight * 0.05)}px`);
-      e.setProperty('--y-fim', `${yFim}px`);
+      e.setProperty('--esc-ini', String(escIni));
+      e.setProperty('--x-ini', `${xIni}px`);
+      e.setProperty('--y-ini', `${yIni}px`);
       e.setProperty('--pan', `${panPx}px`);
       e.setProperty('--alt-mapa', String(Math.round(altura * escFim)));
     };
@@ -104,28 +127,80 @@ export default function Home() {
     const entre = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
     let pendente = 0;
 
-    const pintar = () => {
+    /* Modo leve: eu não tenho como testar aqui em cima de GPU de verdade, e a
+       conta muda com a densidade da tela — numa tela de densidade 2 cada camada
+       do tamanho da janela custa quatro vezes mais pixels. Então o site mede o
+       próprio zoom: se os quadros estiverem passando de 34ms (menos de 30 por
+       segundo) no primeiro trecho de movimento, ele desliga a cópia desfocada e
+       congela o papel de parede pelo resto da sessão. Prefiro animação mais
+       simples do que animação picotada. */
+    const quadros: number[] = [];
+    let leve = false;
+    let decidido = false;
+    const medirQuadro = (agora: number) => {
+      if (leve || decidido) return;
+      quadros.push(agora);
+      /* seis amostras, e não vinte: numa máquina entregando nove quadros por
+         segundo o zoom inteiro tem catorze, e exigir mais é esperar a cinemática
+         passar picotada antes de decidir que ela está picotando */
+      if (quadros.length < 6) return;
+      const gaps = quadros.slice(1).map((t, i) => t - quadros[i]).sort((a, b) => a - b);
+      decidido = true;
+      if (gaps[Math.floor(gaps.length / 2)] > 34) {
+        leve = true;
+        eu.dataset.leve = 'sim';
+      }
+    };
+
+    const pintar = (agora = performance.now()) => {
       pendente = 0;
+
       if (semCinema.matches) {
-        eu.style.setProperty('--p', '0');
-        eu.style.setProperty('--q', '0');
+        /* style inline vence folha de estilo, então no layout achatado eu limpo
+           o que escrevi e devolvo o comando pro CSS */
+        for (const el of animados) el?.removeAttribute('style');
         delete eu.dataset.fase;
         return;
       }
+
       const y = window.scrollY - eu.offsetTop;
       const p = entre(y / zoomPx);
       const q = entre((y - zoomPx) / Math.max(1, panPx));
-      eu.style.setProperty('--p', p.toFixed(4));
-      eu.style.setProperty('--q', q.toFixed(4));
+      /* começa a medir depois de 8% do zoom: os primeiros quadros de qualquer
+         máquina são lentos por causa da primeira pintura, e medir ali daria
+         falso positivo em computador bom */
+      if (p > 0.08 && p < 0.98) medirQuadro(agora);
+
+      const escala = escIni + (escFim - escIni) * p;
+      const tx = Math.round(xIni * (1 - p));
+      const ty = Math.round(yIni + (yFim - yIni) * p);
+      for (const c of cams) c.style.transform = `translate(${tx}px, ${ty}px) scale(${escala})`;
+      for (const pn of pans) pn.style.transform = `translateY(${-Math.round(panPx * q)}px)`;
+
+      if (texto) {
+        texto.style.opacity = String(entre(1 - p * 1.45));
+        texto.style.transform = `translateY(${Math.round(p * -72)}px)`;
+      }
+      /* a bruma segura até quase o fim do zoom: é ela que impede um módulo
+         nítido de cruzar uma linha de texto que ainda dá pra ler */
+      if (bruma) bruma.style.opacity = String(entre((0.88 - p) * 1.8));
+      if (parede) parede.style.opacity = String(1 - 0.72 * p);
+      if (desfocado) desfocado.style.opacity = String(Math.min(0.55, entre((0.85 - p) * 1.1)));
+      if (chamado) chamado.style.opacity = String(entre(1 - p * 3));
+      if (legenda) legenda.style.opacity = String(entre((p - 0.55) * 2.6) * (1 - q * 0.9));
+      if (clique) clique.style.opacity = String(entre(1 - p));
+
       /* Três fases: na abertura o clique no grafo vale como rolagem; passada a
          metade ele sai da frente, senão roubaria o clique dos módulos, que a
-         partir dali são links; e no fim o texto sai da tela de vez. */
+         partir dali são links; e no fim o texto e as camadas de véu saem da
+         composição, o que deixa a descida com uma camada só se movendo. */
       eu.dataset.fase = p < 0.5 ? 'abertura' : p < 0.999 ? 'meio' : 'mapa';
     };
 
     const agendar = () => {
       if (!pendente) pendente = requestAnimationFrame(pintar);
     };
+    
     const remedir = () => {
       medir();
       agendar();
@@ -178,8 +253,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="abertura-pluma" />
-        <div className="abertura-veu" />
+        <div className="abertura-bruma" />
 
         <div className="abertura-parede">
           <div className="abertura-parede-i" />

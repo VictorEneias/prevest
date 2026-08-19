@@ -667,9 +667,10 @@ pre code {
    tela; daí em diante a rolagem vira normal e o mapa desce até entregar no
    rodapé.
 
-   A coreografia inteira pendura em UMA variável, --p, que vai de 0 a 1 e é
-   escrita pelo JS a cada quadro de rolagem (--q é a descida, depois do zoom).
-   Todo o resto é calc() em cima dela.
+   Quem escreve a coreografia é o JS, direto no style de nove elementos, e não
+   uma variável CSS num ancestral: variável herdada obriga o navegador a
+   revalidar o estilo de toda a subárvore a cada quadro, e a subárvore aqui tem
+   os 84 módulos do mapa, duas vezes.
 
    Isso já foi feito com animation-timeline: scroll(), que é mais elegante e é
    só Chrome: no Firefox a regra não vale, a animação cai na linha do tempo
@@ -727,22 +728,25 @@ pre code {
 }
 .abertura-mapa-b {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
   z-index: 1;
   overflow: hidden;
   filter: blur(4px);
-  opacity: clamp(0, calc((0.85 - var(--p)) * 1.1), 0.55);
-  /* recortar a caixa antes de desfocar poupa o navegador de borrar uma tela
-     inteira a cada quadro */
-  clip-path: inset(0 38% 18% 0);
+  opacity: 0.55;
+  /* A caixa dela é só a bolha do texto, e não a janela inteira: desfoque custa
+     por pixel, e assim são 30% deles. Os cortes da máscara abaixo estão em
+     porcentagem DESTA caixa, e não da janela. */
+  right: 38%;
+  bottom: 18%;
   -webkit-mask-image: linear-gradient(
     to right,
     #000 0,
-    #000 32%,
-    rgba(0, 0, 0, 0.5) 44%,
-    transparent 56%
+    #000 51.6%,
+    rgba(0, 0, 0, 0.5) 71%,
+    transparent 90%
   );
-  mask-image: linear-gradient(to right, #000 0, #000 32%, rgba(0, 0, 0, 0.5) 44%, transparent 56%);
+  mask-image: linear-gradient(to right, #000 0, #000 51.6%, rgba(0, 0, 0, 0.5) 71%, transparent 90%);
 }
 /* a faixa vertical acaba em 66%, que é onde o link "Começar por" termina: ir
    além disso borrava um pedaço de mapa que não tem nada por cima */
@@ -752,73 +756,86 @@ pre code {
   -webkit-mask-image: linear-gradient(
     to bottom,
     transparent 0,
-    rgba(0, 0, 0, 0.55) 5%,
-    #000 12%,
-    #000 66%,
-    rgba(0, 0, 0, 0.5) 72%,
-    transparent 79%
+    rgba(0, 0, 0, 0.55) 6.1%,
+    #000 14.6%,
+    #000 80.5%,
+    rgba(0, 0, 0, 0.5) 87.8%,
+    transparent 96.3%
   );
   mask-image: linear-gradient(
     to bottom,
     transparent 0,
-    rgba(0, 0, 0, 0.55) 5%,
-    #000 12%,
-    #000 66%,
-    rgba(0, 0, 0, 0.5) 72%,
-    transparent 79%
+    rgba(0, 0, 0, 0.55) 6.1%,
+    #000 14.6%,
+    #000 80.5%,
+    rgba(0, 0, 0, 0.5) 87.8%,
+    transparent 96.3%
   );
 }
 
 .abertura-pan {
-  transform: translateY(calc(var(--pan, 0px) * var(--q) * -1));
+  transform: translateY(0);
 }
 .abertura-cam {
   transform-origin: 0 0;
-  transform: translate(
-      calc(var(--x-ini, 300px) * (1 - var(--p))),
-      calc(var(--y-ini, 40px) + (var(--y-fim, 58px) - var(--y-ini, 40px)) * var(--p))
-    )
-    scale(calc(var(--esc-ini, 0.46) + (var(--esc-fim, 0.7) - var(--esc-ini, 0.46)) * var(--p)));
-  will-change: transform;
+  /* o estado de abertura; da rolagem em diante quem escreve o transform é o JS */
+  transform: translate(var(--x-ini, 300px), var(--y-ini, 40px)) scale(var(--esc-ini, 0.46));
 }
+/* Sem will-change de propósito. Com ele o Firefox promove esta caixa inteira a
+   uma textura: o grafo tem 2089x2068 CSS, que numa tela de densidade 2 vira
+   4178x4136 pixels e estoura o limite de 4096 da maioria das GPUs, e aí ele cai
+   no caminho lento. Sem a promoção ele rasteriza só o pedaço visível, que é do
+   tamanho da janela. */
 
-/* A pluma esfumaça as bordas do grafo e o véu acalma o que passa embaixo do
-   texto. Os dois são pintados com a cor do papel, então precisam ficar ABAIXO
-   do papel de parede — foi assim, com eles por cima, que na primeira tentativa
-   a cor do fundo virou um carimbo no canto e sumiu do resto da tela. */
-.abertura-pluma,
-.abertura-veu {
+/* A bruma: o esfumaçado das bordas do grafo e o véu que acalma o que passa
+   embaixo do texto, no MESMO elemento, como dois fundos.
+   Eram dois elementos, e virou um por conta de desempenho: numa tela de alta
+   densidade cada camada do tamanho da janela custa 5 milhões de pixels por
+   quadro, e o que travava o Firefox era a soma delas, não uma em especial.
+   Os dois são pintados com a cor do papel, então ficam ABAIXO do papel de
+   parede — foi assim, com eles por cima, que a cor do fundo virou um carimbo no
+   canto na primeira tentativa. */
+.abertura-bruma {
   position: absolute;
   inset: 0;
   z-index: 3;
   pointer-events: none;
+  background-image:
+    linear-gradient(
+      to right,
+      var(--papel-fundo) 0,
+      var(--papel-fundo) 26%,
+      color-mix(in srgb, var(--papel-fundo) 62%, transparent) 46%,
+      transparent 70%
+    ),
+    radial-gradient(
+      76% 80% at 54% 57%,
+      transparent 0,
+      transparent 28%,
+      color-mix(in srgb, var(--papel-fundo) 42%, transparent) 56%,
+      color-mix(in srgb, var(--papel-fundo) 82%, transparent) 78%,
+      var(--papel-fundo) 95%
+    );
+  /* segura até quase o fim do zoom: é ela que impede um módulo nítido de cruzar
+     uma linha de texto que ainda dá pra ler */
+  opacity: 1;
 }
-.abertura-pluma {
-  opacity: calc(1 - var(--p));
+/* passado o zoom ela está em zero, e sair da composição poupa o quadro inteiro
+   da descida, que é o trecho mais longo da rolagem */
+.abertura[data-fase='mapa'] .abertura-bruma,
+.abertura[data-fase='mapa'] .abertura-mapa-b {
+  visibility: hidden;
 }
-/* o véu segura até 0,85 do zoom: ele é o que impede um módulo nítido de cruzar
-   uma linha de texto que ainda dá pra ler */
-.abertura-veu {
-  opacity: clamp(0, calc((0.85 - var(--p)) * 2), 1);
+
+/* Modo leve, ligado pelo próprio JS quando ele mede o zoom picotando: cai a
+   cópia desfocada e o papel de parede para de mudar de opacidade. O que se
+   perde é o borrão embaixo do texto e o recuo do fundo; o que se ganha é a
+   cinemática rodando lisa numa máquina que não dá conta das duas. */
+.abertura[data-leve='sim'] .abertura-mapa-b {
+  display: none;
 }
-.abertura-pluma {
-  background: radial-gradient(
-    76% 80% at 54% 57%,
-    transparent 0,
-    transparent 28%,
-    color-mix(in srgb, var(--papel-fundo) 42%, transparent) 56%,
-    color-mix(in srgb, var(--papel-fundo) 82%, transparent) 78%,
-    var(--papel-fundo) 95%
-  );
-}
-.abertura-veu {
-  background: linear-gradient(
-    to right,
-    var(--papel-fundo) 0,
-    var(--papel-fundo) 26%,
-    color-mix(in srgb, var(--papel-fundo) 62%, transparent) 46%,
-    transparent 70%
-  );
+.abertura[data-leve='sim'] .abertura-parede {
+  opacity: 0.65 !important;
 }
 
 /* O papel de parede: quatro manchas e o grão, com buraco no miolo do mapa e
@@ -829,7 +846,7 @@ pre code {
   inset: 0;
   z-index: 4;
   pointer-events: none;
-  opacity: calc(1 - 0.72 * var(--p));
+  opacity: 1;
   -webkit-mask-image: radial-gradient(
     60% 66% at 58% 53%,
     transparent 0,
@@ -900,7 +917,6 @@ pre code {
   padding: 0;
   background: none;
   cursor: zoom-in;
-  opacity: calc(1 - var(--p));
 }
 .abertura:not([data-fase='abertura']) .abertura-clique {
   display: none;
@@ -914,8 +930,7 @@ pre code {
   /* em ch a largura media na fonte do parágrafo, e o título de 60px quebrava em
      cinco linhas dentro de 289px */
   width: min(30rem, 42vw);
-  opacity: clamp(0, calc(1 - var(--p) * 1.45), 1);
-  transform: translateY(calc(var(--p) * -72px));
+  opacity: 1;
 }
 /* Ele fica na tela o tempo todo, porque o palco é grudado: sem sumir de vez, o
    título ficaria pairando por cima do mapa durante a descida inteira. */
@@ -978,7 +993,6 @@ pre code {
   font-family: var(--f-ui);
   font-size: 0.72rem;
   color: var(--tinta-fraca);
-  opacity: clamp(0, calc(1 - var(--p) * 3), 1);
   pointer-events: none;
 }
 .abertura-chamado b {
@@ -1008,7 +1022,7 @@ pre code {
   color: var(--tinta-media);
   /* entra quando o mapa vira o assunto e sai na descida, senão ela fica
      tapando o nome de dois módulos lá embaixo */
-  opacity: calc(clamp(0, (var(--p) - 0.55) * 2.6, 1) * (1 - var(--q) * 0.9));
+  opacity: 0;
 }
 .abertura-legenda li {
   display: flex;
@@ -1051,8 +1065,7 @@ pre code {
     order: 3;
   }
   .abertura-mapa-b,
-  .abertura-pluma,
-  .abertura-veu,
+  .abertura-bruma,
   .abertura-clique,
   .abertura-chamado,
   .abertura-halo {
