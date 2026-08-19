@@ -827,25 +827,24 @@ pre code {
   visibility: hidden;
 }
 
-/* Enquanto a rolagem move a câmera, o mapa vai desenhado simples: sem a sombra
-   dos módulos e, no começo do zoom, sem o título deles.
+/* Enquanto a rolagem move a câmera, o módulo vai sem sombra.
 
-   É a maior economia que existe aqui, e ela responde por que o Chrome nunca
-   engasgou: quando a escala muda, ele estica uma textura já rasterizada e só
-   redesenha quando o movimento para; o WebRender do Firefox redesenha tudo a
-   cada quadro, pra sair sempre nítido. Redesenhar 84 sombras de 20px de desfoque
-   por quadro é o que custa — medido aqui: 44 quadros por segundo com a sombra,
-   60 sem ela. Em escala 0,46 a sombra não aparece e o título tem 6px, então o
-   que se perde no movimento é nada.
+   Isso existe pra quem roda sem aceleração de hardware, que é o caso real de
+   muita máquina: sem GPU o navegador rasteriza na CPU e o custo passa a ser por
+   pixel, então redesenhar 84 sombras de 20px de desfoque a cada quadro é o que
+   trava. Medido em densidade 2, só o mapa: 44 quadros por segundo com a sombra,
+   60 sem ela — e em escala 0,46 ela não aparece, então no movimento não se perde
+   nada.
+
+   Esconder também o título do módulo foi testado e saiu: media igual (a sombra
+   sozinha já batia no teto do medidor) e custava um piscar do texto no meio do
+   zoom.
 
    O atributo é escrito uma vez quando a rolagem começa e outra 140ms depois que
    ela para, e não a cada quadro: seletor que casa com 168 módulos é caro de
    revalidar. */
 .abertura[data-desenho='simples'] .mapa-no {
   box-shadow: none;
-}
-.abertura[data-desenho='simples'][data-fase='abertura'] .mapa-no-titulo {
-  visibility: hidden;
 }
 
 /* Modo leve, ligado pelo próprio JS quando ele mede o zoom picotando: cai a
