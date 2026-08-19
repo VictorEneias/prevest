@@ -159,11 +159,20 @@ export default function MapaConceitos({
       });
     }
 
+    /* A cadeia acende no módulo e apaga no módulo. Já foi só o pointerleave da
+       moldura, e o desenho ficava aceso enquanto o mouse passeasse pelo vazio do
+       mapa: eu tirava o mouse de cima e continuava com metade do grafo apagado.
+       O apagar respeita o teclado, senão passar o mouse por perto derrubava o
+       destaque de quem está com o foco no Tab. */
     const entradas = nos.map((n) => {
       const liga = () => acender(n.dataset.no!);
+      const desliga = () => {
+        if (!alvo.contains(document.activeElement)) acender(null);
+      };
       n.addEventListener('pointerenter', liga);
+      n.addEventListener('pointerleave', desliga);
       n.addEventListener('focus', liga);
-      return { n, liga };
+      return { n, liga, desliga };
     });
     const apagar = () => acender(null);
     const aoSairFoco = (e: FocusEvent) => {
@@ -176,8 +185,9 @@ export default function MapaConceitos({
     return () => {
       alvo.removeEventListener('pointerleave', apagar);
       alvo.removeEventListener('focusout', aoSairFoco as EventListener);
-      entradas.forEach(({ n, liga }) => {
+      entradas.forEach(({ n, liga, desliga }) => {
         n.removeEventListener('pointerenter', liga);
+        n.removeEventListener('pointerleave', desliga);
         n.removeEventListener('focus', liga);
       });
     };
