@@ -1,0 +1,98 @@
+---
+resumo: Cinco afirmações sobre números perfeitos, primos de Mersenne e progressões
+fonte: FUVEST
+ano: 2026
+fonte_url: https://www.fuvest.br/wp-content/uploads/fuvest2026-fase1-prova-V1.pdf
+fonte_questao: "55 (prova V1)"
+nivel: desafio
+modulos: [primos-e-fatoracao, progressao-geometrica, sequencias-e-pa]
+resposta: "(B) os termos da PG de primeiro termo 6 e razão 3 são pares"
+verificado: false
+---
+
+Existem números curiosos na matemática. Os números perfeitos são alguns deles. Um número $n$ (para
+$n \in \mathbb{N}^*$) é perfeito se, e somente se, for igual à soma de seus divisores positivos
+(excluindo o próprio). Relacionando números perfeitos e números primos, Euclides escreveu uma
+proposição em seu famoso livro "Elementos": se $2^n - 1$ é um número primo, então
+$2^{\,n-1}(2^n - 1)$ é um número perfeito.
+
+Considerando o que foi exposto, é correto afirmar:
+
+(A) Com exceção de $n = 1$, os 5 primeiros termos da sequência $(a_n) = (2^n - 1)$ são números
+primos.
+(B) Os termos da progressão geométrica, cujo primeiro termo é o primeiro número perfeito e cuja
+razão é 3, são pares.
+(C) Os números 28 e 31 são números perfeitos.
+(D) Na proposição de Euclides, para $n = 4$, obtemos que $2^n - 1$ não é primo, mas que
+$2^{\,n-1}(2^n - 1)$ é perfeito.
+(E) A sequência formada pela diferença dos termos consecutivos de $(a_n) = (2^n - 1)$ é uma
+progressão aritmética de razão 2.
+
+<Dicas>
+  <Dica>
+    Antes de julgar qualquer alternativa, escreve os primeiros termos de $2^n - 1$ e acha o
+    primeiro número perfeito na mão, testando os pequenos.
+  </Dica>
+  <Dica>
+    Numa questão de cinco afirmações, o caminho barato é procurar o contraexemplo de cada uma. Três
+    delas caem com um número só.
+  </Dica>
+  <Dica>
+    Na (E), calcula a diferença $a_{n+1} - a_n$ com as potências, sem substituir número. O que
+    sobra cresce somando sempre a mesma coisa, ou multiplicando sempre pela mesma coisa?
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="(B) os termos da PG de primeiro termo 6 e razão 3 são pares">
+
+Primeiro o material de trabalho. A sequência $a_n = 2^n - 1$ começa assim:
+
+| $n$ | 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|
+| $2^n - 1$ | 1 | 3 | 7 | 15 | 31 | 63 |
+
+E o primeiro número perfeito é o $6$: os divisores dele fora ele mesmo são $1$, $2$ e $3$, e
+$1 + 2 + 3 = 6$.
+
+Agora, uma alternativa por vez.
+
+**(A) Falsa.** Tirando o $n = 1$, os cinco primeiros são $3$, $7$, $15$, $31$ e $63$. O $15$ é
+$3 \cdot 5$ e o $63$ é $7 \cdot 9$, então dois deles não são primos.
+
+**(B) Verdadeira.** A PG é $6,\ 18,\ 54,\ 162,\ \dots$, ou seja, $6 \cdot 3^{\,k}$. O $6$ é par, e
+multiplicar um número par por qualquer inteiro devolve par, então todos os termos são pares.
+
+**(C) Falsa.** O $28$ é perfeito ($1 + 2 + 4 + 7 + 14 = 28$), porém o $31$ é primo, e primo tem só
+o $1$ como divisor próprio. A soma dá $1$, e não $31$.
+
+**(D) Falsa.** Para $n = 4$ o $2^4 - 1 = 15$ realmente não é primo, e é aí que a afirmação tenta te
+pegar: a proposição de Euclides não promete nada nesse caso. E de fato $2^3 \cdot 15 = 120$ não é
+perfeito, porque a soma dos divisores próprios dele dá $240$.
+
+**(E) Falsa.** A diferença entre termos consecutivos é
+
+$$
+a_{n+1} - a_n = (2^{\,n+1} - 1) - (2^n - 1) = 2^{\,n+1} - 2^n = 2^n
+$$
+
+o que dá $2, 4, 8, 16, \dots$: cada termo é o dobro do anterior, então é uma PG de razão $2$, e não
+uma PA.
+
+A resposta é a **(B)**.
+
+### Raciocínio
+
+Questão de cinco afirmações eu não resolvo, eu derrubo: cada alternativa cai com um contraexemplo,
+e contraexemplo é mais barato que demonstração. A (A) cai no $15$, a (C) cai no $31$, a (E) cai nos
+dois primeiros termos da diferença. A (D) é a mais cara das quatro, e mesmo ela dá pra desconfiar
+sem conta: a proposição de Euclides é uma seta de mão única, ela diz o que acontece **quando**
+$2^n - 1$ é primo, e não promete nada quando não é.
+
+### Erros comuns
+
+**Ler a proposição de Euclides de trás pra frente**, que é a armadilha da (D). "Se é primo, então é
+perfeito" não autoriza concluir nada a partir de "não é primo". Essa troca de sentido da implicação
+é a mesma que faz alguém concluir que, se todo quadrado é retângulo, então todo retângulo é
+quadrado.
+
+</Resolucao>

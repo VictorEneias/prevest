@@ -1,0 +1,93 @@
+---
+resumo: Descobrir em quantas semanas uma exponencial passa de um valor, usando log
+fonte: FUVEST
+ano: 2026
+fonte_url: https://www.fuvest.br/wp-content/uploads/fuvest2026-fase1-prova-V1.pdf
+fonte_questao: "18 (prova V1)"
+nivel: medio
+modulos: [equacoes-exponenciais, logaritmos]
+resposta: "(E) entre 4 e 6 semanas"
+verificado: false
+---
+
+Uma startup de tecnologia está desenvolvendo um novo aplicativo e observa que o número de
+usuários está crescendo, em milhares, após $t$ semanas do lançamento, de acordo com a função:
+
+$$
+M(t) = 200 \times (1{,}1)^{\,t}
+$$
+
+Com isso, a equipe da startup quer saber: qual é o período, em semanas, em que o número de
+usuários ultrapassa $300$ mil?
+
+(A) Entre 0 e 1 semana.
+(B) Entre 1 e 3 semanas.
+(C) Entre 2 e 4 semanas.
+(D) Entre 3 e 4 semanas.
+(E) Entre 4 e 6 semanas.
+
+*Note e adote:* $\log 3 \cong 0{,}4771$; $\log 5 \cong 0{,}6990$ e $\log 11 \cong 1{,}0414$.
+
+<Dicas>
+  <Dica>
+    Escreve a pergunta como uma desigualdade antes de qualquer conta. "Ultrapassa 300 mil" vira o
+    quê, sabendo que o $M(t)$ já conta em milhares?
+  </Dica>
+  <Dica>
+    O $t$ está no expoente, e é isso que o log resolve. Antes de aplicar o log, deixa a potência
+    sozinha de um lado.
+  </Dica>
+  <Dica>
+    A tabela não dá $\log 1{,}1$ nem $\log 1{,}5$ prontos. Reescreve os dois como divisão de
+    números que a tabela tem, lembrando que $\log 2 = 1 - \log 5$.
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="(E) entre 4 e 6 semanas">
+
+O $M(t)$ conta em milhares, então "ultrapassar 300 mil" é $M(t) > 300$:
+
+$$
+200 \cdot (1{,}1)^{t} > 300
+\qquad\Longrightarrow\qquad
+(1{,}1)^{t} > 1{,}5
+$$
+
+Com o $t$ no expoente, quem desce ele é o logaritmo:
+
+$$
+t \cdot \log 1{,}1 > \log 1{,}5
+$$
+
+Agora os dois logs, montados com o que a tabela dá:
+
+$$
+\log 1{,}1 = \log\frac{11}{10} = \log 11 - 1 = 1{,}0414 - 1 = 0{,}0414
+$$
+
+$$
+\log 1{,}5 = \log\frac{3}{2} = \log 3 - \log 2 = 0{,}4771 - (1 - 0{,}6990) = 0{,}1761
+$$
+
+Como $\log 1{,}1$ é positivo, a desigualdade não vira:
+
+$$
+t > \frac{0{,}1761}{0{,}0414} \cong 4{,}25
+$$
+
+Passou dos 300 mil um pouco depois da quarta semana, e o único intervalo que contém $4{,}25$ é o
+da alternativa **(E)**.
+
+### Raciocínio
+
+A tabela do "note e adote" é a dica mais barata da prova: ela te diz de quais números você vai
+precisar. Ver $\log 11$ ali é o aviso de que o $1{,}1$ vira $\frac{11}{10}$, e ver $\log 5$ sem
+$\log 2$ é o aviso de que o $\log 2$ sai de $1 - \log 5$.
+
+### Erros comuns
+
+**Marcar a (D)**, que também contém números perto de 4. Como $t > 4{,}25$, a semana 3 e a
+semana 4 ainda estão abaixo dos 300 mil, então o intervalo "entre 3 e 4" descreve justamente o
+período em que ele **não** ultrapassou.
+
+</Resolucao>

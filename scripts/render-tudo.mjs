@@ -61,6 +61,37 @@ try {
   }
 
   console.log(cinza(`  ${rotas.length} páginas renderizadas`));
+
+  /* O corpo de cada exercício é renderizado à parte, e não pela página em que ele
+     aparece: o não verificado não aparece em página nenhuma, e a busca desenha só
+     os 30 primeiros. Sem isto, exercício novo passava batido justamente enquanto
+     ele é rascunho, que é quando o erro ainda está lá. */
+  const { MDXProvider } = await import('@mdx-js/react');
+  const { exercicios } = await vite.ssrLoadModule('/src/conteudo.ts');
+  const { componentesMDX } = await vite.ssrLoadModule('/src/components/mdx.tsx');
+
+  for (const e of exercicios) {
+    try {
+      const html = renderToString(
+        h(
+          MemoryRouter,
+          null,
+          h(ProvedorAula, null, h(MDXProvider, { components: componentesMDX }, h(e.Corpo))),
+        ),
+      );
+      const semSvg = html.replace(/<svg[\s\S]*?<\/svg>/g, '');
+      if (semSvg.includes('$')) {
+        quebradas.push([`exercício ${e.id}`, 'sobrou cifrão no texto — LaTeX desbalanceado?']);
+      }
+      if (/<p>[^<]*\|\s*-{3}/.test(semSvg)) {
+        quebradas.push([`exercício ${e.id}`, 'tabela virou parágrafo — falta o remark-gfm?']);
+      }
+    } catch (err) {
+      quebradas.push([`exercício ${e.id}`, err.message.split('\n')[0]]);
+    }
+  }
+
+  console.log(cinza(`  ${exercicios.length} exercícios renderizados`));
 } catch (e) {
   console.error(vermelho('\n  o app não levantou:'), e.message);
   process.exitCode = 1;

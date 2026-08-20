@@ -1,0 +1,104 @@
+---
+resumo: Achar o erro de uma resolução que trocou sen(2x) por 2·sen(x)
+fonte: FUVEST
+ano: 2026
+fonte_url: https://www.fuvest.br/wp-content/uploads/fuvest2026-fase1-prova-V1.pdf
+fonte_questao: "07 (prova V1)"
+nivel: facil
+modulos: [identidades-trigonometricas, circulo-trigonometrico]
+resposta: "(D) não utilizou corretamente o seno da soma de dois arcos"
+verificado: false
+---
+
+Considere a equação trigonométrica
+
+$$
+\operatorname{sen}\frac{\pi}{2} + \operatorname{sen} x = \operatorname{sen}(2x) - \cos \pi
+$$
+
+para $x \in \mathbb{R}$, $0 \le x < 2\pi$.
+
+Um estudante resolveu essa equação da seguinte maneira:
+
+$$
+\begin{aligned}
+\operatorname{sen}\frac{\pi}{2} + \operatorname{sen} x &= \operatorname{sen}(2x) - \cos \pi \\
+1 + \operatorname{sen} x &= \operatorname{sen}(2x) + 1 \\
+\operatorname{sen} x &= \operatorname{sen}(2x) \\
+\operatorname{sen} x &= 2\operatorname{sen} x \\
+2\operatorname{sen} x - \operatorname{sen} x &= 0 \\
+\operatorname{sen} x &= 0 \\
+x = 0 \;&\text{ou}\; x = \pi
+\end{aligned}
+$$
+
+A resolução apresentada pelo estudante está errada, pois ele
+
+(A) considerou que $\cos \pi$ vale $1$.
+(B) não considerou as infinitas voltas no ciclo trigonométrico para a resposta.
+(C) considerou que $\operatorname{sen}\frac{\pi}{2}$ vale $1$.
+(D) não utilizou corretamente o seno da soma de dois arcos.
+(E) apresentou duas respostas e não apenas uma.
+
+<Dicas>
+  <Dica>
+    A questão não pede pra você resolver a equação, pede pra você achar em qual linha o estudante
+    escorregou. Confere uma linha por vez, de cima pra baixo, e para na primeira que não se
+    sustenta.
+  </Dica>
+  <Dica>
+    As duas primeiras linhas trocam $\operatorname{sen}\frac{\pi}{2}$ por $1$ e $-\cos\pi$ por
+    $+1$. Confere esses dois valores no ciclo antes de seguir: eles estão certos?
+  </Dica>
+  <Dica>
+    Sobrou a passagem de $\operatorname{sen}(2x)$ pra $2\operatorname{sen} x$. O $2$ ali está
+    multiplicando o seno, ou está dentro dele? E $2x$ é a mesma coisa que $x + x$.
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="(D) não utilizou corretamente o seno da soma de dois arcos">
+
+As duas primeiras trocas estão certas: $\operatorname{sen}\frac{\pi}{2} = 1$ e $\cos\pi = -1$,
+então $-\cos\pi = +1$, e os dois $1$ se cancelam dos dois lados. Isso derruba as alternativas (A)
+e (C).
+
+O erro está na quarta linha, quando ele escreve
+
+$$
+\operatorname{sen}(2x) = 2\operatorname{sen} x \qquad \text{(errado)}
+$$
+
+O seno não é uma multiplicação, então o $2$ não sai de dentro dele. Como $2x = x + x$, o certo é
+abrir pelo seno da soma:
+
+$$
+\operatorname{sen}(2x) = \operatorname{sen}(x + x)
+= \operatorname{sen} x \cos x + \cos x \operatorname{sen} x
+= 2\operatorname{sen} x \cos x
+$$
+
+Então a resposta é a **(D)**.
+
+E vale ver onde a equação ia dar, feita direito:
+
+$$
+\operatorname{sen} x = 2\operatorname{sen} x \cos x
+\;\Longrightarrow\;
+\operatorname{sen} x\,(1 - 2\cos x) = 0
+$$
+
+o que dá $\operatorname{sen} x = 0$ (e aí $x = 0$ ou $x = \pi$) **ou** $\cos x = \frac{1}{2}$ (e aí
+$x = \frac{\pi}{3}$ ou $x = \frac{5\pi}{3}$). O estudante perdeu duas das quatro raízes.
+
+### Raciocínio
+
+Quando a questão mostra a resolução de outra pessoa, eu não refaço a conta do zero: eu leio linha
+por linha perguntando "essa linha decorre da de cima?". A primeira que não decorre é a resposta, e
+o resto da folha nem precisa ser lido.
+
+### Erros comuns
+
+**Marcar a (B)**, achando que faltou somar $2k\pi$. O enunciado prendeu $x$ no intervalo
+$0 \le x < 2\pi$, ou seja, uma volta só: as infinitas voltas estão fora do que foi pedido.
+
+</Resolucao>

@@ -1,0 +1,129 @@
+---
+resumo: A entropia de Shannon de uma sequência, montada com propriedade de logaritmo
+fonte: FUVEST
+ano: 2026
+fonte_url: https://www.fuvest.br/wp-content/uploads/fuvest2026-fase1-prova-V1.pdf
+fonte_questao: "04 (prova V1)"
+nivel: desafio
+modulos: [logaritmos, probabilidade]
+resposta: "(A) 5 − (9/4)·log₂ 3"
+verificado: false
+---
+
+O conceito de entropia permeia diversas áreas do conhecimento e foi introduzido na Teoria da
+Informação por Claude Shannon, que desenvolveu uma forma de calcular a entropia $E$ de um sistema,
+a saber
+
+$$
+E = -\sum_i P_i(x)\,\log_2 P_i(x)
+$$
+
+em que $P_i(x)$ é a probabilidade do $i$-ésimo resultado para a variável $x$.
+
+Por exemplo, considere uma sequência com duas letras A coloridas, a primeira azul e a segunda
+vermelha (AA). Se essas duas letras fossem colocadas numa urna, a probabilidade de se retirar, sem
+observar, a letra azul, como na sequência original, é $\frac{1}{2}$. Devolve-se a letra à urna e
+sorteia-se novamente. A probabilidade de sair vermelha é novamente $\frac{1}{2}$, e nesse caso
+tem-se:
+
+$$
+E = -\sum_i P_i(x)\,\log_2 P_i(x)
+= -\left(\frac{1}{2}\log_2\frac{1}{2} + \frac{1}{2}\log_2\frac{1}{2}\right) = 1
+$$
+
+Para uma sequência com 4 letras A, as duas primeiras azuis e as duas últimas vermelhas (AAAA),
+colocando-as numa urna e sorteando uma, a probabilidade de sair azul é $\frac{1}{2}$. Devolve-se a
+letra e sorteia-se novamente. A probabilidade da segunda letra sorteada ser azul, como na sequência
+original, é novamente $\frac{1}{2}$. Procedendo dessa forma para as duas letras vermelhas, tem-se:
+
+$$
+E = -\left(\frac{1}{2}\log_2\frac{1}{2} + \frac{1}{2}\log_2\frac{1}{2}
++ \frac{1}{2}\log_2\frac{1}{2} + \frac{1}{2}\log_2\frac{1}{2}\right) = 2
+$$
+
+Com base nessas informações, qual o valor da entropia $E$, no caso de uma sequência com 4 letras A,
+sendo as 3 primeiras azuis e a última vermelha (AAAA)?
+
+(A) $5 - \frac{9}{4}\log_2 3$
+(B) $\frac{1}{2} - \frac{5}{2}\log_2 3$
+(C) $\frac{3}{2}$
+(D) $\frac{9}{4}\log_2 3$
+(E) $3$
+
+<Dicas>
+  <Dica>
+    O enunciado é longo e a única coisa que você precisa tirar dele é a receita: quantas parcelas a
+    soma tem, e o que entra em cada uma. Conta as parcelas dos dois exemplos e compara com o
+    tamanho da sequência.
+  </Dica>
+  <Dica>
+    Agora a urna nova: são 3 azuis e 1 vermelha lá dentro. Tirando uma letra sem olhar, qual é a
+    probabilidade de sair azul? E de sair vermelha?
+  </Dica>
+  <Dica>
+    Montada a soma, você vai precisar de $\log_2\frac{3}{4}$, que não é número redondo. Quebra ele
+    com a propriedade do log de um quociente, lembrando que $\log_2 4 = 2$.
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="(A) 5 − (9/4)·log₂ 3">
+
+A receita dos exemplos é: **uma parcela por letra da sequência**, e em cada parcela entra a
+probabilidade de sortear a cor daquela letra. Por isso a sequência de duas letras deu duas parcelas
+e a de quatro deu quatro.
+
+Na urna nova são $3$ azuis e $1$ vermelha, então
+
+$$
+P(\text{azul}) = \frac{3}{4} \qquad\qquad P(\text{vermelha}) = \frac{1}{4}
+$$
+
+As três primeiras letras são azuis e a última é vermelha, então:
+
+$$
+E = -\left(3 \cdot \frac{3}{4}\log_2\frac{3}{4} + \frac{1}{4}\log_2\frac{1}{4}\right)
+$$
+
+Agora os dois logs. O da direita é redondo, porque $\frac{1}{4} = 2^{-2}$:
+
+$$
+\log_2\frac{1}{4} = -2
+\qquad\text{então}\qquad
+\frac{1}{4}\log_2\frac{1}{4} = -\frac{1}{2}
+$$
+
+E o da esquerda abre pela propriedade do quociente:
+
+$$
+\log_2\frac{3}{4} = \log_2 3 - \log_2 4 = \log_2 3 - 2
+$$
+
+$$
+3 \cdot \frac{3}{4}\left(\log_2 3 - 2\right) = \frac{9}{4}\log_2 3 - \frac{9}{2}
+$$
+
+Juntando dentro do parêntese e virando o sinal:
+
+$$
+E = -\left(\frac{9}{4}\log_2 3 - \frac{9}{2} - \frac{1}{2}\right)
+= -\left(\frac{9}{4}\log_2 3 - 5\right)
+= 5 - \frac{9}{4}\log_2 3
+$$
+
+Alternativa **(A)**.
+
+### Raciocínio
+
+Enunciado desse tamanho assusta, e o que eu faço é procurar o padrão em vez de entender a teoria:
+os dois exemplos existem pra te ensinar a montar a soma, e nenhuma linha deles fala de Shannon de
+verdade. Depois de montada, é uma conta de logaritmo com $\log_2 3$ atravessado, e o
+$\log_2 3 \cong 1{,}58$ serve pra conferir: $E \cong 5 - 3{,}56 = 1{,}44$, que é menos que os $2$ da
+sequência equilibrada, e faz sentido, porque uma urna com 3 azuis é mais previsível que uma com
+2 e 2.
+
+### Erros comuns
+
+**Somar só duas parcelas**, uma pra azul e uma pra vermelha, porque são duas cores. A receita dos
+exemplos é uma parcela por letra, e é justamente isso que faz as três azuis pesarem três vezes.
+
+</Resolucao>

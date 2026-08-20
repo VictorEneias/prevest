@@ -1,0 +1,91 @@
+---
+resumo: A equação da circunferência de um prédio que tangencia o ponto médio do lado da praça
+fonte: FUVEST
+ano: 2026
+fonte_url: https://www.fuvest.br/wp-content/uploads/fuvest2026-fase1-prova-V1.pdf
+fonte_questao: "37 (prova V1)"
+nivel: medio
+modulos: [analitica-circunferencia, analitica-ponto]
+resposta: "(A) (x − 14)² + (y − 4)² = 36"
+verificado: false
+---
+
+Engenheiros estavam mapeando um terreno para construção de um empreendimento com quatro prédios
+em formato cilíndrico distribuídos em torno de uma praça com o formato quadrado. Para a construção
+dos prédios, os engenheiros demarcaram os vértices da praça nos pontos $A = (0,0)$, $B = (8,0)$,
+$C$ e $D$, em sistema de coordenadas cartesianas onde cada unidade corresponde a um metro.
+
+Sabendo-se que a borda da seção circular de cada prédio tangencia cada lado do quadrado no seu
+ponto médio, qual deve ser a equação da circunferência do prédio que tem uma distância de $10$ m
+do seu centro até o centro do quadrado e que passa pelo ponto de tangência $P$, conforme a figura?
+
+(A) $(x - 14)^2 + (y - 4)^2 = 36$
+(B) $(x - 18)^2 + (y - 4)^2 = 100$
+(C) $(x - 8)^2 + (y - 24)^2 = 36$
+(D) $x^2 + y^2 = 36$
+(E) $(x - 4)^2 + (y - 24)^2 = 100$
+
+*A figura da prova mostra a praça com os quatro prédios em volta e marca o ponto de tangência $P$
+de um deles. Ela não está reproduzida aqui, e não faz falta: das cinco alternativas, só uma tem o
+centro a $10$ m do centro da praça.*
+
+<Dicas>
+  <Dica>
+    Começa desenhando a praça no papel quadriculado. Com $A = (0,0)$ e $B = (8,0)$, quem são $C$ e
+    $D$, e onde fica o centro do quadrado?
+  </Dica>
+  <Dica>
+    Tangenciar o lado no ponto médio quer dizer que o círculo encosta ali e não corta. Onde fica o
+    centro de um círculo que encosta num lado horizontal ou vertical: em cima da perpendicular ao
+    lado, ou em qualquer lugar?
+  </Dica>
+  <Dica>
+    Sobrou achar o raio, e ele é a distância do centro até o ponto onde o círculo encosta. Você já
+    tem os dois pontos.
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="(A) (x − 14)² + (y − 4)² = 36">
+
+O lado $AB$ vai de $(0,0)$ a $(8,0)$, então o quadrado tem lado $8$, os outros vértices são
+$C = (8,8)$ e $D = (0,8)$, e o centro da praça é o $(4,4)$.
+
+Os pontos médios dos quatro lados são $(4,0)$, $(8,4)$, $(4,8)$ e $(0,4)$, e é neles que os prédios
+encostam. O prédio da pergunta é o que encosta no lado $BC$, no ponto $P = (8,4)$.
+
+Como o círculo tangencia um lado vertical no ponto $(8,4)$, o centro dele está na horizontal que
+passa por $P$, ou seja, na altura $y = 4$. E ele está a $10$ m do centro da praça, andando pra fora:
+
+$$
+\text{centro} = (4 + 10,\; 4) = (14,\, 4)
+$$
+
+O raio é a distância do centro até o ponto onde o círculo encosta:
+
+$$
+r = 14 - 8 = 6
+$$
+
+E a equação da circunferência de centro $(a,b)$ e raio $r$ é $(x-a)^2 + (y-b)^2 = r^2$:
+
+$$
+(x - 14)^2 + (y - 4)^2 = 36
+$$
+
+Alternativa **(A)**.
+
+### Raciocínio
+
+O que trava aqui não é a fórmula da circunferência, é montar o desenho: com o quadrado marcado no
+papel, o centro do prédio é o único ponto que fica na reta $y = 4$, do lado de fora, a $10$ do
+centro. Repara que dá pra eliminar três alternativas sem calcular nada, olhando só o raio: a
+distância do centro da praça até o lado é $4$, então um prédio de raio $10$ engoliria a praça
+inteira, o que derruba a (B) e a (E).
+
+### Erros comuns
+
+**Confundir o $10$ com o raio**, e escrever $(x-14)^2 + (y-4)^2 = 100$. O $10$ é a distância entre
+dois centros, o da praça e o do prédio, e o raio é a distância do centro do prédio até onde ele
+encosta na praça. São dois segmentos diferentes na mesma reta.
+
+</Resolucao>

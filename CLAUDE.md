@@ -134,7 +134,7 @@ O que era `<Curiosidade rotulo="X">` hoje é `### X`. O que era `<Erros>` hoje �
 |---|---|
 | `npm run dev` | **é isso que roda na casa do aluno**, na porta 4321 |
 | `npm run grafo` | frontmatter inválido, elo morto, ciclo, prereq redundante, teto de 5 áreas, e o frontmatter dos exercícios |
-| `npm run paginas` | renderiza as 86 páginas no node e diz qual quebrou |
+| `npm run paginas` | renderiza as páginas e o corpo de todo exercício no node, e diz qual quebrou |
 | `npm run tempos` | recalcula o `tempo_estimado` das 84 aulas |
 | `npm run plano` | reescreve o `PLANO-DE-AULAS.md` a partir do frontmatter |
 | `npm run check` | `tsc --noEmit` |

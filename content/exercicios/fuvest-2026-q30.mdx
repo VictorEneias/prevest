@@ -1,0 +1,81 @@
+---
+resumo: A menor altura de uma lata cilíndrica de 350 mL com o diâmetro limitado
+fonte: FUVEST
+ano: 2026
+fonte_url: https://www.fuvest.br/wp-content/uploads/fuvest2026-fase1-prova-V1.pdf
+fonte_questao: "30 (prova V1)"
+nivel: medio
+modulos: [cilindro-e-cone, unidades-de-medida]
+resposta: "(B) 7 cm"
+verificado: false
+---
+
+O Brasil é o líder mundial em reciclagem de alumínio, atingindo números próximos a 99% de latas
+recicladas no ano de 2021. Essas latas, já utilizadas para refrigerantes, cervejas, energéticos,
+agora começam a trazer também água mineral em seu interior.
+
+Considere que uma empresa deseja envasar $350$ mL de água em uma lata de alumínio de formato
+cilíndrico e que, por razões práticas como manuseio e custo do material, o diâmetro da base dessa
+lata deve ter entre $5$ cm e $8$ cm.
+
+Qual será, aproximadamente, em centímetros, a menor altura possível da lata?
+
+(A) 5
+(B) 7
+(C) 13
+(D) 18
+(E) 28
+
+<Dicas>
+  <Dica>
+    O volume é o mesmo em qualquer lata que serve, e ele liga duas coisas que podem variar: o raio
+    e a altura. Escreve essa ligação antes de pensar em qual é a menor.
+  </Dica>
+  <Dica>
+    Se o volume é fixo, engordar a lata faz o quê com a altura dela? Então a altura mínima
+    acontece em qual das pontas do intervalo do diâmetro?
+  </Dica>
+  <Dica>
+    Cuidado com duas armadilhas na hora de pôr os números: mL não é cm³ por acaso, e o enunciado
+    te deu o diâmetro, não o raio.
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="(B) 7 cm">
+
+Primeiro as unidades: $350$ mL são $350\ \text{cm}^3$, porque $1$ mL é exatamente $1\ \text{cm}^3$.
+
+O volume do cilindro é
+
+$$
+V = \pi r^2 h
+\qquad\Longrightarrow\qquad
+h = \frac{V}{\pi r^2} = \frac{350}{\pi r^2}
+$$
+
+O $350$ e o $\pi$ são fixos, então **quanto maior o raio, menor a altura**: o $r$ aparece dividindo,
+e ainda por cima ao quadrado. A altura mínima é a do raio máximo.
+
+O diâmetro pode chegar a $8$ cm, então o raio máximo é $4$ cm:
+
+$$
+h = \frac{350}{\pi \cdot 4^2} = \frac{350}{16\pi} \cong \frac{350}{50{,}3} \cong 6{,}96
+$$
+
+Aproximadamente $7$ cm, alternativa **(B)**.
+
+### Raciocínio
+
+Antes de calcular eu decido qual ponta do intervalo usar, porque calcular as duas é o dobro do
+trabalho pra jogar metade fora. E dá pra conferir a ordem de grandeza sem conta nenhuma: a lata de
+refrigerante que você conhece tem uns 6,5 cm de diâmetro e uns 12 cm de altura, então uma lata mais
+gorda com o mesmo conteúdo tem que ser mais baixa que isso.
+
+### Erros comuns
+
+**Usar o $8$ como raio.** Aí sai $h = \frac{350}{64\pi} \cong 1{,}7$, que não está entre as
+alternativas, e é o tipo de erro que a prova nem precisa punir com distrator: ele se denuncia
+sozinho. Já **usar o raio $2{,}5$** (o diâmetro mínimo) dá $\cong 17{,}8$, que é a alternativa (D)
+esperando por quem procurou a altura errada.
+
+</Resolucao>
