@@ -120,11 +120,9 @@ const PERTENCE: { chave: Onde; simbolo: string; nome: string; aceita: Onde[] }[]
   },
 ];
 
-const PRESETS = ['5', '-2', '0', '0,75', '3/4', '8/4', '0,333...', '√2'];
 
 export default function Caixas({ valor: inicial = '3', titulo, chaveUrl }: CaixasProps) {
   const [texto, setTexto] = useState(inicial);
-  const [congelado, setCongelado] = useState<Lido | null>(null);
 
   useEffect(() => {
     if (!chaveUrl) return;
@@ -151,17 +149,10 @@ export default function Caixas({ valor: inicial = '3', titulo, chaveUrl }: Caixa
           .map((p) => `nos ${p.nome}`)
           .join(', ') + '.');
 
-  const bolinha = (l: Lido, fantasma = false) => (
-    <span className={`cx-bola ${fantasma ? 'fantasma' : ''}`}>{l.rotulo}</span>
-  );
+  const bolinha = (l: Lido) => <span className="cx-bola">{l.rotulo}</span>;
 
-  /* a vaga de cada caixa: o número entra na dela, e o congelado fica do lado */
-  const conteudo = (nivel: Onde) => (
-    <>
-      {lido.onde === nivel && bolinha(lido)}
-      {congelado && congelado.onde === nivel && bolinha(congelado, true)}
-    </>
-  );
+  /** a vaga de cada caixa: o número entra na dela e as outras ficam vazias */
+  const conteudo = (nivel: Onde) => <>{lido.onde === nivel && bolinha(lido)}</>;
 
   return (
     <figure className="cx">
@@ -196,6 +187,11 @@ export default function Caixas({ valor: inicial = '3', titulo, chaveUrl }: Caixa
       </div>
 
       <div className="cx-ctrl">
+        <p className="cx-como">
+          Acima estão as caixas de números, uma dentro da outra. Aí embaixo você escolhe{' '}
+          <b>qual número</b> vai entrar, arrastando de quarto em quarto ou escrevendo no campo do
+          lado, e a figura mostra em quais caixas ele coube.
+        </p>
         <div className="cx-linha">
           <input
             className="cx-slider"
@@ -208,7 +204,7 @@ export default function Caixas({ valor: inicial = '3', titulo, chaveUrl }: Caixa
             aria-label="Varrer os números de −5 a 5, de quarto em quarto"
           />
           <label className="cx-campo">
-            número
+            ou escreva o número:
             <input
               type="text"
               value={texto}
@@ -217,47 +213,20 @@ export default function Caixas({ valor: inicial = '3', titulo, chaveUrl }: Caixa
               aria-label="Escrever o número: aceita fração, dízima e raiz"
             />
           </label>
-          <button
-            className="cx-btn"
-            onClick={() => setCongelado(congelado ? null : lido)}
-            aria-pressed={!!congelado}
-          >
-            {congelado ? 'Soltar' : 'Congelar'}
-          </button>
         </div>
 
-        <div className="cx-linha">
-          {PRESETS.map((p) => (
-            <button key={p} className="cx-btn" onClick={() => setTexto(p)}>
-              {menos(p)}
-            </button>
-          ))}
-          <button
-            className="cx-btn"
-            onClick={() => {
-              setTexto(inicial);
-              setCongelado(null);
-            }}
-          >
-            Recomeçar
-          </button>
+        <p className="cx-nota">
+          <b>Experimenta:</b> arrasta de quarto em quarto e repara que entre dois inteiros o ponto
+          cai fora de duas caixas de uma vez. Depois escreve no campo <code>8/4</code>, que parece
+          fração e é inteiro, <code>0,333...</code>, que não acaba nunca e mesmo assim é fração, e{' '}
+          <code>√2</code>, que é o único dos três que fica na caixa de fora.
           {chaveUrl && (
-            <button
-              className="cx-btn sutil"
-              onClick={copiarLink}
-              title="Copiar link com esta configuração"
-            >
-              Copiar link
+            <button className="cx-link" onClick={copiarLink}>
+              copiar link deste estado
             </button>
           )}
-        </div>
+        </p>
       </div>
-
-      <p className="cx-nota">
-        Arraste o slider de quarto em quarto e olha em quantas caixas o ponto está a cada parada.
-        No campo do lado dá pra escrever fração (<code>3/4</code>), dízima (<code>0,333...</code>)
-        e raiz (<code>√2</code>).
-      </p>
 
       <style>{`
         .cx {
@@ -302,10 +271,6 @@ export default function Caixas({ valor: inicial = '3', titulo, chaveUrl }: Caixa
           font-weight: 700; font-variant-numeric: tabular-nums;
           box-shadow: var(--sombra);
         }
-        .cx-bola.fantasma {
-          background: transparent; color: var(--tinta-fraca);
-          border: 2px dashed var(--tinta-fraca); box-shadow: none;
-        }
 
         .cx-leitura {
           display: flex; gap: 10px; flex-wrap: wrap; align-items: baseline;
@@ -346,6 +311,16 @@ export default function Caixas({ valor: inicial = '3', titulo, chaveUrl }: Caixa
           background: var(--tinta); border-color: var(--tinta); color: var(--papel);
         }
         .cx-btn.sutil { color: var(--tinta-fraca); }
+        .cx-como {
+          font-size: 0.8rem; color: var(--tinta-media); margin: 0 0 2px;
+        }
+        .cx-como b { color: var(--tinta); }
+        .cx-link {
+          font: inherit; color: var(--tinta-fraca); background: none;
+          border: 0; padding: 0 0 0 8px; text-decoration: underline; cursor: pointer;
+        }
+        .cx-link:hover { color: var(--tinta); }
+        .cx-nota b { color: var(--tinta-media); }
         .cx-nota {
           font-family: var(--f-ui); font-size: 0.74rem; color: var(--tinta-fraca);
           margin: calc(var(--u) * 0.4) 0 0;

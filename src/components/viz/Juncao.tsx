@@ -38,23 +38,6 @@ const CTX: Record<Contexto, { unid: string; pos: string; neg: string; resultado:
 
 /* Os casos que eu chamo na lousa toda aula, a um clique. Cada contexto tem os
    seus, senão em Física apareceria "dois negativos" pra falar de força. */
-const PRESETS: Record<Contexto, { nome: string; parcelas: number[] }[]> = {
-  numero: [
-    { nome: 'Positivo com negativo', parcelas: [3, -5] },
-    { nome: 'Dois negativos', parcelas: [-3, -5] },
-    { nome: 'Volta pro zero', parcelas: [7, -7] },
-    { nome: 'Atravessa o zero', parcelas: [5, -9, 2] },
-  ],
-  deslocamento: [
-    { nome: 'Ida e volta', parcelas: [40, -40] },
-    { nome: 'Anda mais do que volta', parcelas: [50, -35, 20, -5] },
-  ],
-  forca: [
-    { nome: 'Em equilíbrio', parcelas: [30, -30] },
-    { nome: 'Resultante pra direita', parcelas: [50, -20] },
-  ],
-};
-
 const L = 720;
 const A = 246;
 const Y = 178;
@@ -89,7 +72,6 @@ export default function Juncao({
   const [alvoSolta, setAlvoSolta] = useState<number | null>(null);
   const [grupo, setGrupo] = useState<[number, number] | null>(null);
   const [agrupando, setAgrupando] = useState(false);
-  const [fantasma, setFantasma] = useState<number[] | null>(null);
   const [pulsando, setPulsando] = useState(false);
 
   const fitaRef = useRef<HTMLDivElement>(null);
@@ -120,7 +102,7 @@ export default function Juncao({
   /* ---- domínio da reta ---- */
   const [min, max] = useMemo(() => {
     if (dominio) return dominio;
-    const vals = [...acum, 0, ...(fantasma ? fantasma : [])];
+    const vals = [...acum, 0];
     let lo = Math.floor(Math.min(...vals)) - 1;
     let hi = Math.ceil(Math.max(...vals)) + 1;
     if (hi - lo < 6) {
@@ -129,7 +111,7 @@ export default function Juncao({
       hi = Math.ceil(meio + 3);
     }
     return [lo, hi] as [number, number];
-  }, [acum, dominio, fantasma]);
+  }, [acum, dominio]);
 
   const x = useCallback((v: number) => MARGEM + ((v - min) / (max - min)) * (L - 2 * MARGEM), [min, max]);
 
@@ -186,21 +168,6 @@ export default function Juncao({
     setAlvoSolta(null);
   };
 
-  const embaralhar = () => {
-    setItens((atual) => {
-      const novo = [...atual];
-      for (let i = novo.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [novo[i], novo[j]] = [novo[j], novo[i]];
-      }
-      return novo;
-    });
-    setGrupo(null);
-    setPasso(parcelas.length);
-    setPulsando(true);
-    setTimeout(() => setPulsando(false), 550);
-  };
-
   /* Trocar a ordem só existia no arrasto, então quem usa teclado não conseguia
      ver a comutatividade acontecer, que é o ponto da figura. As setas só movem
      quando o foco está no chip: dentro do <input> elas são do campo. */
@@ -211,15 +178,6 @@ export default function Juncao({
     else if (e.key === 'ArrowRight' && i < parcelas.length - 1) mover(i, i + 1);
     else return;
     e.preventDefault();
-  };
-
-  const recomecar = (novas = iniciais) => {
-    setItens(novas.map((v) => ({ id: proximoId.current++, v })));
-    setPasso(novas.length);
-    setGrupo(null);
-    setAgrupando(false);
-    setFantasma(null);
-    setNotacao(notacaoInicial);
   };
 
   const editar = (i: number, v: number) => {
@@ -475,19 +433,17 @@ export default function Juncao({
           </text>
         </g>
 
-        {/* curva congelada */}
-        {fantasma && (
-          <g opacity="0.42">
-            <circle cx={x(fantasma[fantasma.length - 1])} cy={Y} r="5" fill="none" stroke="var(--tinta-fraca)" strokeWidth="2" />
-            <text x={x(fantasma[fantasma.length - 1])} y={Y + 46} textAnchor="middle" className="jc-tick">
-              antes
-            </text>
-          </g>
-        )}
       </svg>
 
       {/* ---------- controles ---------- */}
       <div className="jc-ctrl">
+        <p className="jc-como">
+          Cada ficha lá em cima é uma parcela, com o sinal dela na frente
+          {permitirEditar ? ', e dá pra mudar o número, trocar o sinal no ⇄ e pôr mais parcela no +' : ''}
+          {permitirReordenar ? '. Arrasta as fichas pra trocar a ordem' : ''}. Aí embaixo você
+          escolhe como olhar a mesma conta.
+        </p>
+
         <div className="jc-grupo-btn">
           <button
             onClick={() => setNotacao((n) => (n === 'juncao' ? 'subtracao' : 'juncao'))}
@@ -495,27 +451,13 @@ export default function Juncao({
           >
             {notacao === 'juncao' ? 'Ver como subtração' : 'Ver como junção'}
           </button>
-          {permitirReordenar && (
-            <button onClick={embaralhar} className="jc-btn">
-              Embaralhar
-            </button>
-          )}
-        </div>
-
-        <div className="jc-grupo-btn">
           <button
             onClick={() => setPasso((p) => (p >= parcelas.length ? 1 : p + 1))}
             className="jc-btn"
-            title="Mostrar uma seta de cada vez"
           >
-            {passo >= parcelas.length ? 'Passo a passo' : `Próxima seta (${passo}/${parcelas.length})`}
-          </button>
-          <button
-            onClick={() => setFantasma(fantasma ? null : [...acum])}
-            className="jc-btn"
-            aria-pressed={!!fantasma}
-          >
-            {fantasma ? 'Soltar' : 'Congelar'}
+            {passo >= parcelas.length
+              ? 'Mostrar uma seta de cada vez'
+              : `Próxima seta (${passo}/${parcelas.length})`}
           </button>
           {permitirAgrupar && (
             <button
@@ -526,33 +468,33 @@ export default function Juncao({
               className="jc-btn"
               aria-pressed={agrupando}
             >
-              {agrupando ? 'Sair do agrupar' : 'Agrupar'}
+              {agrupando ? 'Sair do agrupar' : 'Agrupar duas fichas'}
             </button>
           )}
-          <button onClick={() => recomecar()} className="jc-btn">
-            Recomeçar
-          </button>
+        </div>
+
+        <p className="jc-nota">
+          {agrupando ? (
+            <>
+              <b>Agora:</b> clica em duas fichas vizinhas pra elas virarem uma seta só, e clica
+              dentro do grupo pra desfazer. O resultado não sai do lugar, e a seta que sobrou é a
+              junção das duas.
+            </>
+          ) : (
+            <>
+              <b>Experimenta:</b>{' '}
+              {permitirReordenar
+                ? 'troca a ordem das fichas e repara que o ponto do resultado não se move, porque cada parcela anda o tanto dela e a ordem de andar não muda onde você chega.'
+                : 'troca a notação e repara que a conta é a mesma escrita de dois jeitos.'}
+            </>
+          )}
           {chaveUrl && (
-            <button onClick={copiarLink} className="jc-btn sutil" title="Copiar link com esta configuração">
-              Copiar link
+            <button className="jc-link" onClick={copiarLink}>
+              copiar link deste estado
             </button>
           )}
-        </div>
+        </p>
       </div>
-
-      {permitirEditar && (
-        <div className="jc-presets">
-          {PRESETS[contexto].map((pr) => (
-            <button key={pr.nome} className="jc-btn sutil" onClick={() => recomecar(pr.parcelas)}>
-              {pr.nome}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {agrupando && (
-        <p className="jc-nota">Clique nas parcelas pra montar um grupo. Clique dentro do grupo pra desfazer.</p>
-      )}
 
       <style>{`
         .jc {
@@ -649,10 +591,16 @@ export default function Juncao({
         .jc-btn.destaque { border-color: var(--azul); color: var(--azul); font-weight: 600; }
         .jc-btn.destaque:hover { background: var(--azul-fraco); }
         .jc-btn.sutil { color: var(--tinta-fraca); }
-        .jc-presets {
-          display: flex; gap: 6px; flex-wrap: wrap;
-          margin-top: calc(var(--u) * 0.4);
+        .jc-como {
+          font-size: 0.8rem; color: var(--tinta-media); margin: 0 0 2px;
         }
+        .jc-como b { color: var(--tinta); }
+        .jc-link {
+          font: inherit; color: var(--tinta-fraca); background: none;
+          border: 0; padding: 0 0 0 8px; text-decoration: underline; cursor: pointer;
+        }
+        .jc-link:hover { color: var(--tinta); }
+        .jc-nota b { color: var(--tinta-media); }
         .jc-nota {
           font-family: var(--f-ui); font-size: 0.74rem; color: var(--tinta-fraca);
           margin: calc(var(--u) * 0.4) 0 0;

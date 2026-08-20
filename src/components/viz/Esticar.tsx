@@ -67,7 +67,6 @@ export default function Esticar({
   const [valor, setValor] = useState(valorInicial);
   const [fator, setFator] = useState(fatorInicial);
   const [travado, setTravado] = useState(false);
-  const [congelado, setCongelado] = useState<{ v: number; f: number } | null>(null);
 
   useEffect(() => {
     if (!chaveUrl) return;
@@ -82,7 +81,7 @@ export default function Esticar({
 
   const [min, max] = ((): [number, number] => {
     if (dominio) return dominio;
-    const vals = [0, valor, resultado, congelado ? congelado.v * congelado.f : 0];
+    const vals = [0, valor, resultado];
     const lo = Math.min(...vals);
     const hi = Math.max(...vals);
     const folga = Math.max(1, (hi - lo) * 0.12);
@@ -95,15 +94,6 @@ export default function Esticar({
   const passo = span <= 14 ? 1 : span <= 30 ? 2 : span <= 70 ? 5 : 10;
   const ticks: number[] = [];
   for (let v = Math.ceil(min / passo) * passo; v <= max; v += passo) ticks.push(v);
-
-  const PRESETS: { nome: string; f: number }[] = [
-    { nome: 'Dobrar', f: 2 },
-    { nome: 'Metade', f: 0.5 },
-    { nome: 'Virar', f: -1 },
-    { nome: 'Virar e dobrar', f: -2 },
-    { nome: 'O inverso', f: valor === 0 ? 0 : 1 / valor },
-    { nome: 'Não mexer', f: 1 },
-  ];
 
   const aoTeclar = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowRight') setFator((f) => Math.min(FATOR_MAX, f + 0.25));
@@ -178,9 +168,6 @@ export default function Esticar({
           <marker id="es-base" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
             <path d="M0,0 L9,4.5 L0,9 z" fill="var(--grafite)" />
           </marker>
-          <marker id="es-fant" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
-            <path d="M0,0 L9,4.5 L0,9 z" fill="var(--tinta-fraca)" />
-          </marker>
         </defs>
 
         <line
@@ -206,23 +193,6 @@ export default function Esticar({
             </text>
           </g>
         ))}
-
-        {congelado && (
-          <g>
-            {seta(
-              0,
-              congelado.v * congelado.f,
-              Y - 92,
-              'var(--tinta-fraca)',
-              'es-fant',
-              true,
-            )}
-            <text x={x(congelado.v * congelado.f)} y={Y - 100} className="es-rot fant">
-              antes: {num(congelado.v)} × {comoFracao(congelado.f)} ={' '}
-              {num(congelado.v * congelado.f)}
-            </text>
-          </g>
-        )}
 
         {/* a seta de partida, sempre no lugar, pra a comparação existir */}
         {seta(0, valor, Y - 22, 'var(--grafite)', 'es-base')}
@@ -256,8 +226,12 @@ export default function Esticar({
       </svg>
 
       <div className="es-ctrl">
+        <p className="es-como">
+          Acima está uma seta que sai do zero, e o resultado dela multiplicada pelo fator. Aí
+          embaixo você escolhe <b>por quanto multiplicar</b> e <b>de que número a seta parte</b>.
+        </p>
         <div className="es-linha">
-          <span className="es-etiq">fator</span>
+          <span className="es-etiq">multiplicar por:</span>
           <input
             className="es-slider"
             type="range"
@@ -283,7 +257,7 @@ export default function Esticar({
 
         <div className="es-linha">
           <label className="es-campo">
-            a seta de partida
+            a seta parte do:
             <input
               type="number"
               value={Number(valor.toFixed(4))}
@@ -294,48 +268,19 @@ export default function Esticar({
           <button className="es-btn" onClick={() => setTravado((t) => !t)} aria-pressed={travado}>
             Travar a seta de partida
           </button>
-          <button
-            className="es-btn"
-            onClick={() => setCongelado(congelado ? null : { v: valor, f: fator })}
-            aria-pressed={!!congelado}
-          >
-            {congelado ? 'Soltar' : 'Congelar'}
-          </button>
         </div>
 
-        <div className="es-linha">
-          {PRESETS.map((p) => (
-            <button key={p.nome} className="es-btn" onClick={() => setFator(p.f)}>
-              {p.nome}
-            </button>
-          ))}
-          <button
-            className="es-btn"
-            onClick={() => {
-              setValor(valorInicial);
-              setFator(fatorInicial);
-              setCongelado(null);
-              setTravado(false);
-            }}
-          >
-            Recomeçar
-          </button>
+        <p className="es-nota">
+          <b>Experimenta:</b> trava a seta de partida e desce o fator devagar. Acima de 1 a seta
+          estica, entre 0 e 1 ela encolhe, no 0 ela some, e do 0 pro −0,25 ela reaparece do outro
+          lado, já virada. Com o desenho em foco, ← → mudam o fator e ↑ ↓ mudam a seta de partida.
           {chaveUrl && (
-            <button
-              className="es-btn sutil"
-              onClick={copiarLink}
-              title="Copiar link com esta configuração"
-            >
-              Copiar link
+            <button className="es-link" onClick={copiarLink}>
+              copiar link deste estado
             </button>
           )}
-        </div>
+        </p>
       </div>
-
-      <p className="es-nota">
-        Trave a seta de partida pra mexer só no fator, e olha o que acontece na passagem do 1 pro
-        0,75 e na do 0 pro −0,25. Com o desenho em foco, ← → mudam o fator e ↑ ↓ mudam a seta.
-      </p>
 
       <style>{`
         .es {
@@ -375,7 +320,6 @@ export default function Esticar({
         .es-rot.pos { fill: var(--azul); }
         .es-rot.neg { fill: var(--vermelho); }
         .es-rot.base { fill: var(--grafite); font-weight: 600; font-size: 11.5px; }
-        .es-rot.fant { fill: var(--tinta-fraca); font-weight: 600; font-size: 11.5px; }
 
         .es-ctrl {
           display: flex; flex-direction: column; gap: 8px;
@@ -406,6 +350,16 @@ export default function Esticar({
           background: var(--tinta); border-color: var(--tinta); color: var(--papel);
         }
         .es-btn.sutil { color: var(--tinta-fraca); }
+        .es-como {
+          font-size: 0.8rem; color: var(--tinta-media); margin: 0 0 2px;
+        }
+        .es-como b { color: var(--tinta); }
+        .es-link {
+          font: inherit; color: var(--tinta-fraca); background: none;
+          border: 0; padding: 0 0 0 8px; text-decoration: underline; cursor: pointer;
+        }
+        .es-link:hover { color: var(--tinta); }
+        .es-nota b { color: var(--tinta-media); }
         .es-nota {
           font-family: var(--f-ui); font-size: 0.74rem; color: var(--tinta-fraca);
           margin: calc(var(--u) * 0.4) 0 0;

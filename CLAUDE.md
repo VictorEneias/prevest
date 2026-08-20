@@ -423,10 +423,9 @@ Rótulo decimal sai com vírgula, que é como se escreve em português.
 ### `<RetaZoom />` — a reta com a escala na mão do aluno
 
 O interativo de escala: arrastar anda pelos números, o slider afasta e aproxima,
-e o passo entre as marcas fica escrito por extenso embaixo — senão o aluno olha
-só o desenho e não percebe que a escala mudou. Tem travar o centro (pra separar
-"andei" de "aproximei"), congelar a janela anterior, presets e as setas do
-teclado.
+e o passo entre as marcas fica escrito por extenso embaixo, senão o aluno olha só
+o desenho e não percebe que a escala mudou. Tem travar o centro, que separa
+"andei" de "aproximei", e as setas do teclado.
 
 ```mdx
 <RetaZoom centro={0} janela={20} titulo="Afaste e aproxime" chaveUrl="rz" />
@@ -488,9 +487,10 @@ forem escritas: passe `linhas`/`colunas` diferentes em vez de criar componente.
 ### `<Barra />` — a fração como pedaço de barra
 
 O denominador corta e o numerador pinta. Com `b` aparece a segunda barra, pra
-comparar, e com `soma` aparece a terceira, já cortada no MMC. O botão **igualar os
-pedaços** é o coração da figura: os cortes multiplicam e o pintado não muda de
-tamanho, que é a equivalência acontecendo.
+comparar, e com `soma` aparece a terceira, já cortada no MMC. O coração da figura
+é o aluno cortar as duas barras no mesmo número na mão: os cortes multiplicam e o
+pintado não muda de tamanho, que é a equivalência acontecendo. Isso já foi um
+botão de "igualar os pedaços", e o botão fazia a conta no lugar dele.
 
 ```mdx
 <Barra a={[3, 5]} b={[3, 7]} titulo="Quem pintou mais?" chaveUrl="b1" />
@@ -498,17 +498,20 @@ tamanho, que é a equivalência acontecendo.
 ```
 
 A barra mostra **dois** inteiros lado a lado, com a linha grossa marcando o fim do
-primeiro, então $7/4$ passa da linha em vez de estourar o desenho.
+primeiro e a régua embaixo escrevendo 0, 1 e 2, então $7/4$ passa da marca do 1 em
+vez de estourar o desenho.
 
 ### `<Esticar />` — multiplicar como esticar, encolher e virar
 
 Uma seta na reta multiplicada por um fator: acima de 1 estica, entre 0 e 1 encolhe,
 negativo vira pro outro lado do zero. É o que faz "menos com menos dá mais" virar
-uma coisa que se vê, e o preset **o inverso** larga a ponta exatamente no 1, que é
-a divisão inteira num desenho só.
+uma coisa que se vê, e pondo o fator no inverso do valor (com `valor={4}`, fator
+$0{,}25$) a ponta larga exatamente no 1, que é a divisão inteira num desenho só.
+Escolha um `valor` cujo inverso caia no passo de $0{,}25$ do slider, senão o aluno
+não consegue chegar nele arrastando.
 
 ```mdx
-<Esticar valor={3} fator={2} titulo="Estica, encolhe e vira" chaveUrl="es" />
+<Esticar valor={4} fator={2} titulo="Estica, encolhe e vira" chaveUrl="es" />
 ```
 
 `dominio` trava a escala; sem ele a reta se ajusta ao resultado. O fator aparece
@@ -856,17 +859,33 @@ nomeado, o caminho é filtrar `children` por `props.slot === 'nome'`, e o MDX es
 - [ ] **Manipulável.** O aluno mexe e a tela responde. Figura estática não conta.
 - [ ] **Slider + campo numérico.** Slider pra explorar, número pra travar em valor
       exato quando for resolver uma questão de verdade.
-- [ ] **Congelar** — deixa o estado atual em cinza no fundo. O aprendizado está na
-      comparação, não no estado final.
+- [ ] **Controle com nome de gente.** O rótulo diz o que o aluno vai fazer
+      ("cortar em quantas partes:"), e não o nome do parâmetro ("corta em").
+- [ ] **Uma linha de orientação antes dos controles**, dizendo o que está desenhado
+      em cima e o que os controles fazem. É a `.xx-como`.
+- [ ] **Uma linha de "experimenta" depois**, com o que vale a pena tentar e o que
+      olhar enquanto acontece. É a `.xx-nota`, e é onde moram também as teclas.
 - [ ] **Isolar parâmetro** — travar os outros e deixar um só livre. Se tudo mexe
       junto, o aluno não separa as causas.
 - [ ] **Teclado.** Setas ajustam valores; foco visível.
-- [ ] **Reset** e presets nomeados ("o caso que inverte a concavidade").
 - [ ] **`chaveUrl`** — estado no hash da URL, pra o Victor achar a configuração
-      perfeita no preparo e o link virar parte do material.
+      perfeita no preparo e o link virar parte do material. O copiar link é um
+      texto sublinhado no fim da nota, e não mais um botão.
 - [ ] `prefers-reduced-motion` respeitado.
 - [ ] `aria-label` no `<svg>` descrevendo o estado atual em palavras.
 - [ ] Cores **só** via as variáveis CSS de `global.css`. Nunca hex solto.
+
+**Não** ponha fileira de botão embaixo dos controles. Congelar, recomeçar,
+embaralhar, simplificar, igualar e os presets nomeados existiram em agosto de 2026
+e saíram todos: o botão fazia a conta no lugar do aluno, e ele passava a olhar o
+resultado aparecer em vez de mexer no controle até ele aparecer. Cada um deles foi
+substituído por uma frase dizendo o que experimentar com as mãos que já estão nos
+sliders.
+
+Botão que sobrevive é o que **liga um jeito de mexer** e não tem como virar frase:
+trocar a notação, entrar no modo de agrupar, contar por linha, girar a cabeça,
+mostrar uma seta de cada vez. Se o botão faz sozinho o que o aluno deveria fazer,
+ele é texto.
 
 ### Reuso antes de criação
 

@@ -7,9 +7,15 @@ import { useEffect, useState } from 'react';
  * 2/4 e 1/2 pintam o mesmo tanto, e que igualar os pedaços multiplica os cortes
  * sem mexer no que está pintado.
  *
- * A barra mostra dois inteiros lado a lado, então 7/4 passa da linha grossa em
- * vez de estourar o desenho, e a soma ganha uma terceira barra já cortada no
- * MMC, que é a única forma de somar pedaço de tamanho diferente. */
+ * A barra mostra dois inteiros lado a lado, então 7/4 passa da marca do 1 em vez
+ * de estourar o desenho, e a soma ganha uma terceira barra já cortada no MMC,
+ * que é a única forma de somar pedaço de tamanho diferente.
+ *
+ * Aqui já teve uma fileira de botão embaixo dos controles: igualar os pedaços,
+ * simplificar, congelar e quatro presets. Saiu tudo. O botão fazia a conta no
+ * lugar do aluno, e ele passava a olhar o resultado aparecer em vez de mexer no
+ * corte até ele aparecer. O que substitui é o texto acima dos controles, que diz
+ * o que experimentar com as mesmas mãos que já estão nos sliders. */
 
 export interface BarraProps {
   /** A primeira fração, [numerador, denominador]. */
@@ -28,21 +34,11 @@ const MARGEM = 34;
 const ALTURA = 42;
 const DEN_MAX = 16;
 const NUM_MAX = 80;
-/* teto do MMC no botão de igualar: acima disso o pedaço fica fino demais pra
-   ver, e a lição de "o MMC é o caminho curto" já foi dada pelo próprio número */
-const MMC_MAX = 40;
 
 const mdc = (a: number, b: number): number => (b ? mdc(b, a % b) : Math.abs(a));
 const mmc = (a: number, b: number) => Math.abs(a * b) / mdc(a, b);
 const trava = (n: number, max: number) => Math.min(max, Math.max(0, Math.round(n)));
 const dec = (n: number) => String(Number(n.toFixed(3))).replace('.', ',');
-
-const PRESETS: { nome: string; a: [number, number]; b: [number, number] }[] = [
-  { nome: 'Meio e um terço', a: [1, 2], b: [1, 3] },
-  { nome: 'Mesmo numerador', a: [3, 5], b: [3, 7] },
-  { nome: 'Equivalentes', a: [2, 4], b: [1, 2] },
-  { nome: 'Passa do inteiro', a: [7, 4], b: [1, 4] },
-];
 
 /** Uma fração escrita empilhada, que é como ela aparece no texto da aula. */
 function Fr({ n, d }: { n: number; d: number }) {
@@ -65,7 +61,6 @@ export default function Barra({
   const [da, setDa] = useState(a[1]);
   const [nb, setNb] = useState(b?.[0] ?? 1);
   const [db, setDb] = useState(b?.[1] ?? 3);
-  const [congelado, setCongelado] = useState<{ n: number; d: number } | null>(null);
 
   const duas = !!b;
 
@@ -75,9 +70,9 @@ export default function Barra({
     if (!bruto) return;
     const [p, q, r, s] = bruto.split(',').map(Number);
     if (Number.isFinite(p)) setNa(trava(p, NUM_MAX));
-    if (Number.isFinite(q)) setDa(Math.max(1, trava(q, MMC_MAX)));
+    if (Number.isFinite(q)) setDa(Math.max(1, trava(q, DEN_MAX)));
     if (Number.isFinite(r)) setNb(trava(r, NUM_MAX));
-    if (Number.isFinite(s)) setDb(Math.max(1, trava(s, MMC_MAX)));
+    if (Number.isFinite(s)) setDb(Math.max(1, trava(s, DEN_MAX)));
   }, [chaveUrl]);
 
   const va = na / da;
@@ -85,31 +80,11 @@ export default function Barra({
   const comum = duas ? mmc(da, db) : da;
   const somaNum = duas ? na * (comum / da) + nb * (comum / db) : na;
 
-  /* igualar os pedaços é reescrever as duas no MMC: o pintado não muda de tamanho */
-  const igualar = () => {
-    if (!duas) return;
-    setNa(na * (comum / da));
-    setNb(nb * (comum / db));
-    setDa(comum);
-    setDb(comum);
-  };
-
-  const simplificar = () => {
-    const g = mdc(na, da) || 1;
-    setNa(na / g);
-    setDa(da / g);
-    if (duas) {
-      const h = mdc(nb, db) || 1;
-      setNb(nb / h);
-      setDb(db / h);
-    }
-  };
-
   const aoTeclar = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowRight') setNa((n) => trava(n + 1, NUM_MAX));
     else if (e.key === 'ArrowLeft') setNa((n) => trava(n - 1, NUM_MAX));
-    else if (e.key === 'ArrowUp') setDa((d) => Math.max(1, trava(d - 1, MMC_MAX)));
-    else if (e.key === 'ArrowDown') setDa((d) => Math.max(1, trava(d + 1, MMC_MAX)));
+    else if (e.key === 'ArrowUp') setDa((d) => Math.max(1, trava(d - 1, DEN_MAX)));
+    else if (e.key === 'ArrowDown') setDa((d) => Math.max(1, trava(d + 1, DEN_MAX)));
     else return;
     e.preventDefault();
   };
@@ -127,14 +102,12 @@ export default function Barra({
   const barras = [
     { n: na, d: da, rotulo: 'a', cor: 'var(--azul)' },
     ...(duas ? [{ n: nb, d: db, rotulo: 'b', cor: 'var(--grafite)' }] : []),
-    ...(duas && comSoma
-      ? [{ n: somaNum, d: comum, rotulo: 'a + b', cor: 'var(--marca)' }]
-      : []),
+    ...(duas && comSoma ? [{ n: somaNum, d: comum, rotulo: 'a + b', cor: 'var(--marca)' }] : []),
   ];
 
-  /* a altura tem que sair da mesma conta que empilha as barras lá embaixo, senão
-     a última sobra fora do viewBox e invade o parágrafo seguinte */
-  const A = 22 + (congelado ? ALTURA + 36 : 0) + barras.length * (ALTURA + 26) + 8;
+  /* a altura sai da mesma conta que empilha as barras, mais a régua do fim,
+     senão a última sobra fora do viewBox e invade o parágrafo seguinte */
+  const A = 22 + barras.length * (ALTURA + 26) + 26;
 
   const aria =
     `Barra cortada em ${da} ${da === 1 ? 'pedaço' : 'pedaços'}, com ${na} pintados, ` +
@@ -146,19 +119,12 @@ export default function Barra({
           : `A ${va > vb ? 'primeira' : 'segunda'} pinta mais.`)
       : '');
 
-  /* uma barra: os cortes vazios, o pintado por cima e a linha grossa do inteiro */
-  const desenhar = (
-    n: number,
-    d: number,
-    y: number,
-    cor: string,
-    rotulo: string,
-    fantasma = false,
-  ) => {
+  /* uma barra: os cortes vazios, o pintado por cima e a marca do primeiro inteiro */
+  const desenhar = (n: number, d: number, y: number, cor: string, rotulo: string) => {
     const largura = inteiro / d;
     const pedacos = Array.from({ length: d * 2 }, (_, i) => i);
     return (
-      <g key={`${rotulo}-${y}`} opacity={fantasma ? 0.55 : 1}>
+      <g key={`${rotulo}-${y}`}>
         {pedacos.map((i) => (
           <rect
             key={i}
@@ -181,7 +147,7 @@ export default function Barra({
               fill={cor}
               stroke="var(--papel)"
               strokeWidth="1"
-              opacity={fantasma ? 0.35 : 0.85}
+              opacity={0.85}
             />
           ))}
         <line
@@ -193,9 +159,7 @@ export default function Barra({
           strokeWidth="2.5"
         />
         <text x={MARGEM} y={y - 8} className="br-rot">
-          {fantasma ? 'antes: ' : ''}
-          {n}/{d}
-          {!fantasma && ` = ${dec(n / d)}`}
+          {n}/{d} = {dec(n / d)}
         </text>
       </g>
     );
@@ -203,14 +167,80 @@ export default function Barra({
 
   let y = 22;
   const desenhos: React.ReactNode[] = [];
-  if (congelado) {
-    desenhos.push(desenhar(congelado.n, congelado.d, y, 'var(--tinta-fraca)', 'antes', true));
-    y += ALTURA + 36;
-  }
   for (const barra of barras) {
     desenhos.push(desenhar(barra.n, barra.d, y, barra.cor, barra.rotulo));
     y += ALTURA + 26;
   }
+
+  /* A régua embaixo de tudo. Antes o desenho tinha a linha grossa no meio e nada
+     dizendo que ali era o 1: quem via 7/4 passando da linha não tinha como saber
+     que tinha passado de um inteiro. */
+  const reguaY = y - 20;
+  const marcas: { x: number; rot: string }[] = [
+    { x: MARGEM, rot: '0' },
+    { x: MARGEM + inteiro, rot: '1' },
+    { x: MARGEM + 2 * inteiro, rot: '2' },
+  ];
+
+  const experimente = comSoma
+    ? 'Corta as duas no mesmo número de partes e repara que o pintado de cada uma não muda de tamanho, só de nome. Aí sim a terceira barra soma, porque agora os pedaços são iguais.'
+    : duas
+      ? 'Corta as duas no mesmo número de partes (o pedaço comum ali em cima diz qual número serve) e repara: o pintado não muda de tamanho, muda só o nome da fração. É isso que igualar os pedaços quer dizer.'
+      : 'Aumenta o corte sem mexer no que está pintado e repara que a parte colorida encolhe, porque o mesmo inteiro passou a ser dividido entre mais gente.';
+
+  const controles = (
+    quem: string,
+    cor: string,
+    n: number,
+    d: number,
+    setN: (v: number) => void,
+    setD: (v: number) => void,
+  ) => (
+    <div className="br-linha">
+      <span className="br-quem">
+        <i style={{ background: cor }} aria-hidden="true" />
+        {quem}
+      </span>
+      <label className="br-campo">
+        cortar em quantas partes:
+        <input
+          className="br-slider"
+          type="range"
+          min={1}
+          max={DEN_MAX}
+          value={d}
+          onChange={(e) => setD(Math.max(1, trava(+e.target.value, DEN_MAX)))}
+          aria-label={`Em quantas partes a ${quem.toLowerCase()} está cortada`}
+        />
+        <input
+          type="number"
+          min={1}
+          max={DEN_MAX}
+          value={d}
+          onChange={(e) => setD(Math.max(1, trava(+e.target.value, DEN_MAX)))}
+        />
+      </label>
+      <label className="br-campo">
+        pintar quantas partes:
+        <input
+          className="br-slider"
+          type="range"
+          min={0}
+          max={Math.min(NUM_MAX, d * 2)}
+          value={n}
+          onChange={(e) => setN(trava(+e.target.value, NUM_MAX))}
+          aria-label={`Quantas partes da ${quem.toLowerCase()} estão pintadas`}
+        />
+        <input
+          type="number"
+          min={0}
+          max={NUM_MAX}
+          value={n}
+          onChange={(e) => setN(trava(+e.target.value, NUM_MAX))}
+        />
+      </label>
+    </div>
+  );
 
   return (
     <figure className="br">
@@ -255,163 +285,44 @@ export default function Barra({
         onKeyDown={aoTeclar}
       >
         {desenhos}
+        <line
+          x1={MARGEM}
+          y1={reguaY}
+          x2={MARGEM + 2 * inteiro}
+          y2={reguaY}
+          className="br-regua"
+        />
+        {marcas.map((m) => (
+          <g key={m.rot}>
+            <line x1={m.x} y1={reguaY - 4} x2={m.x} y2={reguaY + 4} className="br-regua" />
+            <text x={m.x} y={reguaY + 18} className="br-marca" textAnchor="middle">
+              {m.rot}
+            </text>
+          </g>
+        ))}
       </svg>
 
       <div className="br-ctrl">
-        <div className="br-linha">
-          <label className="br-campo">
-            corta em
-            <input
-              className="br-slider"
-              type="range"
-              min={1}
-              max={Math.max(DEN_MAX, da)}
-              value={da}
-              onChange={(e) => setDa(Math.max(1, trava(+e.target.value, DEN_MAX)))}
-              aria-label="Denominador da primeira fração"
-            />
-            <input
-              type="number"
-              min={1}
-              max={Math.max(DEN_MAX, da)}
-              value={da}
-              onChange={(e) => setDa(Math.max(1, trava(+e.target.value, DEN_MAX)))}
-            />
-          </label>
-          <label className="br-campo">
-            pinta
-            <input
-              className="br-slider"
-              type="range"
-              min={0}
-              max={Math.min(NUM_MAX, da * 2)}
-              value={na}
-              onChange={(e) => setNa(trava(+e.target.value, NUM_MAX))}
-              aria-label="Numerador da primeira fração"
-            />
-            <input
-              type="number"
-              min={0}
-              max={NUM_MAX}
-              value={na}
-              onChange={(e) => setNa(trava(+e.target.value, NUM_MAX))}
-            />
-          </label>
-        </div>
+        <p className="br-como">
+          {duas ? 'As duas barras acima têm o mesmo tamanho' : 'A barra acima'} vale{' '}
+          <b>2 inteiros</b>: a marca do meio é o <b>1</b> e a ponta é o <b>2</b>. Aí embaixo você
+          escolhe em quantas partes {duas ? 'cada uma' : 'ela'} vai ser cortada, e quantas dessas
+          partes vão ser pintadas.
+        </p>
 
-        {duas && (
-          <div className="br-linha">
-            <label className="br-campo">
-              corta em
-              <input
-                className="br-slider"
-                type="range"
-                min={1}
-                max={Math.max(DEN_MAX, db)}
-                value={db}
-                onChange={(e) => setDb(Math.max(1, trava(+e.target.value, DEN_MAX)))}
-                aria-label="Denominador da segunda fração"
-              />
-              <input
-                type="number"
-                min={1}
-                max={Math.max(DEN_MAX, db)}
-                value={db}
-                onChange={(e) => setDb(Math.max(1, trava(+e.target.value, DEN_MAX)))}
-              />
-            </label>
-            <label className="br-campo">
-              pinta
-              <input
-                className="br-slider"
-                type="range"
-                min={0}
-                max={Math.min(NUM_MAX, db * 2)}
-                value={nb}
-                onChange={(e) => setNb(trava(+e.target.value, NUM_MAX))}
-                aria-label="Numerador da segunda fração"
-              />
-              <input
-                type="number"
-                min={0}
-                max={NUM_MAX}
-                value={nb}
-                onChange={(e) => setNb(trava(+e.target.value, NUM_MAX))}
-              />
-            </label>
-          </div>
-        )}
+        {controles('Barra 1', 'var(--azul)', na, da, setNa, setDa)}
+        {duas && controles('Barra 2', 'var(--grafite)', nb, db, setNb, setDb)}
 
-        <div className="br-linha">
-          {duas && (
-            <button
-              className="br-btn"
-              onClick={igualar}
-              disabled={da === db || comum > MMC_MAX}
-              title={
-                comum > MMC_MAX
-                  ? `o pedaço comum seria de ${comum} em ${comum}, fino demais pra desenhar`
-                  : undefined
-              }
-            >
-              Igualar os pedaços
-            </button>
-          )}
-          <button className="br-btn" onClick={simplificar}>
-            Simplificar
-          </button>
-          <button
-            className="br-btn"
-            onClick={() => setCongelado(congelado ? null : { n: na, d: da })}
-            aria-pressed={!!congelado}
-          >
-            {congelado ? 'Soltar' : 'Congelar'}
-          </button>
-        </div>
-
-        <div className="br-linha">
-          {PRESETS.map((p) => (
-            <button
-              key={p.nome}
-              className="br-btn"
-              onClick={() => {
-                setNa(p.a[0]);
-                setDa(p.a[1]);
-                setNb(p.b[0]);
-                setDb(p.b[1]);
-              }}
-            >
-              {p.nome}
-            </button>
-          ))}
-          <button
-            className="br-btn"
-            onClick={() => {
-              setNa(a[0]);
-              setDa(a[1]);
-              setNb(b?.[0] ?? 1);
-              setDb(b?.[1] ?? 3);
-              setCongelado(null);
-            }}
-          >
-            Recomeçar
-          </button>
+        <p className="br-nota">
+          <b>Experimenta:</b> {experimente} Com o desenho em foco, ← → pintam e apagam e ↑ ↓ mudam
+          o corte da primeira barra.
           {chaveUrl && (
-            <button
-              className="br-btn sutil"
-              onClick={copiarLink}
-              title="Copiar link com esta configuração"
-            >
-              Copiar link
+            <button className="br-link" onClick={copiarLink}>
+              copiar link deste estado
             </button>
           )}
-        </div>
+        </p>
       </div>
-
-      <p className="br-nota">
-        A linha grossa marca o fim do primeiro inteiro. Com o desenho em foco, ← → pintam e apagam
-        pedaço da primeira barra e ↑ ↓ mudam em quantos pedaços ela está cortada.
-      </p>
 
       <style>{`
         .br {
@@ -452,40 +363,50 @@ export default function Barra({
           font-family: var(--f-ui); font-size: 12.5px; font-weight: 700;
           fill: var(--tinta-media); font-variant-numeric: tabular-nums;
         }
+        .br-regua { stroke: var(--grade-forte); stroke-width: 1; }
+        .br-marca {
+          font-family: var(--f-ui); font-size: 12px; font-weight: 700;
+          fill: var(--tinta-fraca);
+        }
 
         .br-ctrl {
           display: flex; flex-direction: column; gap: 8px;
           margin-top: calc(var(--u) * 0.5); padding-top: calc(var(--u) * 0.5);
           border-top: 1px solid var(--linha);
         }
-        .br-linha { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .br-como {
+          font-size: 0.8rem; color: var(--tinta-media); margin: 0 0 2px;
+        }
+        .br-como b { color: var(--tinta); }
+        .br-linha { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+        .br-quem {
+          display: inline-flex; align-items: center; gap: 6px; flex: none;
+          font-size: 0.74rem; font-weight: 600; color: var(--tinta-media);
+          min-width: 5.5rem;
+        }
+        .br-quem i { width: 10px; height: 10px; border-radius: 2px; }
         .br-campo {
-          display: flex; align-items: center; gap: 6px; flex: 1 1 14rem;
+          display: flex; align-items: center; gap: 8px; flex: 1 1 17rem;
           font-size: 0.74rem; color: var(--tinta-fraca);
         }
-        .br-slider { flex: 1; min-width: 90px; accent-color: var(--azul); }
+        .br-slider { flex: 1; min-width: 80px; accent-color: var(--azul); }
         .br-campo input[type="number"] {
           width: 4.5ch; font: inherit; font-size: 0.82rem; color: var(--tinta);
           border: 1px solid var(--linha); border-radius: var(--raio);
           padding: 4px 5px; background: var(--papel); text-align: center;
         }
-        .br-btn {
-          font-family: var(--f-ui); font-size: 0.74rem;
-          border: 1px solid var(--linha); background: var(--papel);
-          color: var(--tinta-media); padding: 5px 11px;
-          border-radius: var(--raio); cursor: pointer;
-        }
-        .br-btn:hover { border-color: var(--tinta); color: var(--tinta); }
-        .br-btn[aria-pressed="true"] {
-          background: var(--tinta); border-color: var(--tinta); color: var(--papel);
-        }
-        /* botão de igualar apagado quando os pedaços já são iguais: aí não há o que igualar */
-        .br-btn:disabled { color: var(--tinta-fraca); border-style: dashed; cursor: default; }
-        .br-btn.sutil { color: var(--tinta-fraca); }
         .br-nota {
-          font-family: var(--f-ui); font-size: 0.74rem; color: var(--tinta-fraca);
-          margin: calc(var(--u) * 0.4) 0 0;
+          font-size: 0.74rem; color: var(--tinta-fraca); line-height: 1.5;
+          margin: calc(var(--u) * 0.2) 0 0;
         }
+        .br-nota b { color: var(--tinta-media); }
+        /* o copiar link é ferramenta minha, e não do aluno: fica como texto no
+           fim da nota em vez de virar mais um botão embaixo dos controles */
+        .br-link {
+          font: inherit; color: var(--tinta-fraca); background: none;
+          border: 0; padding: 0 0 0 8px; text-decoration: underline; cursor: pointer;
+        }
+        .br-link:hover { color: var(--tinta); }
       `}</style>
     </figure>
   );

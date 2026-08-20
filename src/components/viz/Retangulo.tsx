@@ -23,13 +23,6 @@ const MARGEM = 40;
 const MAX = 12;
 const PASSO_MAX = 44;
 
-const PRESETS: { nome: string; l: number; c: number }[] = [
-  { nome: '3 por 4', l: 3, c: 4 },
-  { nome: '4 por 3', l: 4, c: 3 },
-  { nome: 'Uma fila só', l: 1, c: 9 },
-  { nome: 'Quadrado', l: 6, c: 6 },
-];
-
 const trava = (n: number) => Math.min(MAX, Math.max(1, Math.round(n)));
 
 /** 4 + 4 + 4, e com muitas parcelas vira "4 + … + 4, 9 vezes". */
@@ -47,7 +40,6 @@ export default function Retangulo({
   const [linhas, setLinhas] = useState(trava(linhasIniciais));
   const [colunas, setColunas] = useState(trava(colunasIniciais));
   const [contando, setContando] = useState<'linha' | 'coluna' | null>(null);
-  const [congelado, setCongelado] = useState<{ l: number; c: number } | null>(null);
 
   useEffect(() => {
     if (!chaveUrl) return;
@@ -114,11 +106,6 @@ export default function Retangulo({
             por coluna: {soma(linhas, colunas)} = {total}
           </span>
         )}
-        {congelado && (
-          <span className="rt-antes">
-            antes: {congelado.l} × {congelado.c} = {congelado.l * congelado.c}
-          </span>
-        )}
       </div>
 
       <svg
@@ -176,9 +163,14 @@ export default function Retangulo({
       </svg>
 
       <div className="rt-ctrl">
+        <p className="rt-como">
+          Acima está um retângulo de bolinhas. Aí embaixo você escolhe <b>quantas fileiras</b> ele
+          tem e <b>quantas bolinhas em cada fileira</b>, e os dois botões do fim contam o mesmo
+          retângulo de dois jeitos.
+        </p>
         <div className="rt-linha">
           <label className="rt-campo">
-            linhas
+            quantas fileiras:
             <input
               className="rt-slider"
               type="range"
@@ -199,7 +191,7 @@ export default function Retangulo({
         </div>
         <div className="rt-linha">
           <label className="rt-campo">
-            colunas
+            quantas bolinhas em cada fileira:
             <input
               className="rt-slider"
               type="range"
@@ -237,55 +229,20 @@ export default function Retangulo({
           <button className="rt-btn" onClick={girar}>
             Girar a cabeça
           </button>
-          <button
-            className="rt-btn"
-            onClick={() => setCongelado(congelado ? null : { l: linhas, c: colunas })}
-            aria-pressed={!!congelado}
-          >
-            {congelado ? 'Soltar' : 'Congelar'}
-          </button>
         </div>
 
-        <div className="rt-linha">
-          {PRESETS.map((p) => (
-            <button
-              key={p.nome}
-              className="rt-btn"
-              onClick={() => {
-                setLinhas(p.l);
-                setColunas(p.c);
-              }}
-            >
-              {p.nome}
-            </button>
-          ))}
-          <button
-            className="rt-btn"
-            onClick={() => {
-              setLinhas(trava(linhasIniciais));
-              setColunas(trava(colunasIniciais));
-              setContando(null);
-              setCongelado(null);
-            }}
-          >
-            Recomeçar
-          </button>
+        <p className="rt-nota">
+          <b>Experimenta:</b> conta por linha, depois por coluna, e repara que o total é o mesmo
+          sem ninguém ter mexido numa bolinha. Depois gira a cabeça: o retângulo virou
+          {' '}{colunas} × {linhas} e continua com as mesmas {total} bolinhas. Com o desenho em
+          foco, ← → mudam as bolinhas de cada fileira, ↑ ↓ mudam as fileiras e a tecla G gira.
           {chaveUrl && (
-            <button
-              className="rt-btn sutil"
-              onClick={copiarLink}
-              title="Copiar link com esta configuração"
-            >
-              Copiar link
+            <button className="rt-link" onClick={copiarLink}>
+              copiar link deste estado
             </button>
           )}
-        </div>
+        </p>
       </div>
-
-      <p className="rt-nota">
-        Congele um retângulo, gire e compare o total. Com o desenho em foco, ← → mudam as colunas,
-        ↑ ↓ mudam as linhas e a tecla G gira.
-      </p>
 
       <style>{`
         .rt {
@@ -347,6 +304,16 @@ export default function Retangulo({
           background: var(--tinta); border-color: var(--tinta); color: var(--papel);
         }
         .rt-btn.sutil { color: var(--tinta-fraca); }
+        .rt-como {
+          font-size: 0.8rem; color: var(--tinta-media); margin: 0 0 2px;
+        }
+        .rt-como b { color: var(--tinta); }
+        .rt-link {
+          font: inherit; color: var(--tinta-fraca); background: none;
+          border: 0; padding: 0 0 0 8px; text-decoration: underline; cursor: pointer;
+        }
+        .rt-link:hover { color: var(--tinta); }
+        .rt-nota b { color: var(--tinta-media); }
         .rt-nota {
           font-family: var(--f-ui); font-size: 0.74rem; color: var(--tinta-fraca);
           margin: calc(var(--u) * 0.4) 0 0;

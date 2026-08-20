@@ -46,12 +46,6 @@ const casasDe = (passo: number) => Math.max(0, -Math.floor(Math.log10(passo) + 1
 const fmt = (n: number, casas: number) =>
   (Math.abs(n) < 1e-9 ? 0 : n).toFixed(casas).replace('.', ',').replace('-', '−');
 
-const PRESETS: { nome: string; centro: number; janela: number }[] = [
-  { nome: 'Do 0 ao 100', centro: 50, janela: 110 },
-  { nome: 'Os dois lados do zero', centro: 0, janela: 20 },
-  { nome: 'Entre o 1 e o 2', centro: 1.5, janela: 1.4 },
-];
-
 export default function RetaZoom({
   centro: centroInicial = 0,
   janela: janelaInicial = 20,
@@ -62,7 +56,6 @@ export default function RetaZoom({
   const [janela, setJanela] = useState(janelaInicial);
   const [travado, setTravado] = useState(false);
   const [arrastando, setArrastando] = useState(false);
-  const [congelada, setCongelada] = useState<{ min: number; max: number } | null>(null);
 
   const svgRef = useRef<SVGSVGElement>(null);
   const arraste = useRef<{ x: number; centro: number } | null>(null);
@@ -200,30 +193,16 @@ export default function RetaZoom({
           </g>
         ))}
 
-        {/* a janela de antes, pra comparar com a de agora */}
-        {congelada && (
-          <g className="rz-congelada">
-            <line
-              x1={Math.max(2, x(congelada.min))}
-              y1={Y + 44}
-              x2={Math.min(L - 2, x(congelada.max))}
-              y2={Y + 44}
-              stroke="var(--tinta-fraca)"
-              strokeWidth="2.5"
-              strokeDasharray="6 4"
-            />
-            <text x={L / 2} y={Y + 62} textAnchor="middle" className="rz-tick">
-              janela de antes: de {fmt(congelada.min, casas)} até {fmt(congelada.max, casas)}
-            </text>
-          </g>
-        )}
       </svg>
 
       <div className="rz-ctrl">
+        <p className="rz-como">
+          Acima está um pedaço da reta dos números, e você pode arrastar ela pros lados com o
+          mouse. Aí embaixo você escolhe <b>o quanto aproximar</b>, e o número que fica no meio da
+          tela.
+        </p>
         <div className="rz-linha">
-          <button className="rz-btn" onClick={() => zoom(1.6)} aria-label="Afastar">
-            −
-          </button>
+          <span className="rz-etiq">afastar</span>
           <input
             className="rz-slider"
             type="range"
@@ -233,14 +212,12 @@ export default function RetaZoom({
             onChange={(e) => setJanela(janelaDePos(Number(e.target.value)))}
             aria-label="Escala: afastar ou aproximar"
           />
-          <button className="rz-btn" onClick={() => zoom(1 / 1.6)} aria-label="Aproximar">
-            +
-          </button>
+          <span className="rz-etiq">aproximar</span>
         </div>
 
         <div className="rz-linha">
           <label className="rz-campo">
-            centro
+            número do meio:
             <input
               type="number"
               value={Number(centro.toFixed(casas + 1))}
@@ -250,7 +227,7 @@ export default function RetaZoom({
             />
           </label>
           <label className="rz-campo">
-            largura
+            quantos números cabem na tela:
             <input
               type="number"
               value={Number(janela.toFixed(2))}
@@ -266,51 +243,20 @@ export default function RetaZoom({
           <button className="rz-btn" onClick={() => setTravado((t) => !t)} aria-pressed={travado}>
             Travar o centro
           </button>
-          <button
-            className="rz-btn"
-            onClick={() => setCongelada(congelada ? null : { min, max })}
-            aria-pressed={!!congelada}
-          >
-            {congelada ? 'Soltar' : 'Congelar'}
-          </button>
         </div>
 
-        <div className="rz-linha">
-          {PRESETS.map((p) => (
-            <button
-              key={p.nome}
-              className="rz-btn"
-              onClick={() => {
-                setCentro(p.centro);
-                setJanela(p.janela);
-              }}
-            >
-              {p.nome}
-            </button>
-          ))}
-          <button
-            className="rz-btn"
-            onClick={() => {
-              setCentro(centroInicial);
-              setJanela(janelaInicial);
-              setCongelada(null);
-              setTravado(false);
-            }}
-          >
-            Recomeçar
-          </button>
+        <p className="rz-nota">
+          <b>Experimenta:</b> trava o centro e mexe só na escala, que é o jeito de separar
+          "eu andei" de "eu aproximei". Depois vai aproximando sem parar em cima do 1: entre ele e
+          o 2 aparece número que não estava lá antes, e o passo escrito aqui embaixo do desenho é
+          quem conta que a escala mudou. Com o desenho em foco, ← → andam e ↑ ↓ mudam a escala.
           {chaveUrl && (
-            <button className="rz-btn sutil" onClick={copiarLink} title="Copiar link com esta configuração">
-              Copiar link
+            <button className="rz-link" onClick={copiarLink}>
+              copiar link deste estado
             </button>
           )}
-        </div>
+        </p>
       </div>
-
-      <p className="rz-nota">
-        Arraste a reta pros lados pra andar pelos números. Com o desenho em foco, as setas ← →
-        andam e ↑ ↓ mudam a escala.
-      </p>
 
       <style>{`
         .rz {
@@ -375,6 +321,17 @@ export default function RetaZoom({
           background: var(--tinta); border-color: var(--tinta); color: var(--papel);
         }
         .rz-btn.sutil { color: var(--tinta-fraca); }
+        .rz-como {
+          font-size: 0.8rem; color: var(--tinta-media); margin: 0 0 2px;
+        }
+        .rz-como b { color: var(--tinta); }
+        .rz-etiq { font-size: 0.72rem; color: var(--tinta-fraca); flex: none; }
+        .rz-link {
+          font: inherit; color: var(--tinta-fraca); background: none;
+          border: 0; padding: 0 0 0 8px; text-decoration: underline; cursor: pointer;
+        }
+        .rz-link:hover { color: var(--tinta); }
+        .rz-nota b { color: var(--tinta-media); }
         .rz-nota {
           font-family: var(--f-ui); font-size: 0.74rem; color: var(--tinta-fraca);
           margin: calc(var(--u) * 0.4) 0 0;
