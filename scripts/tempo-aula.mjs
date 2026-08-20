@@ -41,8 +41,8 @@ export const PESO = {
   interativo: 200,
 };
 
-const INTERATIVOS = ['Juncao', 'RetaZoom', 'Caixas', 'Retangulo', 'Barra', 'Esticar'];
-const FIGURAS = ['Setas', 'Reta', 'Conjunto'];
+const INTERATIVOS = ['Juncao', 'RetaZoom', 'Caixas', 'Retangulo', 'Barra', 'Esticar', 'Coordenadas'];
+const FIGURAS = ['Setas', 'Reta', 'Conjunto', 'Plano', 'Linhas'];
 
 /** Conta o que existe na página. O que está dentro de <Alem> não entra: aquilo é
  *  declaradamente fora do escopo, e a aula não fica mais longa por causa dele. */

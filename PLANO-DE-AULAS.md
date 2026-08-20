@@ -1,6 +1,6 @@
 # Plano de aulas — Matemática
 
-84 aulas, 768 tópicos declarados, 49h45 de aula. Gerado por `npm run plano` a partir do frontmatter de `content/conceitos/`; **não edite este arquivo à mão**, edite a aula e rode o script de novo.
+84 aulas, 770 tópicos declarados, 49h25 de aula. Gerado por `npm run plano` a partir do frontmatter de `content/conceitos/`; **não edite este arquivo à mão**, edite a aula e rode o script de novo.
 
 ## Como ler uma ficha
 
@@ -17,14 +17,14 @@
 |---|---:|---:|---:|
 | Aritmética | 17 | 147 | 9h30 |
 | Álgebra | 16 | 135 | 8h55 |
-| Funções | 17 | 160 | 10h25 |
-| Geometria | 25 | 247 | 15h50 |
+| Funções | 17 | 160 | 10h20 |
+| Geometria | 25 | 249 | 15h35 |
 | Dados e contagem | 9 | 79 | 5h05 |
-| **Total** | **84** | **768** | **49h45** |
+| **Total** | **84** | **770** | **49h25** |
 
-Por nível declarado: **41 de base** (revisão de fundamental que trava o resto, 24h10) e **43 de médio** (25h35).
+Por nível declarado: **41 de base** (revisão de fundamental que trava o resto, 24h05) e **43 de médio** (25h20).
 
-Por estado: **6 escritas** (Conjuntos numéricos, Escalamento, Frações, Junção, O que cada operação faz, A reta numérica) e **78 esqueletos**, que já têm título, resumo, tópicos e prereqs, mas nenhum texto.
+Por estado: **7 escritas** (Conjuntos numéricos, Escalamento, Frações, Junção, Plano cartesiano, O que cada operação faz, A reta numérica) e **77 esqueletos**, que já têm título, resumo, tópicos e prereqs, mas nenhum texto.
 
 ## Os gargalos
 
@@ -90,53 +90,53 @@ O grafo declara dependência, não fila. Esta é uma ordem que respeita todos os
 | 35 | Sistemas do 1º grau | Álgebra | 7 | 30 | 20h20 |
 | 36 | Números reais | Aritmética | 7 | 35 | 20h55 |
 | 37 | Juros simples e compostos | Aritmética | 7 | 35 | 21h30 |
-| 38 | O que é uma função | Funções | 7 | 50 | 22h20 |
-| 39 | Média, moda e mediana | Dados e contagem | 7 | 30 | 22h50 |
-| 40 | Probabilidade condicional | Dados e contagem | 7 | 35 | 23h25 |
-| 41 | Binômio de Newton | Dados e contagem | 8 | 30 | 23h55 |
-| 42 | Dispersão | Dados e contagem | 8 | 40 | 24h35 |
-| 43 | Função afim | Funções | 8 | 40 | 25h15 |
-| 44 | Fatoração | Álgebra | 8 | 30 | 25h45 |
-| 45 | Matrizes | Álgebra | 8 | 35 | 26h20 |
-| 46 | Prismas | Geometria | 8 | 50 | 27h10 |
-| 47 | Teorema de Pitágoras | Geometria | 8 | 30 | 27h40 |
-| 48 | Comprimento e área do círculo | Geometria | 8 | 30 | 28h10 |
-| 49 | Conjuntos e intervalos | Aritmética | 8 | 40 | 28h50 |
-| 50 | Equação do 2º grau | Álgebra | 9 | 40 | 29h30 |
-| 51 | Determinantes | Álgebra | 9 | 30 | 30h00 |
-| 52 | Frações algébricas | Álgebra | 9 | 30 | 30h30 |
-| 53 | Inequações do 1º grau | Álgebra | 9 | 30 | 31h00 |
-| 54 | Função exponencial | Funções | 9 | 35 | 31h35 |
-| 55 | Função composta e inversa | Funções | 9 | 30 | 32h05 |
-| 56 | Sequências e PA | Funções | 9 | 35 | 32h40 |
-| 57 | Função modular | Funções | 9 | 30 | 33h10 |
-| 58 | O ponto no plano | Geometria | 9 | 30 | 33h40 |
-| 59 | Cilindro e cone | Geometria | 9 | 50 | 34h30 |
-| 60 | Pirâmides | Geometria | 9 | 40 | 35h10 |
-| 61 | Relações métricas no triângulo retângulo | Geometria | 9 | 30 | 35h40 |
-| 62 | Trigonometria no triângulo retângulo | Geometria | 10 | 40 | 36h20 |
-| 63 | A reta no plano | Geometria | 10 | 50 | 37h10 |
-| 64 | Esfera | Geometria | 10 | 35 | 37h45 |
-| 65 | Função quadrática | Funções | 10 | 40 | 38h25 |
-| 66 | Logaritmos | Funções | 10 | 40 | 39h05 |
-| 67 | Equações e inequações exponenciais | Funções | 10 | 30 | 39h35 |
-| 68 | Progressão geométrica | Funções | 10 | 35 | 40h10 |
-| 69 | Números complexos | Álgebra | 10 | 40 | 40h50 |
-| 70 | Polinômios | Álgebra | 10 | 40 | 41h30 |
-| 71 | Sistemas lineares | Álgebra | 10 | 35 | 42h05 |
-| 72 | Equações polinomiais | Álgebra | 11 | 35 | 42h40 |
-| 73 | Círculo trigonométrico | Funções | 11 | 45 | 43h25 |
-| 74 | Função logarítmica | Funções | 11 | 30 | 43h55 |
-| 75 | Transformações de gráfico | Funções | 11 | 40 | 44h35 |
-| 76 | Inequações e estudo do sinal | Funções | 11 | 30 | 45h05 |
-| 77 | A circunferência no plano | Geometria | 11 | 35 | 45h40 |
-| 78 | Lei dos senos e dos cossenos | Geometria | 11 | 25 | 46h05 |
-| 79 | Sólidos inscritos e circunscritos | Geometria | 11 | 30 | 46h35 |
-| 80 | Cônicas | Geometria | 12 | 40 | 47h15 |
-| 81 | Funções trigonométricas | Funções | 12 | 40 | 47h55 |
-| 82 | Equações e inequações logarítmicas | Funções | 12 | 30 | 48h25 |
-| 83 | Complexos na forma trigonométrica | Álgebra | 12 | 35 | 49h00 |
-| 84 | Identidades e equações trigonométricas | Funções | 13 | 45 | 49h45 |
+| 38 | O que é uma função | Funções | 7 | 45 | 22h15 |
+| 39 | Média, moda e mediana | Dados e contagem | 7 | 30 | 22h45 |
+| 40 | Probabilidade condicional | Dados e contagem | 7 | 35 | 23h20 |
+| 41 | Binômio de Newton | Dados e contagem | 8 | 30 | 23h50 |
+| 42 | Dispersão | Dados e contagem | 8 | 40 | 24h30 |
+| 43 | Função afim | Funções | 8 | 40 | 25h10 |
+| 44 | Fatoração | Álgebra | 8 | 30 | 25h40 |
+| 45 | Matrizes | Álgebra | 8 | 35 | 26h15 |
+| 46 | Prismas | Geometria | 8 | 45 | 27h00 |
+| 47 | Teorema de Pitágoras | Geometria | 8 | 30 | 27h30 |
+| 48 | Comprimento e área do círculo | Geometria | 8 | 30 | 28h00 |
+| 49 | Conjuntos e intervalos | Aritmética | 8 | 40 | 28h40 |
+| 50 | Equação do 2º grau | Álgebra | 9 | 40 | 29h20 |
+| 51 | Determinantes | Álgebra | 9 | 30 | 29h50 |
+| 52 | Frações algébricas | Álgebra | 9 | 30 | 30h20 |
+| 53 | Inequações do 1º grau | Álgebra | 9 | 30 | 30h50 |
+| 54 | Função exponencial | Funções | 9 | 35 | 31h25 |
+| 55 | Função composta e inversa | Funções | 9 | 30 | 31h55 |
+| 56 | Sequências e PA | Funções | 9 | 35 | 32h30 |
+| 57 | Função modular | Funções | 9 | 30 | 33h00 |
+| 58 | O ponto no plano | Geometria | 9 | 30 | 33h30 |
+| 59 | Cilindro e cone | Geometria | 9 | 45 | 34h15 |
+| 60 | Pirâmides | Geometria | 9 | 40 | 34h55 |
+| 61 | Relações métricas no triângulo retângulo | Geometria | 9 | 30 | 35h25 |
+| 62 | Trigonometria no triângulo retângulo | Geometria | 10 | 40 | 36h05 |
+| 63 | A reta no plano | Geometria | 10 | 45 | 36h50 |
+| 64 | Esfera | Geometria | 10 | 35 | 37h25 |
+| 65 | Função quadrática | Funções | 10 | 40 | 38h05 |
+| 66 | Logaritmos | Funções | 10 | 40 | 38h45 |
+| 67 | Equações e inequações exponenciais | Funções | 10 | 30 | 39h15 |
+| 68 | Progressão geométrica | Funções | 10 | 35 | 39h50 |
+| 69 | Números complexos | Álgebra | 10 | 40 | 40h30 |
+| 70 | Polinômios | Álgebra | 10 | 40 | 41h10 |
+| 71 | Sistemas lineares | Álgebra | 10 | 35 | 41h45 |
+| 72 | Equações polinomiais | Álgebra | 11 | 35 | 42h20 |
+| 73 | Círculo trigonométrico | Funções | 11 | 45 | 43h05 |
+| 74 | Função logarítmica | Funções | 11 | 30 | 43h35 |
+| 75 | Transformações de gráfico | Funções | 11 | 40 | 44h15 |
+| 76 | Inequações e estudo do sinal | Funções | 11 | 30 | 44h45 |
+| 77 | A circunferência no plano | Geometria | 11 | 35 | 45h20 |
+| 78 | Lei dos senos e dos cossenos | Geometria | 11 | 25 | 45h45 |
+| 79 | Sólidos inscritos e circunscritos | Geometria | 11 | 30 | 46h15 |
+| 80 | Cônicas | Geometria | 12 | 40 | 46h55 |
+| 81 | Funções trigonométricas | Funções | 12 | 40 | 47h35 |
+| 82 | Equações e inequações logarítmicas | Funções | 12 | 30 | 48h05 |
+| 83 | Complexos na forma trigonométrica | Álgebra | 12 | 35 | 48h40 |
+| 84 | Identidades e equações trigonométricas | Funções | 13 | 45 | 49h25 |
 
 ## As fichas
 
@@ -1014,7 +1014,7 @@ Escrito com módulo e argumento, multiplicar complexo vira girar e esticar.
 
 ### Funções
 
-17 aulas, 10h25.
+17 aulas, 10h20.
 
 #### 38. O que é uma função
 
@@ -1022,7 +1022,7 @@ Escrito com módulo e argumento, multiplicar complexo vira girar e esticar.
 
 Domínio, imagem e gráfico, e a regra de que cada entrada tem uma saída só.
 
-`introducao-a-funcoes` · nível 7 · base · **50 min de aula** e 25 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
+`introducao-a-funcoes` · nível 7 · base · **45 min de aula** e 23 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
 
 **Precisa de:** Plano cartesiano, Equação do 1º grau  
 **Destrava:** Função afim
@@ -1484,7 +1484,7 @@ Relação fundamental, soma de arcos e arco duplo, e as equações que saem daí
 
 ### Geometria
 
-25 aulas, 15h50.
+25 aulas, 15h35.
 
 #### 2. Ângulos
 
@@ -1584,7 +1584,7 @@ Elementos, posições relativas e os ângulos que aparecem quando você desenha 
 
 A ideia que casou álgebra com geometria: par ordenado, quadrantes e localização.
 
-`plano-cartesiano` · nível 2 · base · **40 min de aula** e 20 min de leitura em casa (planejado pelos tópicos) · 10 tópicos
+`plano-cartesiano` · nível 2 · base · **40 min de aula** e 20 min de leitura em casa (medido na página) · 12 tópicos
 
 **Precisa de:** Conjuntos numéricos  
 **Destrava:** O ponto no plano, Círculo trigonométrico, O que é uma função
@@ -1594,7 +1594,9 @@ A ideia que casou álgebra com geometria: par ordenado, quadrantes e localizaç�
 - par ordenado
 - eixo das abscissas
 - eixo das ordenadas
+- origem do plano
 - quadrantes
+- sinal das coordenadas
 - localização de ponto
 - produto cartesiano
 - simetria em relação aos eixos
@@ -1602,9 +1604,7 @@ A ideia que casou álgebra com geometria: par ordenado, quadrantes e localizaç�
 - reflexão de figura
 - translação de figura
 
-**Recorte previsto:** o par ordenado, os quadrantes com os sinais, e as simetrias simples.
-
-**Falta:** o produto cartesiano como conjunto de pares é o que liga esta aula com função, e costuma ser pulado.
+**Seções já escritas:** Uma reta só não localiza nada numa folha · Duas retas cruzadas, e o endereço aparece · O par é ordenado, e trocar a ordem muda o ponto · Agora mexe você · Os quatro quadrantes são os quatro jeitos de combinar dois sinais · Quem mora em cima de um eixo não está em quadrante nenhum · Lendo o ponto de volta, do desenho pro par · O espelho troca um sinal só · Uma figura inteira anda ponto a ponto · Produto cartesiano, que é de onde vem o nome · Onde o pessoal escorrega
 
 #### 8. Polígonos
 
@@ -1805,7 +1805,7 @@ Os casos de semelhança e a razão de semelhança, que é o que faz medir a altu
 
 Cubo, paralelepípedo e prisma qualquer, com área total pela planificação e volume como base vezes altura.
 
-`prismas` · nível 8 · medio · **50 min de aula** e 25 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
+`prismas` · nível 8 · medio · **45 min de aula** e 23 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
 
 **Precisa de:** Poliedros, Áreas de polígonos  
 **Destrava:** Cilindro e cone, Pirâmides
@@ -1913,7 +1913,7 @@ Distância entre dois pontos, ponto médio e alinhamento, com Pitágoras trabalh
 
 As mesmas ideias dos sólidos de face plana, agora com o círculo na base.
 
-`cilindro-e-cone` · nível 9 · medio · **50 min de aula** e 25 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
+`cilindro-e-cone` · nível 9 · medio · **45 min de aula** e 23 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
 
 **Precisa de:** Prismas, Comprimento e área do círculo  
 **Destrava:** Esfera
@@ -2025,7 +2025,7 @@ Seno, cosseno e tangente como razões que só dependem do ângulo, e por que iss
 
 Coeficiente angular, as três formas de escrever a equação, e as posições entre duas retas.
 
-`analitica-reta` · nível 10 · medio · **50 min de aula** e 25 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
+`analitica-reta` · nível 10 · medio · **45 min de aula** e 23 min de leitura em casa (planejado pelos tópicos) · 13 tópicos
 
 **Precisa de:** O ponto no plano, Função afim  
 **Destrava:** A circunferência no plano
@@ -2952,6 +2952,7 @@ Todo tópico de toda aula, em ordem alfabética. É o mesmo conteúdo da página
 - ordem das operações → O que cada operação faz (#5)
 - ordem de grandeza → Notação científica (#28)
 - ordem de uma matriz → Matrizes (#45)
+- origem do plano → Plano cartesiano (#7)
 - ortocentro → Triângulos (#3)
 - outlier → Dispersão (#42)
 
@@ -3159,6 +3160,7 @@ Todo tópico de toda aula, em ordem alfabética. É o mesmo conteúdo da página
 - simplificação → Frações (#11)
 - simplificação de fração algébrica → Frações algébricas (#52)
 - simplificação de radical → Radiciação (#25)
+- sinal das coordenadas → Plano cartesiano (#7)
 - sinal do número → Junção (#12)
 - sinal na frente de parênteses → Junção (#12)
 - sinal por quadrante → Círculo trigonométrico (#73)

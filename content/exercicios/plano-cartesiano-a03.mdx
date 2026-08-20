@@ -1,0 +1,66 @@
+---
+resumo: Empurra os três vértices de um triângulo e vê o que muda na figura
+fonte: Autoral
+nivel: facil
+modulos: [plano-cartesiano]
+resposta: "(−2, 3), (2, 3) e (2, 5); a figura não muda de tamanho nem de forma"
+verificado: false
+---
+
+Um triângulo tem vértices em $(1,\, 2)$, $(5,\, 2)$ e $(5,\, 4)$. Ele é empurrado 3 unidades
+pra esquerda e 1 unidade pra cima.
+
+Quais são os novos vértices, e o triângulo mudou de tamanho ou de forma?
+
+<Dicas>
+  <Dica>
+    A figura não faz nada sozinha: quem anda são os pontos dela, um por um. Empurrar pra
+    esquerda mexe em qual dos dois números?
+  </Dica>
+  <Dica>
+    Escreve a transformação como uma regra que vale pra qualquer ponto, no formato
+    $(x,\, y) \to (\ldots,\ \ldots)$, e depois aplica ela nos três.
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="(−2, 3), (2, 3) e (2, 5); a figura não muda de tamanho nem de forma">
+
+Andar 3 pra esquerda é tirar 3 do x, e subir 1 é somar 1 no y, então a regra é:
+
+$$
+(x,\, y) \to (x - 3,\, y + 1)
+$$
+
+Aplicando nos três vértices:
+
+$$
+(1,\, 2) \to (-2,\, 3) \qquad (5,\, 2) \to (2,\, 3) \qquad (5,\, 4) \to (2,\, 5)
+$$
+
+<Plano
+  dominio={[-4, 7]}
+  imagem={[-2, 6]}
+  poligonos={[
+    { vertices: [[1, 2], [5, 2], [5, 4]], nome: 'T', cor: 3, tracejado: true },
+    { vertices: [[-2, 3], [2, 3], [2, 5]], nome: "T'", cor: 1 },
+  ]}
+  legenda="o mesmo triângulo, três casas pra esquerda e uma pra cima"
+/>
+
+O triângulo continua exatamente igual. O lado de baixo media 4 antes e continua medindo 4,
+porque os dois pontos dele andaram 3 pra esquerda juntos, e a distância entre duas pessoas que
+andam o mesmo tanto pro mesmo lado não muda. Numa translação, **todo mundo anda igual**, então
+nem tamanho nem forma se mexem.
+
+### Raciocínio
+
+Escrever a regra antes de aplicar economiza erro: com $(x - 3,\, y + 1)$ na frente, os três
+vértices viram trabalho mecânico. Quem faz de cabeça ponto por ponto costuma acertar dois e
+somar em vez de subtrair no terceiro.
+
+### Erros comuns
+
+**Somar o 3 em vez de tirar**, mandando a figura pra direita. Esquerda é o lado dos números
+menores no eixo x, então empurrar pra lá é diminuir o x.
+
+</Resolucao>

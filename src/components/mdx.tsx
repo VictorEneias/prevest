@@ -23,6 +23,7 @@ import Juncao from './viz/Juncao';
 import Setas from './viz/Setas';
 import Reta from './viz/Reta';
 import Plano from './viz/Plano';
+import Coordenadas from './viz/Coordenadas';
 import Linhas from './viz/Linhas';
 import RetaZoom from './viz/RetaZoom';
 import Caixas from './viz/Caixas';
@@ -44,6 +45,7 @@ export const componentesMDX: Record<string, ComponentType<any>> = {
   Setas,
   Reta,
   Plano,
+  Coordenadas,
   Linhas,
   RetaZoom,
   Caixas,

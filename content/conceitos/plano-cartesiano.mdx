@@ -13,7 +13,9 @@ topicos:
   - par ordenado
   - eixo das abscissas
   - eixo das ordenadas
+  - origem do plano
   - quadrantes
+  - sinal das coordenadas
   - localização de ponto
   - produto cartesiano
   - simetria em relação aos eixos
@@ -22,10 +24,370 @@ topicos:
   - translação de figura
 ---
 
-Esqueleto: esta aula ainda não foi escrita.
+Na aula da <C id="reta-numerica">reta numérica</C> a gente combinou uma coisa que já
+resolveu bastante coisa: todo número tem um endereço, e esse endereço é um ponto em
+cima de uma reta. Acontece que a reta é uma linha só, e quase tudo que você vai
+desenhar daqui pra frente mora numa folha de papel, que é bem mais larga que uma
+linha, então hoje eu vou te mostrar o que a gente faz pra localizar um ponto que está
+solto no meio da folha.
 
-Quando for, ela vai cobrir o par ordenado, os quadrantes com os sinais, e as simetrias simples.
+Isso parece burocracia de desenho, porém é uma das melhores ideias que a matemática já
+teve, porque é ela que faz a geometria e a álgebra, que eram duas matérias separadas
+que não se falavam, virarem uma coisa só: **a partir do momento em que todo ponto vira
+um par de números, toda figura vira uma conta e toda conta vira uma figura**. É por
+isso que daqui a algumas aulas você vai conseguir perguntar "onde essas duas retas se
+cruzam?" e responder resolvendo um sisteminha, sem desenhar nada.
 
----
+O nome disso é **plano cartesiano**, e o "cartesiano" vem de René Descartes, que
+publicou a ideia em 1637 num apêndice do *Discurso do Método*, chamado *A Geometria*.
 
-*Falta: o produto cartesiano como conjunto de pares é o que liga esta aula com função, e costuma ser pulado.*
+## Uma reta só não localiza nada numa folha
+
+Imagina que eu te entrego um ingresso de cinema em que está escrito só um número, o
+**12**. Você entra na sala e fica parado, porque 12 sozinho não te leva a lugar
+nenhum: falta saber a fila. Se eu escrever **fila G, poltrona 12**, acabou a dúvida,
+e repara que eu precisei de duas informações justamente porque a sala tem duas
+direções pra você andar, pra frente e pra trás, pra esquerda e pra direita.
+
+Com a folha de papel é igualzinho. Se eu disser que um ponto está no **3**, você não
+tem como saber onde ele está, porque eu não disse quanto ele sobe. Um ponto numa folha
+exige duas respostas: **quanto ele anda pro lado** e **quanto ele anda pra cima**.
+
+Então a solução é bem menos criativa do que você imaginaria: se uma reta numérica
+responde uma pergunta, a gente usa duas.
+
+## Duas retas cruzadas, e o endereço aparece
+
+Pega uma reta numérica deitada, do jeito que você já conhece, e cruza ela com outra
+reta numérica em pé, de forma que os dois zeros fiquem exatamente no mesmo lugar. Esse
+lugar em que elas se cruzam se chama **origem**.
+
+<Plano
+  dominio={[-5, 5]}
+  quadrantes={false}
+  pontos={[{ x: 0, y: 0, nome: 'origem (0, 0)', lado: 'cima-direita' }]}
+  titulo="Duas retas numéricas cruzadas no zero"
+  legenda="a deitada é o eixo x, a em pé é o eixo y, e o encontro delas é a origem"
+/>
+
+A reta deitada é o **eixo x**, e ela cresce pra direita, exatamente como a reta
+numérica de sempre. A reta em pé é o **eixo y**, e ela cresce pra cima, então os
+números negativos dela ficam embaixo da origem. Cada uma das duas continua sendo uma
+reta numérica inteira, com tudo que você já viu: negativo de um lado, positivo do
+outro, e um monte de gente morando entre dois inteiros.
+
+Na prova e no livro esses dois eixos costumam aparecer com um nome mais antigo, que
+vale a pena você reconhecer: o eixo x é o **eixo das abscissas** e o eixo y é o **eixo
+das ordenadas**. Então quando a questão falar "a abscissa do ponto", ela está falando
+do primeiro número, e quando falar "a ordenada", é o segundo.
+
+## O par é ordenado, e trocar a ordem muda o ponto
+
+Com os dois eixos no lugar, localizar um ponto virou dizer dois números, e a gente
+escreve os dois juntos dentro de um parêntese, assim: $(3, 5)$. Isso se chama **par
+ordenado**, e o "ordenado" está aí porque a ordem faz parte da informação.
+
+A combinação é a seguinte, e ela nunca muda: **o primeiro número diz quanto andar no
+eixo x, e o segundo diz quanto andar no eixo y**. Então pra achar o ponto $(3, 5)$
+você sai da origem, anda 3 pra direita, e de lá sobe 5.
+
+Pra ver que a ordem importa de verdade, olha os dois pontos aqui embaixo, que usam os
+mesmos dois números:
+
+<Plano
+  dominio={[-1, 6]}
+  pontos={[
+    { x: 3, y: 5, nome: 'A (3, 5)', guias: true, cor: 3, lado: 'esquerda' },
+    { x: 5, y: 3, nome: 'B (5, 3)', guias: true, cor: 2, lado: 'direita' },
+  ]}
+  titulo="Os mesmos números, em ordem trocada"
+  legenda="A anda 3 e sobe 5; B anda 5 e sobe 3"
+/>
+
+São dois lugares diferentes da folha, e é por isso que $(3, 5)$ e $(5, 3)$ são pontos
+diferentes. Isso é uma diferença enorme em relação ao que você está acostumado com
+conjunto, porque lá $\{3, 5\}$ e $\{5, 3\}$ são o mesmo conjunto, já que conjunto não
+liga pra ordem, enquanto o **par ordenado liga**, e é justamente por isso que ele carrega
+esse nome.
+
+E antes que você ache que isso é implicância de matemático, pensa no seu endereço: rua
+Sete de Setembro, número 240 é um lugar, e rua 240, número 7 é outro completamente
+diferente, se é que existe. O par de coordenadas funciona igual.
+
+## Agora mexe você
+
+Até aqui eu te mostrei ponto parado, e tem uma coisa que eu não consigo te mostrar com
+desenho parado: o que acontece com os dois números **enquanto** o ponto anda. Arrasta o
+P aí embaixo e fica de olho no par lá em cima.
+
+<Coordenadas x={3} y={2} titulo="Arrasta o ponto e lê o par" chaveUrl="pc" />
+
+Tem três coisas que eu quero que você faça aí antes de continuar lendo.
+
+A primeira é **usar um slider de cada vez**. Mexe só no de cima e repara que o ponto
+anda na horizontal e que só o primeiro número do par muda; mexe só no de baixo e o
+ponto sobe e desce, mudando só o segundo. Cada número do par cuida de uma direção, e é
+por isso que dois números bastam.
+
+A segunda é **atravessar um eixo devagar**. Leva o ponto do lado direito pro lado
+esquerdo e olha o primeiro número trocar de sinal bem na hora em que ele cruza o eixo
+y. Depois faz o mesmo pra cima e pra baixo com o segundo número. É daí que sai o
+assunto da próxima seção.
+
+A terceira é **ligar o caminho** e ver a ordem acontecendo: primeiro a seta anda pro
+lado, depois ela sobe. Essa é a leitura do par ordenado desenhada.
+
+## Os quatro quadrantes são os quatro jeitos de combinar dois sinais
+
+Os dois eixos cortam a folha em quatro pedaços, e cada pedaço se chama **quadrante**.
+Eles são numerados começando no de cima à direita e seguindo no sentido contrário ao do
+ponteiro do relógio:
+
+<Plano
+  dominio={[-5, 5]}
+  quadrantes={true}
+  pontos={[
+    { x: 3, y: 2, nome: '(3, 2)', cor: 3 },
+    { x: -3, y: 2, nome: '(−3, 2)', cor: 2 },
+    { x: -3, y: -2, nome: '(−3, −2)', cor: 1, lado: 'baixo' },
+    { x: 3, y: -2, nome: '(3, −2)', cor: 5, lado: 'baixo' },
+  ]}
+  titulo="Um morador de cada quadrante"
+  legenda="o que separa os quatro é só a combinação de sinais do par"
+/>
+
+Você não precisa decorar essa tabela, porque ela sai sozinha da figura, porém vale
+olhar pra ela uma vez com calma:
+
+| Quadrante | x | y | Exemplo |
+|---|---|---|---|
+| I | positivo | positivo | $(3, 2)$ |
+| II | negativo | positivo | $(-3, 2)$ |
+| III | negativo | negativo | $(-3, -2)$ |
+| IV | positivo | negativo | $(3, -2)$ |
+
+Repara que **o quadrante não é uma informação nova**: ele já estava escrito no par, nos
+sinais dos dois números. Quando a questão te dá um ponto e pergunta em que quadrante
+ele está, ela está pedindo que você olhe os dois sinais, e nada mais.
+
+Essa contagem no sentido anti-horário parece aleatória, porém ela é a mesma volta que
+você vai usar mais pra frente pra medir ângulo no círculo trigonométrico, onde o
+sentido positivo também é o contrário do relógio. Guarda esse detalhe, que ele volta.
+
+## Quem mora em cima de um eixo não está em quadrante nenhum
+
+O quadrante é o pedaço de folha **entre** os eixos, então os pontos que caem exatamente
+em cima de uma das duas retas ficam de fora dessa contagem, e eles são fáceis de
+reconhecer porque sempre têm um zero no par.
+
+Se o primeiro número é zero, o ponto não andou nada pro lado, então ele ficou grudado
+no eixo y, tipo $(0, 4)$. Se o segundo número é zero, ele não subiu nada, então está
+deitado no eixo x, tipo $(-3, 0)$. E se os dois são zero, você está de volta na
+**origem**, que é o $(0, 0)$.
+
+Guarda essa frase, porque ela vale ouro daqui a algumas aulas: **todo ponto do eixo x
+tem o segundo número igual a zero**. Quando você for procurar onde um gráfico corta o
+eixo x, é exatamente isso que você vai estar procurando.
+
+## Lendo o ponto de volta, do desenho pro par
+
+Até agora a gente foi do par pro desenho, e na prova o caminho quase sempre é o
+contrário: o desenho está lá e você precisa dizer o par. O jeito é baixar duas
+perpendiculares, ou seja, andar do ponto reto até cada eixo e ler onde você caiu, que
+é exatamente o que as linhas tracejadas da figura do $A$ e do $B$ estavam fazendo lá
+em cima.
+
+Aqui mora uma armadilha que derruba muita gente por pressa, e não por falta de
+entendimento:
+
+<Plano
+  dominio={[-10, 10]}
+  passo={2}
+  pontos={[{ x: 6, y: 4, nome: '(6, 4)', guias: true, cor: 3 }]}
+  titulo="Cada quadradinho aqui vale 2"
+  legenda="quem conta quadradinho em vez de ler o número escrito acha que esse ponto é (3, 2)"
+/>
+
+Quem conta "andei três quadradinhos e subi dois" responde $(3, 2)$ e erra a questão
+inteira, porque nesta figura **cada quadradinho vale 2**. Coordenada você lê nos números
+que estão escritos no eixo, porque o quadradinho vale o que a escala mandar, e essa é a
+mesma história da reta numérica: quem manda é quanto vale cada passo.
+
+## O espelho troca um sinal só
+
+Agora que ponto virou par de números, dá pra fazer coisa com os números e ver o que
+acontece com o ponto. A mais simples de todas é trocar o sinal, e o resultado é uma
+**simetria**, que é o nome chique pra reflexão num espelho.
+
+<Plano
+  dominio={[-5, 5]}
+  quadrantes={true}
+  pontos={[
+    { x: 4, y: 3, nome: 'P (4, 3)', guias: true, cor: 3 },
+    { x: -4, y: 3, nome: '(−4, 3)', cor: 2, vazio: true },
+    { x: 4, y: -3, nome: '(4, −3)', cor: 1, vazio: true, lado: 'baixo' },
+    { x: -4, y: -3, nome: '(−4, −3)', cor: 5, vazio: true, lado: 'baixo' },
+  ]}
+  titulo="O P e os três espelhos dele"
+  legenda="trocar o sinal do x, trocar o do y, e trocar os dois"
+/>
+
+Trocar o sinal do primeiro número leva $(4, 3)$ pra $(-4, 3)$, e o ponto atravessou o
+**eixo y**, ficando do outro lado dele na mesma altura. Trocar o sinal do segundo leva
+pra $(4, -3)$, e agora quem foi atravessado foi o **eixo x**. Trocando os dois, o ponto
+vai parar do outro lado da origem, que é a mesma coisa que dar meia volta em torno
+dela.
+
+O jeito de nunca mais confundir qual é qual é olhar pra **quem fica parado**: o eixo do
+espelho é a linha que não se mexe, então na reflexão em torno do eixo y quem está em
+cima do eixo y continua onde estava, e quem muda de lado é a distância horizontal, que
+é justamente o x. Se você quiser conferir, pega o ponto $(0, 4)$, que mora no eixo y, e
+troca o sinal do x dele: continua $(0, 4)$, porque $-0$ é $0$, ou seja, o ponto não
+saiu do lugar mesmo, como tinha que ser.
+
+Escrevendo as três de uma vez, pra você ter onde olhar:
+
+$$
+\text{espelho no eixo } y:\ (x,\, y) \to (-x,\, y)
+$$
+
+$$
+\text{espelho no eixo } x:\ (x,\, y) \to (x,\, -y)
+$$
+
+$$
+\text{meia volta pela origem:}\ (x,\, y) \to (-x,\, -y)
+$$
+
+Se você ainda não fez, volta lá no ponto que você arrastava e liga os espelhos: os três
+acompanham o P enquanto você o arrasta, e dá pra ver cada sinal trocando na hora.
+
+## Uma figura inteira anda ponto a ponto
+
+Uma figura é um monte de ponto, então tudo que vale pra um ponto vale pra uma figura,
+com a única diferença de que você faz a mesma coisa com todos os vértices e depois liga
+eles de novo na mesma ordem.
+
+Espelhar este triângulo no eixo y, por exemplo, é trocar o sinal do x dos três vértices:
+
+<Plano
+  dominio={[-5, 5]}
+  poligonos={[
+    { vertices: [[1, 1], [4, 1], [4, 3]], nome: 'T', cor: 3 },
+    { vertices: [[-1, 1], [-4, 1], [-4, 3]], nome: "T'", cor: 2, tracejado: true },
+  ]}
+  titulo="O triângulo e o reflexo dele no eixo y"
+  legenda="(1, 1), (4, 1) e (4, 3) viraram (−1, 1), (−4, 1) e (−4, 3)"
+/>
+
+Repara numa coisa que o desenho mostra e a conta não: o triângulo refletido tem
+exatamente o mesmo tamanho e a mesma forma do original, porém ele está **virado**, do
+mesmo jeito que a sua mão direita no espelho vira uma mão esquerda.
+
+O outro movimento que aparece o tempo todo é a **translação**, que é empurrar a figura
+sem virar e sem girar. Pra empurrar tudo 5 pra direita e 2 pra baixo, você soma 5 em
+todo x e tira 2 de todo y:
+
+$$
+(x,\, y) \to (x + 5,\, y - 2)
+$$
+
+<Plano
+  dominio={[-5, 8]}
+  imagem={[-4, 5]}
+  poligonos={[
+    { vertices: [[-4, 2], [-1, 2], [-1, 4]], nome: 'T', cor: 3, tracejado: true },
+    { vertices: [[1, 0], [4, 0], [4, 2]], nome: "T'", cor: 1 },
+  ]}
+  titulo="O mesmo triângulo empurrado"
+  legenda="todo mundo somou 5 no x e perdeu 2 no y, então a figura andou sem mudar de forma"
+/>
+
+Somar um número no x empurra a figura pro lado, e somar no y empurra pra cima ou pra
+baixo. Guarda isso também, porque quando você chegar em gráfico de função e vir um
+$f(x) + 3$, o que estiver acontecendo com a curva vai ser exatamente essa translação,
+aplicada num ponto de cada vez.
+
+## Produto cartesiano, que é de onde vem o nome
+
+Na aula de <C id="conjuntos-numericos">conjuntos</C> a gente falou de conjunto como uma
+caixa de elementos. Se você pegar duas caixas e formar **todos** os pares possíveis,
+com o primeiro elemento vindo da primeira caixa e o segundo vindo da segunda, o que
+você montou tem nome: **produto cartesiano**, escrito $A \times B$.
+
+Com $A = \{1, 2, 3\}$ e $B = \{1, 2\}$, os pares são estes seis:
+
+$$
+A \times B = \{(1,1),\ (1,2),\ (2,1),\ (2,2),\ (3,1),\ (3,2)\}
+$$
+
+E como todo par ordenado é um ponto, esse conjunto tem desenho:
+
+<Plano
+  dominio={[-1, 4]}
+  imagem={[-1, 4]}
+  pontos={[
+    { x: 1, y: 1, nome: '(1, 1)', cor: 3, lado: 'direita' },
+    { x: 1, y: 2, nome: '(1, 2)', cor: 3, lado: 'direita' },
+    { x: 2, y: 1, nome: '(2, 1)', cor: 3, lado: 'direita' },
+    { x: 2, y: 2, nome: '(2, 2)', cor: 3, lado: 'direita' },
+    { x: 3, y: 1, nome: '(3, 1)', cor: 3, lado: 'direita' },
+    { x: 3, y: 2, nome: '(3, 2)', cor: 3, lado: 'direita' },
+  ]}
+  titulo="Os seis pares de A × B"
+  legenda="três opções de x vezes duas de y dão seis pontos"
+/>
+
+Foram $3 \times 2 = 6$ pares, e não é coincidência que a conta seja uma multiplicação:
+cada uma das 3 escolhas de x pode ser combinada com cada uma das 2 escolhas de y. Repara
+também que $B \times A$ seria outro conjunto, com $(1, 3)$ dentro e sem $(3, 1)$, pelo
+mesmo motivo de sempre, que é o par ser ordenado.
+
+Agora faz o mesmo com os conjuntos infinitos: se você pegar todos os números reais no
+primeiro lugar e todos os números reais no segundo, você forma $\mathbb{R} \times
+\mathbb{R}$, que a gente escreve $\mathbb{R}^2$, e o desenho disso é **a folha inteira,
+sem nenhum buraco**. Esse conjunto de pares é literalmente o plano cartesiano, e é daí
+que vem o nome.
+
+E é aqui que essa aula se conecta com a próxima: uma **função** vai ser um pedaço
+escolhido desse conjunto de pares, com uma regra dizendo qual y acompanha cada x, e o
+gráfico dela vai ser esse conjunto de pares desenhado na folha, o que quer dizer que o
+desenho e a regra vão ser a mesma informação escrita de dois jeitos.
+
+### Onde o pessoal escorrega
+
+**Marcar o ponto na ordem errada.** Dado $(2, 5)$, andar 5 pro lado e subir 2:
+
+$$
+(2, 5) \;\to\; \text{anda 5, sobe 2} \qquad \text{(errado)}
+$$
+
+O primeiro número é sempre o do eixo x, e o segundo é sempre o do eixo y. O que falta
+aqui é lembrar que o par é **ordenado**, e que a ordem é parte da informação, não uma
+convenção que dá pra escolher na hora.
+
+**Contar quadradinho em vez de ler o eixo.** Numa figura em que cada marca vale 2,
+responder $(3, 2)$ pro ponto que está em $(6, 4)$. O conceito que está faltando é o de
+escala, o mesmo da reta numérica: um quadradinho não vale 1 por natureza, ele vale o
+que estiver escrito no eixo.
+
+**Trocar o eixo do espelho.** Refletir $(3, 2)$ em torno do eixo x e escrever:
+
+$$
+(3, 2) \;\to\; (-3, 2) \qquad \text{(errado)}
+$$
+
+Quem faz isso está trocando o sinal do número que tem o mesmo nome do eixo, e o certo é
+o contrário: o eixo x é a linha que fica parada, então quem atravessa ela é a altura, e
+o que troca de sinal é o y, dando $(3, -2)$.
+
+**Botar num quadrante um ponto que mora no eixo.** Dizer que $(0, 4)$ está no primeiro
+quadrante porque o 4 é positivo:
+
+$$
+(0, 4) \;\to\; \text{primeiro quadrante} \qquad \text{(errado)}
+$$
+
+Quadrante é o pedaço de folha entre os eixos, e $(0, 4)$ está em cima do eixo y, então
+ele não está em quadrante nenhum. Zero no par é o aviso de que o ponto está na
+fronteira.

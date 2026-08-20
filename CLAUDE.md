@@ -94,8 +94,10 @@ src/
     viz/
       Juncao.tsx           interativo de sinal
       RetaZoom.tsx         interativo de escala
+      Coordenadas.tsx      interativo de par ordenado
       Setas.tsx            figura congelada de junção
       Reta.tsx             figura congelada de reta
+      Plano.tsx            figura congelada de plano: curva, ponto e figura
       MapaConceitos.tsx    o grafo desenhado
   lib/
     layout-grafo.ts        o Sugiyama, TS puro, roda em node sem o app
@@ -425,7 +427,7 @@ cabe do 0 ao 100 e com passo pequeno mostra quem mora entre o 1 e o 2.
 
 Rótulo decimal sai com vírgula, que é como se escreve em português.
 
-### `<Plano />` — o plano cartesiano com curvas, congelado
+### `<Plano />` — o plano cartesiano com curvas, pontos e figuras, congelado
 
 A `<Reta>` um andar acima: mesma família de figura estática, sem controle nenhum,
 pro caso em que o argumento é o desenho. A curva chega como **função de x**, e
@@ -452,6 +454,31 @@ o nome dentro do módulo. `cor` é 0 a 5, a paleta das áreas.
 
 Quem vai deixar o aluno mexer nos coeficientes é o `<Funcao>` com sliders, que
 ainda não existe. Este aqui é a figura congelada, do jeito que uma prova desenha.
+
+Ele também desenha **ponto** e **figura ligando pontos**, que foi o que a aula de
+plano cartesiano pediu: lá o assunto é o par ordenado, e quadrante, espelho e
+translação são a mesma figura com outra lista de pares.
+
+```mdx
+<Plano
+  dominio={[-5, 5]}
+  quadrantes={true}          {/* escreve I, II, III e IV no fundo */}
+  pontos={[
+    { x: 4, y: 3, nome: 'P (4, 3)', guias: true, cor: 3 },
+    { x: -4, y: 3, nome: '(−4, 3)', cor: 2, vazio: true, lado: 'esquerda' },
+  ]}
+  poligonos={[
+    { vertices: [[1, 1], [4, 1], [4, 3]], nome: 'T', cor: 3 },
+    { vertices: [[-1, 1], [-4, 1], [-4, 3]], nome: "T'", cor: 2, tracejado: true },
+  ]}
+/>
+```
+
+`guias` é o tracejado do ponto até os dois eixos, `vazio` é a bolinha vazada do
+ponto que está sendo comparado com outro, e `lado` (`cima`, `baixo`, `esquerda`,
+`direita`, `cima-direita`) escolhe de que lado da bolinha o nome encosta. A
+diagonal existe pro ponto que cai em cima de um eixo, onde `cima` põe o nome em
+cima da linha e `baixo` põe no meio dos números dela.
 
 ### `<Linhas />` — o gráfico de linha por categoria, congelado
 
@@ -586,6 +613,28 @@ não consegue chegar nele arrastando.
 `dominio` trava a escala; sem ele a reta se ajusta ao resultado. O fator aparece
 escrito como fração quando é uma fração de denominador pequeno, senão `1/3` viraria
 `0,3333` na tela e ninguém reconheceria o inverso.
+
+### `<Coordenadas />` — o ponto que o aluno arrasta
+
+O interativo do plano cartesiano, e o irmão de mãos dadas do `<Plano>`: aqui o
+aluno pega o ponto com o dedo ou com o mouse e vê o par ordenado responder. É a
+única coisa da aula que desenho parado não mostra, porque o que ensina é o
+primeiro número reagindo ao movimento horizontal e o sinal virando na hora em que
+o ponto atravessa o eixo.
+
+```mdx
+<Coordenadas x={3} y={2} dominio={[-6, 6]} titulo="Arrasta o ponto e lê o par" chaveUrl="pc" />
+```
+
+Os dois botões ligam jeitos de ver e não fazem conta nenhuma: **o caminho** desenha
+a seta que anda no x e depois a que sobe no y, que é a leitura do par ordenado
+acontecendo, e **os espelhos** põem os três simétricos na tela pro aluno arrastar o
+ponto e descobrir sozinho qual sinal cada reflexão troca. Os dois começam
+desligados, e `caminho` e `espelhos` ligam de saída.
+
+O ponto anda de meio em meio, então cai coordenada quebrada, e aí o par sai com
+ponto e vírgula (`(2,5; −1)`), senão ninguém sabe onde um número acaba e o outro
+começa.
 
 ### `<Conjunto />` — o diagrama de conjunto, congelado
 
