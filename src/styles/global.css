@@ -1152,10 +1152,13 @@ pre code {
 .filtro-grupo {
   min-width: 160px;
 }
-/* o grupo das aulas é o único que cresce, porque é o que ganha ficha nova a cada
-   aula que passa a ter exercício */
+/* aula e vestibular são os dois que crescem com o acervo, e são os dois que
+   ganharam campo de busca; a dificuldade continua cabendo em três fichas */
 .filtro-modulos {
-  flex: 1 1 340px;
+  flex: 1 1 300px;
+}
+.filtro-fontes {
+  flex: 1 1 240px;
 }
 .filtro-rot {
   display: flex;
@@ -1168,6 +1171,22 @@ pre code {
   text-transform: uppercase;
   color: var(--tinta-fraca);
   margin: 0 0 7px;
+}
+/* o rótulo de dentro do grupo, que separa o básico do vestibular e o vestibular
+   do ano sem virar um quarto grupo na fileira */
+.filtro-sub {
+  font-family: var(--f-ui);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  margin: 10px 0 6px;
+}
+.filtro-nota {
+  font-family: var(--f-ui);
+  font-size: 0.72rem;
+  color: var(--tinta-fraca);
+  margin: 0;
 }
 .filtro-limpar {
   border: 0;

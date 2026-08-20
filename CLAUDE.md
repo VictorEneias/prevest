@@ -914,20 +914,38 @@ Voltaram em agosto de 2026, com uma regra de classificação e um workflow de
 coleta. Uma aula sem exercício é meia aula: o aluno lê, acha que entendeu, e só
 descobre que não entendeu na prova.
 
+### São dois tipos de exercício, e a fonte é que diz qual
+
+O **básico** é autoral, cobra uma aula só e fecha a página dela. Ele é o
+exercício mais puro daquele assunto, o que serve pro aluno descobrir se entendeu
+o que acabou de ler, e é por isso que ele não pode cobrar uma segunda aula: quem
+está ali ainda não viu a segunda.
+
+**Todo o resto vem de vestibular.** Se o exercício não é o básico de uma aula,
+ele é uma questão de prova de verdade, com banca, ano e link pro original. Não
+existe exercício autoral de dificuldade média inventado pra encher a lista: pra
+isso existem provas, e elas são melhores do que eu escrevendo imitação de prova.
+
+**Básico e fácil são coisas diferentes.** Básico é de onde o exercício vem, fácil
+é o quanto ele dói. Um básico de junção pode ser um desafio, e uma questão da
+FUVEST pode sair na primeira leitura. Por isso o `nivel` tem três valores que não
+incluem "básico", e o básico não é campo nenhum: ele é `fonte: Autoral`, e a
+página calcula. Mesma regra do `desbloqueia` do grafo e do "multidisciplinar" —
+dois campos dizendo a mesma coisa acabam divergindo.
+
 ### O arquivo
 
 Um `.mdx` por exercício em `content/exercicios/`. O nome do arquivo é o id:
-`juncao-a01` pro autoral (módulo principal, `a`, número) e `fuvest-2024-q42` pro
-de prova.
+`juncao-a01` pro básico (aula, `a`, número) e `fuvest-2024-q42` pro de prova.
 
 ```yaml
 ---
 resumo: Junta quatro parcelas agrupando os sinais iguais primeiro  # a linha da busca
-fonte: FUVEST                    # a banca, ou "Autoral"
+fonte: FUVEST                    # a banca, ou "Autoral" (que é o básico da aula)
 ano: 2024                        # obrigatório quando não é autoral
 fonte_url: https://…             # idem — é o que a auditoria abre pra conferir
 fonte_questao: 42
-nivel: basico                    # basico | medio | desafio
+nivel: facil                     # facil | medio | desafio — a dificuldade, e só
 modulos: [juncao]                # ids de aula, o principal primeiro
 resposta: "1"
 verificado: false                # ← SEMPRE false ao criar. Ver 8.1
@@ -935,12 +953,21 @@ verificado: false                # ← SEMPRE false ao criar. Ver 8.1
 ```
 
 **Multidisciplinar não é campo.** Quem tem mais de um id em `modulos` já é, e a
-página calcula. É a mesma regra do grafo, onde `desbloqueia` não existe: dois
-campos dizendo a mesma coisa acabam divergindo.
+página calcula.
 
-**`basico` cai numa aula só**, porque ele é o exercício do fim da aula, e quem
-está ali ainda não viu a segunda aula. Com dois módulos, ele vira `medio`. O
-`npm run grafo` recusa básico com dois módulos.
+**Autoral cai numa aula só**, pelo que está lá em cima, e o `npm run grafo`
+recusa autoral com dois módulos.
+
+### A busca filtra por três eixos
+
+Dificuldade é ficha que liga e desliga, porque são três. Aula e vestibular são
+campo de busca que vai somando o que você escolhe, porque as duas listas crescem
+com o acervo, e 84 fichas de aula é uma parede que ninguém lê. O ano só aparece
+depois que tem vestibular escolhido, e ele oferece só os anos daquela banca:
+2019 da FUVEST e 2019 da UNICAMP são provas diferentes.
+
+Trocar a banca poda o ano junto, senão sobra um `?ano=2018` na URL filtrando
+escondido depois que a fileira de anos some da tela.
 
 ### O corpo
 
@@ -1043,8 +1070,8 @@ Quando as contas existirem, isso vira papel de admin (seção 1).
 | `plugins/revisar.ts` | o middleware que lê e grava o `.mdx`, só no dev |
 | `src/conteudo.ts` | o índice e o `exerciciosDaAula()` |
 
-O bloco do fim da aula é automático, no `Conceito.tsx`: ele pega os `basico`
-daquela aula e fecha com o link pra busca já filtrada. **Não** existe componente
+O bloco do fim da aula é automático, no `Conceito.tsx`: ele pega os básicos
+daquela aula (os autorais) e fecha com o link pra busca já filtrada. **Não** existe componente
 de exercício pra escrever no `.mdx` da aula.
 
 ## 8. Regras invioláveis

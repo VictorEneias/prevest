@@ -199,10 +199,11 @@ function visitar(id) {
 for (const id of conceitos.keys()) visitar(id);
 
 /* --- exercícios ---
-   Os três eixos que o exercício declara, mais as duas amarras que a auditoria
-   precisa: enunciado de prova sem fonte_url é enunciado que ninguém consegue
-   conferir contra o original, e é exatamente ali que a transcrição erra. */
-const NIVEIS_EX = ['basico', 'medio', 'desafio'];
+   O exercício declara dificuldade, aula e fonte, e a fonte é que diz o que ele é:
+   autoral é o básico da aula, e o resto é prova de verdade, que sem fonte_url
+   ninguém consegue conferir contra o original — é exatamente ali que a
+   transcrição erra. */
+const NIVEIS_EX = ['facil', 'medio', 'desafio'];
 
 for (const [id, { fm, corpo, arquivo }] of exercicios) {
   if (!fm.resumo) erros.push(`${arquivo}: falta "resumo" — é o que a busca mostra na lista`);
@@ -218,12 +219,13 @@ for (const [id, { fm, corpo, arquivo }] of exercicios) {
   for (const m of mods) {
     if (!conceitos.has(m)) erros.push(`${arquivo}: modulos aponta pra "${m}", que não existe`);
   }
-  /* básico é o exercício do fim da aula, e ele cai numa aula só por definição:
-     com dois módulos ele já é multidisciplinar, e a página calcula isso sozinha */
-  if (fm.nivel === 'basico' && mods.length > 1) {
-    erros.push(`${arquivo}: básico com ${mods.length} módulos — ou vira medio, ou fica com um só`);
+  const autoral = String(fm.fonte ?? '').trim().toLowerCase() === 'autoral';
+  /* o autoral é o básico da aula, e básico cai numa aula só por definição: ele
+     fecha a página dela, e quem chega ali ainda não viu a segunda aula. Exercício
+     que junta duas aulas vem de prova. */
+  if (autoral && mods.length > 1) {
+    erros.push(`${arquivo}: autoral com ${mods.length} módulos — o básico é de uma aula só`);
   }
-  const autoral = String(fm.fonte ?? '').toLowerCase() === 'autoral';
   if (!autoral && !fm.fonte_url) {
     erros.push(`${arquivo}: exercício de prova precisa de "fonte_url" pra auditoria conferir`);
   }
@@ -234,8 +236,10 @@ for (const [id, { fm, corpo, arquivo }] of exercicios) {
   if (!/<Resolucao/.test(corpo)) {
     avisos.push(`${arquivo}: não tem <Resolucao> — o aluno fica sem por onde conferir`);
   }
-  if (!/<Dicas/.test(corpo) && fm.nivel !== 'basico') {
-    avisos.push(`${arquivo}: sem <Dicas>, e ${fm.nivel} costuma precisar da escada`);
+  /* o básico da aula dispensa cerimônia; questão de prova sem escada deixa o
+     aluno com o "não sei nem começar" e nada entre isso e a resolução */
+  if (!/<Dicas/.test(corpo) && !autoral) {
+    avisos.push(`${arquivo}: sem <Dicas>, e questão de prova costuma precisar da escada`);
   }
   /* chaveUrl grava no hash da página, e a página de exercícios mostra vários de
      uma vez: dois exercícios com a mesma chave brigam pelo mesmo hash */

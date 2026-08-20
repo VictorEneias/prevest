@@ -22,7 +22,7 @@ export default function CartaoExercicio({ e, ocultarModulo }: CartaoExercicioPro
       <header className="ex-topo">
         <span className="ex-fonte">{rotuloFonte(e)}</span>
         <span className="ex-nivel" data-nivel={e.nivel}>
-          {e.nivel === 'basico' ? 'básico' : e.nivel === 'medio' ? 'médio' : 'desafio'}
+          {e.nivel === 'facil' ? 'fácil' : e.nivel === 'medio' ? 'médio' : 'desafio'}
         </span>
         {e.modulos.filter((m) => m !== ocultarModulo).map((m) => (
           <Link

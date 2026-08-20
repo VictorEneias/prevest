@@ -90,15 +90,22 @@ export const dependemDe = (id: string) => conceitos.filter((c) => c.prereqs.incl
 
 /* ---------- exercícios ---------- */
 
-/** `basico` cai num módulo só e serve pra fixar; `medio` cobra duas ou três
- *  coisas juntas; `desafio` é o que exige uma ideia antes da conta. */
-export type NivelExercicio = 'basico' | 'medio' | 'desafio';
+/** A dificuldade, e ela não diz de onde o exercício veio: `facil` é o que sai
+ *  na primeira leitura, `medio` cobra duas ou três coisas juntas, e `desafio` é
+ *  o que exige uma ideia antes da conta. Um básico da aula pode ser desafio, e
+ *  uma questão de vestibular pode ser fácil. */
+export type NivelExercicio = 'facil' | 'medio' | 'desafio';
 
 export interface Exercicio {
   id: string;
   /** Uma linha dizendo o que o exercício cobra. É o que a busca mostra na lista. */
   resumo: string;
-  /** A banca ("FUVEST", "UNICAMP") ou "Autoral". É por aqui que o filtro separa. */
+  /**
+   * A banca ("FUVEST", "UNICAMP") ou "Autoral", e é ela que diz o que o
+   * exercício é: autoral é o básico da aula, e todo o resto é prova de verdade.
+   * Não existe campo "basico" pelo mesmo motivo que não existe
+   * "multidisciplinar" — dois campos dizendo a mesma coisa acabam divergindo.
+   */
   fonte: string;
   ano?: number;
   /** Obrigatório quando não é autoral: é o que a auditoria abre pra conferir se
@@ -131,15 +138,22 @@ export const exercicios: Exercicio[] = carregar(modulosExercicios).map(({ id, fm
   ano: fm.ano as number | undefined,
   fonte_url: fm.fonte_url as string | undefined,
   fonte_questao: fm.fonte_questao !== undefined ? String(fm.fonte_questao) : undefined,
-  nivel: (fm.nivel as NivelExercicio) ?? 'basico',
+  nivel: (fm.nivel as NivelExercicio) ?? 'facil',
   modulos: (fm.modulos as string[]) ?? [],
   resposta: fm.resposta !== undefined ? String(fm.resposta) : undefined,
   verificado: fm.verificado === true,
   Corpo,
 }));
 
-/** "FUVEST 2024", ou só "Autoral". */
-export const rotuloFonte = (e: Exercicio) => (e.ano ? `${e.fonte} ${e.ano}` : e.fonte);
+/**
+ * O básico da aula: autoral, de uma aula só, e é o que fecha a página dela.
+ * Calculado da fonte, nunca declarado.
+ */
+export const ehBasico = (e: Exercicio) => e.fonte.trim().toLowerCase() === 'autoral';
+
+/** "FUVEST 2024", ou "básico da aula" — pro aluno, "Autoral" não quer dizer nada. */
+export const rotuloFonte = (e: Exercicio) =>
+  ehBasico(e) ? 'básico da aula' : e.ano ? `${e.fonte} ${e.ano}` : e.fonte;
 
 /**
  * O que aparece no site. Exercício não verificado fica FORA do site publicado, e
@@ -154,8 +168,6 @@ export const exerciciosVisiveis = import.meta.env.DEV
   ? exercicios
   : exercicios.filter((e) => e.verificado);
 
-/** Os do fim da aula: básicos que cobram só aquele módulo. */
+/** Os do fim da aula: os básicos daquele módulo, na ordem que o arquivo dá. */
 export const exerciciosDaAula = (id: string) =>
-  exerciciosVisiveis.filter(
-    (e) => e.nivel === 'basico' && e.modulos.length === 1 && e.modulos[0] === id,
-  );
+  exerciciosVisiveis.filter((e) => ehBasico(e) && e.modulos[0] === id);
