@@ -87,3 +87,75 @@ export const porId = new Map(conceitos.map((c) => [c.id, c]));
 
 /** Quem aponta pra esta aula. Calculado, nunca declarado. */
 export const dependemDe = (id: string) => conceitos.filter((c) => c.prereqs.includes(id));
+
+/* ---------- exercícios ---------- */
+
+/** `basico` cai num módulo só e serve pra fixar; `medio` cobra duas ou três
+ *  coisas juntas; `desafio` é o que exige uma ideia antes da conta. */
+export type NivelExercicio = 'basico' | 'medio' | 'desafio';
+
+export interface Exercicio {
+  id: string;
+  /** Uma linha dizendo o que o exercício cobra. É o que a busca mostra na lista. */
+  resumo: string;
+  /** A banca ("FUVEST", "UNICAMP") ou "Autoral". É por aqui que o filtro separa. */
+  fonte: string;
+  ano?: number;
+  /** Obrigatório quando não é autoral: é o que a auditoria abre pra conferir se
+   *  a transcrição do enunciado bate com o original. */
+  fonte_url?: string;
+  fonte_questao?: string;
+  nivel: NivelExercicio;
+  /**
+   * As aulas que o exercício cobra, o principal primeiro. Não existe campo
+   * "multidisciplinar": quem tem mais de um módulo já é, e a página calcula.
+   * Mesma regra do grafo, onde `desbloqueia` não existe.
+   */
+  modulos: string[];
+  /** A resposta, pro checador saber que o exercício tem gabarito declarado. */
+  resposta?: string;
+  /** Só o Victor troca pra true, e só depois de refazer a conta e comparar o
+   *  enunciado com a fonte. Exercício não verificado não aparece na busca. */
+  verificado: boolean;
+  Corpo: ComponentType<Record<string, unknown>>;
+}
+
+const modulosExercicios = import.meta.glob<ModuloMdx>('/content/exercicios/*.mdx', {
+  eager: true,
+});
+
+export const exercicios: Exercicio[] = carregar(modulosExercicios).map(({ id, fm, Corpo }) => ({
+  id,
+  resumo: (fm.resumo as string) ?? id,
+  fonte: (fm.fonte as string) ?? 'Autoral',
+  ano: fm.ano as number | undefined,
+  fonte_url: fm.fonte_url as string | undefined,
+  fonte_questao: fm.fonte_questao !== undefined ? String(fm.fonte_questao) : undefined,
+  nivel: (fm.nivel as NivelExercicio) ?? 'basico',
+  modulos: (fm.modulos as string[]) ?? [],
+  resposta: fm.resposta !== undefined ? String(fm.resposta) : undefined,
+  verificado: fm.verificado === true,
+  Corpo,
+}));
+
+/** "FUVEST 2024", ou só "Autoral". */
+export const rotuloFonte = (e: Exercicio) => (e.ano ? `${e.fonte} ${e.ano}` : e.fonte);
+
+/**
+ * O que aparece no site. Exercício não verificado fica FORA do site publicado, e
+ * não escondido atrás de um selo: resolução com sinal trocado que o Victor ainda
+ * não leu é pior que exercício nenhum.
+ *
+ * Em `npm run dev` ele aparece, com o selo de não verificado e um filtro só pra
+ * ele. É essa a mesa de auditoria enquanto não existe conta de admin: quem roda
+ * o dev é o Victor, e o editor continua sendo o VS Code.
+ */
+export const exerciciosVisiveis = import.meta.env.DEV
+  ? exercicios
+  : exercicios.filter((e) => e.verificado);
+
+/** Os do fim da aula: básicos que cobram só aquele módulo. */
+export const exerciciosDaAula = (id: string) =>
+  exerciciosVisiveis.filter(
+    (e) => e.nivel === 'basico' && e.modulos.length === 1 && e.modulos[0] === id,
+  );

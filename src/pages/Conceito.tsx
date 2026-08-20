@@ -1,9 +1,10 @@
-import { useParams } from 'react-router-dom';
-import { dependemDe, porId } from '../conteudo';
+import { Link, useParams } from 'react-router-dom';
+import { dependemDe, exerciciosDaAula, porId } from '../conteudo';
 import { ROTULO_MATERIA, rotuloBloco } from '../lib/curriculo';
 import { useTitulo } from '../estado';
 import C from '../components/C';
 import MapaConceitos from '../components/viz/MapaConceitos';
+import CartaoExercicio from '../components/CartaoExercicio';
 
 const NIVEL: Record<string, string> = {
   base: 'Base',
@@ -48,6 +49,7 @@ export default function Conceito({
 
   const { Corpo } = c;
   const filhos = dependemDe(c.id);
+  const exercicios = exerciciosDaAula(c.id);
 
   if (dentroDePainel) {
     return (
@@ -122,6 +124,26 @@ export default function Conceito({
         <div className="aula">
           <Corpo />
         </div>
+
+        {/* Os básicos desta aula, e só eles: exercício que junta duas aulas não
+            cabe no fim da primeira, porque quem está aqui ainda não viu a
+            segunda. O resto do caminho é a busca, já filtrada nesta aula. */}
+        {exercicios.length > 0 && (
+          <section className="fim-exercicios">
+            <hr className="regua" />
+            <p className="rotulo-secao">Pra fixar</p>
+            <p className="nota-secao">
+              Só o que esta aula cobre. Faz no papel antes de abrir a resolução, mesmo que dê
+              errado, porque errar e ver onde errou é o que mais ensina aqui.
+            </p>
+            {exercicios.map((e) => (
+              <CartaoExercicio key={e.id} e={e} ocultarModulo={c.id} />
+            ))}
+            <Link className="fim-mais" to={`/exercicios?modulos=${c.id}`}>
+              Continuar praticando <span aria-hidden="true">→</span>
+            </Link>
+          </section>
+        )}
 
         {(filhos.length > 0 || c.prereqs.length > 0) && (
           <div className="vizinhanca">

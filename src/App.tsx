@@ -5,6 +5,7 @@ import { componentesMDX } from './components/mdx';
 import { useAula, type ItemPilha } from './estado';
 import Conceito, { PaginaConceito } from './pages/Conceito';
 import EmBreve from './pages/EmBreve';
+import Exercicios from './pages/Exercicios';
 import Home from './pages/Home';
 import Indice from './pages/Indice';
 import Sobre from './pages/Sobre';
@@ -34,16 +35,7 @@ export default function App() {
           <Route path="/indice" element={<Indice />} />
           <Route path="/conceitos/:id" element={<PaginaConceito />} />
           <Route path="/sobre" element={<Sobre />} />
-          <Route
-            path="/exercicios"
-            element={
-              <EmBreve titulo="Exercícios">
-                Os exercícios saíram do site em agosto, junto com as camadas, enquanto o currículo
-                era refeito. Quando voltarem, cada um vem com a escada de dicas, a resolução e o
-                raciocínio antes da conta.
-              </EmBreve>
-            }
-          />
+          <Route path="/exercicios" element={<Exercicios />} />
           <Route
             path="/entrar"
             element={

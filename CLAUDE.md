@@ -75,6 +75,7 @@ material de aula 1-a-1 em localhost isso não muda nada.
 content/                 ← O ATIVO. Fora de src/ de propósito.
   conceitos/*.mdx          Uma aula = um arquivo. Se um dia trocar de stack,
                            esta pasta migra intacta.
+  exercicios/*.mdx         Um exercício = um arquivo. Seção 7.
 index.html               ← a casca; o app monta em #raiz
 vite.config.ts           ← MDX + KaTeX na compilação, e o providerImportSource
 src/
@@ -85,6 +86,9 @@ src/
   components/
     C.tsx                  elo de pré-requisito
     mdx.tsx                a lista do que o MDX pode usar sem import
+    Dicas.tsx              a escada de dicas, um degrau por vez
+    Resolucao.tsx          a resolução, fechada por padrão
+    CartaoExercicio.tsx    o cartão, na busca e no fim da aula
     viz/
       Juncao.tsx           interativo de sinal
       RetaZoom.tsx         interativo de escala
@@ -98,6 +102,7 @@ src/
   pages/
     Home.tsx               as duas portas de entrada e o mapa inteiro
     Indice.tsx             o índice remissivo: todo tópico de toda aula
+    Exercicios.tsx         a busca de exercícios, com os filtros
     Conceito.tsx           serve de página e de conteúdo de painel
   styles/global.css      ← todo o CSS do site, sem escopo
 scripts/
@@ -123,7 +128,7 @@ O que era `<Curiosidade rotulo="X">` hoje é `### X`. O que era `<Erros>` hoje �
 | | |
 |---|---|
 | `npm run dev` | **é isso que roda na casa do aluno**, na porta 4321 |
-| `npm run grafo` | frontmatter inválido, elo morto, ciclo, prereq redundante, teto de 5 áreas |
+| `npm run grafo` | frontmatter inválido, elo morto, ciclo, prereq redundante, teto de 5 áreas, e o frontmatter dos exercícios |
 | `npm run paginas` | renderiza as 86 páginas no node e diz qual quebrou |
 | `npm run tempos` | recalcula o `tempo_estimado` das 84 aulas |
 | `npm run plano` | reescreve o `PLANO-DE-AULAS.md` a partir do frontmatter |
@@ -586,6 +591,12 @@ todo parágrafo a escolher uma caixa antes de ser escrito; esta é uma caixa só
 um trabalho só, e o texto normal continua sendo prosa solta. Se aparecer uma segunda
 caixa, releia esta frase antes de criar.
 
+### `<Dicas>`, `<Dica>` e `<Resolucao>` — só em exercício
+
+A escada que abre um degrau por vez e a resolução que nasce fechada. Não use em
+aula: lá o texto é prosa solta, e caixa retrátil no meio de explicação foi
+justamente o que saiu em agosto. O formato está na seção 7.
+
 ### `<MapaConceitos />` — o grafo desenhado
 
 Não se usa em `.mdx`; é da home (`src/pages/Home.tsx`) e do rodapé de cada
@@ -867,31 +878,126 @@ quadrática, exponencial, logaritmo, modular e trigonometria — e a mesma estru
 
 ---
 
-## 7. Exercícios (fora do ar por enquanto)
+## 7. Exercícios
 
-Não existe exercício no site. `content/exercicios/`, a rota, a página e o
-`<Questao>` foram removidos em agosto de 2026, junto com as camadas, porque o
-projeto precisava de estrutura simples enquanto o currículo era refeito.
+Voltaram em agosto de 2026, com uma regra de classificação e um workflow de
+coleta. Uma aula sem exercício é meia aula: o aluno lê, acha que entendeu, e só
+descobre que não entendeu na prova.
 
-Quando voltarem, o formato de resolução a retomar é este, que funcionou nos três
-exercícios de junção que existiram:
+### O arquivo
 
-1. **Reler** — o que o enunciado está pedindo, antes de qualquer conta.
-2. **Onde olhar** — aponta um dado específico, sem dizer o que fazer com ele.
-3. **Qual ferramenta** — nomeia o que usar, sem aplicar.
-4. **Resolução** — as contas, no padrão da seção 7.1.
-5. **Como eu penso** — o raciocínio *antes* da conta: o que olhei primeiro, o que
-   descartei e por quê. É a parte que ninguém publica.
-6. **Erros comuns** — o erro do jeito que o aluno comete, com a linha errada.
+Um `.mdx` por exercício em `content/exercicios/`. O nome do arquivo é o id:
+`juncao-a01` pro autoral (módulo principal, `a`, número) e `fuvest-2024-q42` pro
+de prova.
 
-**Nem todo exercício merece os seis degraus.** Exercício de junção é simples
-demais pra tanta cerimônia: ali cabe enunciado, resposta e talvez o erro comum.
-Os seis são pro exercício que aguenta, que é o de vestibular e o de integração.
+```yaml
+---
+resumo: Junta quatro parcelas agrupando os sinais iguais primeiro  # a linha da busca
+fonte: FUVEST                    # a banca, ou "Autoral"
+ano: 2024                        # obrigatório quando não é autoral
+fonte_url: https://…             # idem — é o que a auditoria abre pra conferir
+fonte_questao: 42
+nivel: basico                    # basico | medio | desafio
+modulos: [juncao]                # ids de aula, o principal primeiro
+resposta: "1"
+verificado: false                # ← SEMPRE false ao criar. Ver 8.1
+---
+```
 
-A escada de dicas tem uma regra que vale registrar porque eu já errei: ela tem que
-subir de degrau em degrau. Na primeira versão do `juncao-a01` a dica 1 já mandava
-reescrever tudo em forma de junção e a dica 3 entregava o procedimento inteiro, o
-que faz o aluno copiar em vez de resolver.
+**Multidisciplinar não é campo.** Quem tem mais de um id em `modulos` já é, e a
+página calcula. É a mesma regra do grafo, onde `desbloqueia` não existe: dois
+campos dizendo a mesma coisa acabam divergindo.
+
+**`basico` cai numa aula só**, porque ele é o exercício do fim da aula, e quem
+está ali ainda não viu a segunda aula. Com dois módulos, ele vira `medio`. O
+`npm run grafo` recusa básico com dois módulos.
+
+### O corpo
+
+Enunciado em prosa solta no topo, depois a escada e a resolução:
+
+```mdx
+Resolva, usando junção:
+
+$$
+9 - 4 - 6 + 2
+$$
+
+<Dicas>
+  <Dica>o degrau que só aponta pra onde olhar</Dica>
+  <Dica>o que nomeia a ferramenta, sem aplicar</Dica>
+  <Dica>o que dá o primeiro passo, e para</Dica>
+</Dicas>
+
+<Resolucao resposta="1">
+
+As contas, e depois os `###` de sempre:
+
+### Como eu penso
+### Onde o pessoal escorrega
+
+</Resolucao>
+```
+
+`<Dicas>` abre um degrau por vez e `<Resolucao>` nasce fechada. Essas duas caixas
+não são a volta das camadas da seção 2: ali a caixa era arquivamento, aqui ela é
+função, porque dica que abre tudo de uma vez o aluno copia, e resolução aberta
+transforma o exercício em exemplo resolvido.
+
+**A escada sobe de degrau em degrau**, e eu já errei isso: na primeira versão do
+`juncao-a01` a dica 1 já mandava reescrever tudo em forma de junção e a dica 3
+entregava o procedimento inteiro. O degrau bom aponta pra onde olhar e devolve a
+pergunta; se depois de ler a dica não sobrou nada pro aluno descobrir, ela está
+alta demais.
+
+**Nem todo exercício merece cerimônia.** Básico de junção cabe em enunciado,
+resposta e talvez o erro comum. O "como eu penso" é pro exercício que aguenta, e
+é a parte que ninguém publica: o que eu olhei primeiro, o que descartei e por quê.
+
+Não use `chaveUrl` em exercício. A busca mostra vários de uma vez e eles brigam
+pelo mesmo hash.
+
+### O workflow do vestibular
+
+1. O Victor diz qual prova (`vest_unb 2025`).
+2. Eu busco a prova e o gabarito, e **leio a fonte**. Enunciado escrito de
+   memória sai *quase* certo, e o *quase* é onde o aluno se perde (8.2).
+3. Separo as questões de matemática.
+4. Resolvo uma por uma com calma e **confiro no gabarito antes de escrever
+   qualquer resolução**. Se a minha resposta não bater com o gabarito, a questão
+   não entra: ou eu errei, ou o enunciado que eu li está truncado, e os dois
+   casos são motivo pra parar.
+5. Monto o arquivo, classifico com as tags e apresento.
+6. O Victor lê, corta a dica repetida, ajusta o que ficou didaticamente ruim e
+   **só ele troca `verificado` pra true**.
+
+**Questão com figura eu não invento.** Ou eu reconstruo a figura com um
+componente nosso, ou a questão fica de fora, e eu digo qual foi e por quê.
+
+### A auditoria, enquanto não existe conta
+
+Exercício com `verificado: false` **não aparece no site publicado**, e não fica
+escondido atrás de um selo. Em `npm run dev` ele aparece com o selo de "não
+verificado" e o filtro "só os não verificados", que é a mesa de auditoria: quem
+roda o dev é o Victor. Editar continua sendo no VS Code, e o `title` do selo é o
+caminho do arquivo.
+
+Quando as contas existirem, isso vira papel de admin (seção 1).
+
+### Onde as coisas moram
+
+| | |
+|---|---|
+| `content/exercicios/*.mdx` | os exercícios |
+| `src/pages/Exercicios.tsx` | a busca com os filtros |
+| `src/components/CartaoExercicio.tsx` | o cartão, usado na busca e no fim da aula |
+| `src/components/Dicas.tsx` | `<Dicas>` e `<Dica>` |
+| `src/components/Resolucao.tsx` | `<Resolucao>` |
+| `src/conteudo.ts` | o índice e o `exerciciosDaAula()` |
+
+O bloco do fim da aula é automático, no `Conceito.tsx`: ele pega os `basico`
+daquela aula e fecha com o link pra busca já filtrada. **Não** existe componente
+de exercício pra escrever no `.mdx` da aula.
 
 ## 8. Regras invioláveis
 
@@ -914,9 +1020,11 @@ marcar `true` sozinho continua valendo igual.
 
 ### 8.2 Não invente conteúdo factual
 
-Enunciado de prova real (FUVEST, UNICAMP, ENEM) só entra se o Victor colar o
-texto. Nunca reconstrua de memória: o enunciado sai quase certo e o *quase* é
-justamente onde o aluno se perde.
+Enunciado de prova real (FUVEST, UNICAMP, ENEM) só entra **com a fonte aberta na
+frente**: ou o Victor cola o texto, ou você busca a prova e transcreve lendo, com
+`fonte_url` e o número da questão no frontmatter, que é o que a auditoria abre pra
+comparar (seção 7). Nunca reconstrua de memória: o enunciado sai quase certo e o
+*quase* é justamente onde o aluno se perde.
 
 Se precisar de exercício e não houver fonte, escreva **autoral** e marque
 `fonte: Autoral`. Exercício autoral honesto vale mais que FUVEST inventada.

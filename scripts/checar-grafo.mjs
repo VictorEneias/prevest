@@ -16,6 +16,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 const DIR_C = 'content/conceitos';
+const DIR_E = 'content/exercicios';
 
 const vermelho = (s) => `\x1b[31m${s}\x1b[0m`;
 const amarelo = (s) => `\x1b[33m${s}\x1b[0m`;
@@ -70,6 +71,7 @@ async function ler(dir) {
 }
 
 const conceitos = await ler(DIR_C);
+const exercicios = await ler(DIR_E);
 const erros = [];
 const avisos = [];
 
@@ -196,6 +198,53 @@ function visitar(id) {
 }
 for (const id of conceitos.keys()) visitar(id);
 
+/* --- exercícios ---
+   Os três eixos que o exercício declara, mais as duas amarras que a auditoria
+   precisa: enunciado de prova sem fonte_url é enunciado que ninguém consegue
+   conferir contra o original, e é exatamente ali que a transcrição erra. */
+const NIVEIS_EX = ['basico', 'medio', 'desafio'];
+
+for (const [id, { fm, corpo, arquivo }] of exercicios) {
+  if (!fm.resumo) erros.push(`${arquivo}: falta "resumo" — é o que a busca mostra na lista`);
+  if (!fm.fonte) erros.push(`${arquivo}: falta "fonte" (a banca, ou "Autoral")`);
+  if (!NIVEIS_EX.includes(fm.nivel)) {
+    erros.push(`${arquivo}: nivel "${fm.nivel ?? ''}" — use um de ${NIVEIS_EX.join(', ')}`);
+  }
+  if (fm.verificado !== 'true' && fm.verificado !== 'false') {
+    erros.push(`${arquivo}: verificado tem que ser true ou false (nasce false)`);
+  }
+  const mods = fm.modulos ?? [];
+  if (!mods.length) erros.push(`${arquivo}: falta "modulos" — sem isso o exercício não é achável`);
+  for (const m of mods) {
+    if (!conceitos.has(m)) erros.push(`${arquivo}: modulos aponta pra "${m}", que não existe`);
+  }
+  /* básico é o exercício do fim da aula, e ele cai numa aula só por definição:
+     com dois módulos ele já é multidisciplinar, e a página calcula isso sozinha */
+  if (fm.nivel === 'basico' && mods.length > 1) {
+    erros.push(`${arquivo}: básico com ${mods.length} módulos — ou vira medio, ou fica com um só`);
+  }
+  const autoral = String(fm.fonte ?? '').toLowerCase() === 'autoral';
+  if (!autoral && !fm.fonte_url) {
+    erros.push(`${arquivo}: exercício de prova precisa de "fonte_url" pra auditoria conferir`);
+  }
+  if (!autoral && !fm.ano) {
+    erros.push(`${arquivo}: exercício de prova precisa do "ano" da prova`);
+  }
+  if (!fm.resposta) avisos.push(`${arquivo}: sem "resposta" declarada no frontmatter`);
+  if (!/<Resolucao/.test(corpo)) {
+    avisos.push(`${arquivo}: não tem <Resolucao> — o aluno fica sem por onde conferir`);
+  }
+  if (!/<Dicas/.test(corpo) && fm.nivel !== 'basico') {
+    avisos.push(`${arquivo}: sem <Dicas>, e ${fm.nivel} costuma precisar da escada`);
+  }
+  /* chaveUrl grava no hash da página, e a página de exercícios mostra vários de
+     uma vez: dois exercícios com a mesma chave brigam pelo mesmo hash */
+  for (const m of corpo.matchAll(/chaveUrl=["']([^"']+)["']/g)) {
+    avisos.push(`${arquivo}: chaveUrl "${m[1]}" — a busca mostra vários exercícios juntos, tire`);
+  }
+  void id;
+}
+
 /* --- relatório --- */
 const naoRevisados = [...conceitos.values()].filter((c) => c.fm.revisado !== 'true').length;
 const orfaos = [...conceitos.keys()].filter(
@@ -203,8 +252,12 @@ const orfaos = [...conceitos.keys()].filter(
 );
 
 console.log('');
+const naoVerificados = [...exercicios.values()].filter((e) => e.fm.verificado !== 'true').length;
+
 console.log(`  ${conceitos.size} aulas`);
 console.log(cinza(`  ${naoRevisados} ainda em rascunho`));
+console.log(`  ${exercicios.size} exercícios`);
+console.log(cinza(`  ${naoVerificados} esperando auditoria`));
 if (orfaos.length && orfaos.length < conceitos.size) {
   console.log(cinza(`  folhas do grafo (ninguém depende): ${orfaos.join(', ')}`));
 }
@@ -214,7 +267,7 @@ erros.forEach((e) => console.log(`  ${vermelho('erro')}   ${e}`));
 console.log('');
 
 if (erros.length) {
-  console.log(vermelho(`  ✗ ${erros.length} problema(s) no grafo\n`));
+  console.log(vermelho(`  ✗ ${erros.length} problema(s) no conteúdo\n`));
   process.exit(1);
 }
 console.log(verde('  ✓ grafo íntegro\n'));

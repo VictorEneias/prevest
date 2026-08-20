@@ -1133,6 +1133,187 @@ pre code {
 }
 
 /* ==================================================================
+   5b. a busca de exercícios
+   ==================================================================
+   Os filtros são fichas que ligam e desligam, e não select: com três eixos e o
+   estado inteiro na URL, o aluno vê de uma vez o que está ligado, e o Victor
+   copia a URL pra mandar a lista pronta. */
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--u) * 0.9);
+  margin: var(--u) 0;
+  padding: calc(var(--u) * 0.6) calc(var(--u) * 0.7);
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  background: var(--papel-fundo);
+}
+.filtro-grupo {
+  min-width: 160px;
+}
+/* o grupo das aulas é o único que cresce, porque é o que ganha ficha nova a cada
+   aula que passa a ter exercício */
+.filtro-modulos {
+  flex: 1 1 340px;
+}
+.filtro-rot {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--f-ui);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  margin: 0 0 7px;
+}
+.filtro-limpar {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-family: var(--f-ui);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--acento);
+  cursor: pointer;
+}
+.filtro-busca {
+  width: 100%;
+  margin-bottom: 7px;
+  padding: 5px 9px;
+  font-family: var(--f-ui);
+  font-size: 0.76rem;
+  color: var(--tinta);
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+}
+.filtro-fichas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.filtro-fichas button {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--f-ui);
+  font-size: 0.74rem;
+  padding: 4px 10px;
+  color: var(--tinta-media);
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.filtro-fichas button span {
+  font-size: 0.64rem;
+  color: var(--tinta-fraca);
+}
+.filtro-fichas button:hover {
+  border-color: var(--tinta);
+  color: var(--tinta);
+}
+/* a ficha ligada usa a cor da área quando ela tem uma, senão a tinta: assim a
+   aula marcada aqui é a mesma cor da caixa dela no mapa */
+.filtro-fichas button[aria-pressed='true'] {
+  color: var(--papel);
+  background: var(--cor-bloco, var(--tinta));
+  border-color: var(--cor-bloco, var(--tinta));
+}
+.filtro-fichas button[aria-pressed='true'] span {
+  color: var(--papel);
+  opacity: 0.75;
+}
+
+.ex {
+  margin: calc(var(--u) * 1.1) 0;
+  padding: calc(var(--u) * 0.7) calc(var(--u) * 0.9);
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  background: var(--papel);
+}
+.ex-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: calc(var(--u) * 0.5);
+  padding-bottom: calc(var(--u) * 0.4);
+  border-bottom: 1px solid var(--linha);
+  font-family: var(--f-ui);
+  font-size: 0.68rem;
+}
+.ex-fonte {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tinta-media);
+}
+.ex-nivel {
+  padding: 2px 8px;
+  border: 1px solid var(--linha);
+  border-radius: 999px;
+  color: var(--tinta-fraca);
+}
+.ex-nivel[data-nivel='desafio'] {
+  color: var(--acento);
+  border-color: var(--acento);
+}
+.ex-modulo {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px 2px 6px;
+  border: 1px solid var(--linha);
+  border-left: 4px solid var(--cor-bloco, var(--linha));
+  border-radius: 4px;
+  color: var(--tinta-media);
+  text-decoration: none;
+}
+.ex-modulo:hover {
+  color: var(--tinta);
+  border-color: var(--tinta);
+}
+/* o selo de pendente só existe em npm run dev; o title dele é o caminho do
+   arquivo, que é onde a correção acontece */
+.ex-pendente {
+  padding: 2px 8px;
+  border: 1px dashed var(--acento);
+  border-radius: 999px;
+  color: var(--acento);
+}
+.ex-origem {
+  margin-left: auto;
+  color: var(--tinta-fraca);
+}
+.ex > p:first-of-type {
+  margin-top: 0;
+}
+
+/* o bloco no fim da aula usa o mesmo cartão da busca; o que muda é o convite do
+   fim, que é por onde o aluno sai da aula e cai na prática */
+.fim-mais {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--f-ui);
+  font-weight: 700;
+  font-size: 0.84rem;
+  color: var(--acento);
+  text-decoration: none;
+  border-bottom: 3px solid var(--acento);
+  padding-bottom: 3px;
+}
+.fim-mais:hover {
+  color: var(--tinta);
+  border-bottom-color: var(--tinta);
+}
+
+/* ==================================================================
    6. a página de aula
    ================================================================== */
 

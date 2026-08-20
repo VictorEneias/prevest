@@ -1,0 +1,74 @@
+---
+resumo: Um produto com junção dentro do parêntese, e as duas regras de sinal na mesma conta
+fonte: Autoral
+nivel: medio
+modulos: [escalamento, juncao]
+resposta: "12"
+verificado: false
+---
+
+Resolva:
+
+$$
+-3 \cdot (5 - 9)
+$$
+
+<Dicas>
+  <Dica>
+    Tem duas operações aqui, e elas não são a mesma coisa: uma está dentro do parêntese e a outra
+    está do lado de fora. Qual delas dá pra resolver primeiro?
+  </Dica>
+  <Dica>
+    O que está dentro do parêntese é uma junção de $+5$ com $-9$. Resolve só ela, e repara que
+    sobra um número negativo.
+  </Dica>
+  <Dica>
+    Agora sim é multiplicação, e aqui a regra dos sinais é a da multiplicação: multiplicar por um
+    negativo vira a seta pro outro lado do zero. Você tem duas viradas ou uma só?
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="12">
+
+Primeiro o parêntese, que é junção:
+
+$$
+5 - 9 = -4
+$$
+
+Agora a multiplicação, que é o único lugar desta conta onde "menos com menos dá mais" vale:
+
+$$
+-3 \cdot (-4) \;=\; 12
+$$
+
+### Como eu penso
+
+O que decide esse exercício é reparar que **as duas regras de sinal que você conhece são de
+operações diferentes**, e que elas aparecem uma em cada linha da mesma conta. Dentro do parêntese
+eu estou juntando, então dois negativos ficariam mais negativos ainda. Fora dele eu estou
+escalando, então o fator negativo vira a seta e o resultado sai positivo. Quando eu vejo alguém
+errar isso, quase nunca é por não saber as duas regras: é por aplicar a regra certa na linha
+errada.
+
+Dá pra conferir por outro caminho, distribuindo o $-3$ antes de resolver o parêntese:
+
+$$
+-3 \cdot 5 \;+\; (-3) \cdot (-9) \;=\; -15 + 27 \;=\; 12
+$$
+
+Bateu, e note que aqui a última junção também é entre um negativo e um positivo maior, o que
+devolve positivo.
+
+### Onde o pessoal escorrega
+
+**Aplicar a regra da multiplicação dentro do parêntese:**
+
+$$
+5 - 9 = +14 \qquad \text{(errado)}
+$$
+
+Dentro do parêntese ninguém está multiplicando nada, é uma junção de $+5$ com $-9$, e o resultado
+tem que ficar do lado esquerdo do zero, porque a seta do $9$ é maior que a do $5$.
+
+</Resolucao>

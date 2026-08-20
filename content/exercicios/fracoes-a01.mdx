@@ -1,0 +1,64 @@
+---
+resumo: Comparar duas frações de denominadores diferentes
+fonte: Autoral
+nivel: basico
+modulos: [fracoes]
+resposta: "5/8"
+verificado: false
+---
+
+Quem é maior?
+
+$$
+\frac{5}{8} \qquad \text{ou} \qquad \frac{7}{12}
+$$
+
+<Dicas>
+  <Dica>
+    Os numeradores são diferentes e os denominadores também, então não dá pra comparar contando
+    pedaço nem comparando tamanho de pedaço. O que precisa ficar igual antes de qualquer
+    comparação?
+  </Dica>
+  <Dica>
+    Procura um número em que o 8 e o 12 cabem inteiros. Não precisa ser o menor de todos, porém o
+    menor deixa a conta mais leve.
+  </Dica>
+  <Dica>
+    Achou o 24? Então reescreve as duas com denominador 24, lembrando que multiplicar em cima e
+    embaixo pelo mesmo número não muda o tanto pintado, e aí compara só os numeradores.
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="5/8">
+
+Comparar direto não dá, porque os pedaços têm tamanhos diferentes dos dois lados. Então eu igualo
+os cortes, e o menor denominador que serve pros dois é o $24$:
+
+$$
+\frac{5}{8} = \frac{5 \cdot 3}{8 \cdot 3} = \frac{15}{24}
+\qquad\qquad
+\frac{7}{12} = \frac{7 \cdot 2}{12 \cdot 2} = \frac{14}{24}
+$$
+
+Agora os pedaços têm o mesmo tamanho e ganha quem tem mais, então $\frac{15}{24} > \frac{14}{24}$,
+ou seja, $\frac{5}{8}$ é maior.
+
+<Barra a={[5, 8]} b={[7, 12]} titulo="As duas barras, antes de igualar os cortes" />
+
+### Como eu penso
+
+Antes de multiplicar qualquer coisa eu dou uma olhada rápida pra ver se a resposta já não está na
+cara, porque isso às vezes economiza a conta inteira. Aqui as duas estão pertinho de $\frac{1}{2}$:
+$\frac{5}{8}$ passa da metade (metade seria $\frac{4}{8}$) e $\frac{7}{12}$ também passa (metade
+seria $\frac{6}{12}$), então as duas estão do mesmo lado e o chute não resolve. Como não resolveu,
+eu vou pro caminho garantido, que é igualar os denominadores. O que eu não faço é ficar olhando
+pros quatro números tentando adivinhar.
+
+### Onde o pessoal escorrega
+
+**Comparar numerador com numerador e denominador com denominador.** Como $7 > 5$ e $12 > 8$, é
+tentador concluir que $\frac{7}{12}$ é maior. Só que aumentar o denominador **diminui** a fração,
+porque corta o inteiro em mais pedaços, então os dois números estão puxando pra lados contrários e
+a comparação separada não decide nada.
+
+</Resolucao>
