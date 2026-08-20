@@ -501,6 +501,12 @@ A barra mostra **dois** inteiros lado a lado, com a linha grossa marcando o fim 
 primeiro e a régua embaixo escrevendo 0, 1 e 2, então $7/4$ passa da marca do 1 em
 vez de estourar o desenho.
 
+**Não dá pra pintar mais do que a barra tem.** O teto do numerador é o denominador
+vezes dois (vezes um só quando `soma` está ligado, senão a terceira barra é que
+estouraria), e diminuir o corte puxa o pintado junto. Sem isso o rótulo escrevia
+$8/3 = 2{,}667$ e o desenho parava no 2, que é a figura mentindo. O teto vale também
+pro que o `.mdx` pede e pro que vem no hash da URL.
+
 ### `<Esticar />` — multiplicar como esticar, encolher e virar
 
 Uma seta na reta multiplicada por um fator: acima de 1 estica, entre 0 e 1 encolhe,

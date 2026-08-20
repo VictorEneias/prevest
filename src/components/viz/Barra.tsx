@@ -33,7 +33,6 @@ const L = 720;
 const MARGEM = 34;
 const ALTURA = 42;
 const DEN_MAX = 16;
-const NUM_MAX = 80;
 
 const mdc = (a: number, b: number): number => (b ? mdc(b, a % b) : Math.abs(a));
 const mmc = (a: number, b: number) => Math.abs(a * b) / mdc(a, b);
@@ -53,15 +52,19 @@ function Fr({ n, d }: { n: number; d: number }) {
 export default function Barra({
   a = [1, 2],
   b,
-  soma: comSoma = false,
+  soma = false,
   titulo,
   chaveUrl,
 }: BarraProps) {
-  const [na, setNa] = useState(a[0]);
+  /* o .mdx também respeita o teto: <Barra a={[8, 3]} /> pediria 8 pedaços numa
+     barra que só tem 6, e o desenho sairia mentindo já na primeira pintura */
+  const cabe = (par: [number, number]) => Math.min(par[0], soma ? par[1] : par[1] * 2);
+  const [na, setNa] = useState(() => cabe(a));
   const [da, setDa] = useState(a[1]);
-  const [nb, setNb] = useState(b?.[0] ?? 1);
+  const [nb, setNb] = useState(() => (b ? cabe(b) : 1));
   const [db, setDb] = useState(b?.[1] ?? 3);
 
+  const comSoma = soma;
   const duas = !!b;
 
   useEffect(() => {
@@ -69,11 +72,32 @@ export default function Barra({
     const bruto = new URLSearchParams(location.hash.slice(1)).get(chaveUrl);
     if (!bruto) return;
     const [p, q, r, s] = bruto.split(',').map(Number);
-    if (Number.isFinite(p)) setNa(trava(p, NUM_MAX));
-    if (Number.isFinite(q)) setDa(Math.max(1, trava(q, DEN_MAX)));
-    if (Number.isFinite(r)) setNb(trava(r, NUM_MAX));
-    if (Number.isFinite(s)) setDb(Math.max(1, trava(s, DEN_MAX)));
+    const dA = Number.isFinite(q) ? Math.max(1, trava(q, DEN_MAX)) : da;
+    const dB = Number.isFinite(s) ? Math.max(1, trava(s, DEN_MAX)) : db;
+    setDa(dA);
+    setDb(dB);
+    if (Number.isFinite(p)) setNa(trava(p, comSoma ? dA : dA * 2));
+    if (Number.isFinite(r)) setNb(trava(r, comSoma ? dB : dB * 2));
   }, [chaveUrl]);
+
+  /* Quantos pedaços cabem na barra. Ela vale 2 inteiros, então com o corte em 3 são
+     6, e não existe oitavo pedaço pra pintar: sem esse teto o rótulo dizia 8/3 =
+     2,667 e o desenho parava no 2, ou seja, a figura mentia. Com a soma ligada o
+     teto cai pra 1 inteiro em cada, senão quem estouraria é a terceira barra. */
+  const teto = (d: number) => (comSoma ? d : d * 2);
+
+  /* Mexer no corte pra baixo puxa o pintado junto, senão o que estava pintado
+     passa a não existir mais. Pra cima ninguém é puxado. */
+  const mudarCorteA = (bruto: number) => {
+    const d = Math.max(1, trava(bruto, DEN_MAX));
+    setDa(d);
+    setNa((n) => Math.min(n, teto(d)));
+  };
+  const mudarCorteB = (bruto: number) => {
+    const d = Math.max(1, trava(bruto, DEN_MAX));
+    setDb(d);
+    setNb((n) => Math.min(n, teto(d)));
+  };
 
   const va = na / da;
   const vb = nb / db;
@@ -81,10 +105,10 @@ export default function Barra({
   const somaNum = duas ? na * (comum / da) + nb * (comum / db) : na;
 
   const aoTeclar = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowRight') setNa((n) => trava(n + 1, NUM_MAX));
-    else if (e.key === 'ArrowLeft') setNa((n) => trava(n - 1, NUM_MAX));
-    else if (e.key === 'ArrowUp') setDa((d) => Math.max(1, trava(d - 1, DEN_MAX)));
-    else if (e.key === 'ArrowDown') setDa((d) => Math.max(1, trava(d + 1, DEN_MAX)));
+    if (e.key === 'ArrowRight') setNa((n) => trava(n + 1, teto(da)));
+    else if (e.key === 'ArrowLeft') setNa((n) => trava(n - 1, teto(da)));
+    else if (e.key === 'ArrowUp') mudarCorteA(da - 1);
+    else if (e.key === 'ArrowDown') mudarCorteA(da + 1);
     else return;
     e.preventDefault();
   };
@@ -209,7 +233,7 @@ export default function Barra({
           min={1}
           max={DEN_MAX}
           value={d}
-          onChange={(e) => setD(Math.max(1, trava(+e.target.value, DEN_MAX)))}
+          onChange={(e) => setD(+e.target.value)}
           aria-label={`Em quantas partes a ${quem.toLowerCase()} está cortada`}
         />
         <input
@@ -217,7 +241,7 @@ export default function Barra({
           min={1}
           max={DEN_MAX}
           value={d}
-          onChange={(e) => setD(Math.max(1, trava(+e.target.value, DEN_MAX)))}
+          onChange={(e) => setD(+e.target.value)}
         />
       </label>
       <label className="br-campo">
@@ -226,19 +250,24 @@ export default function Barra({
           className="br-slider"
           type="range"
           min={0}
-          max={Math.min(NUM_MAX, d * 2)}
+          max={teto(d)}
           value={n}
-          onChange={(e) => setN(trava(+e.target.value, NUM_MAX))}
+          onChange={(e) => setN(trava(+e.target.value, teto(d)))}
           aria-label={`Quantas partes da ${quem.toLowerCase()} estão pintadas`}
         />
         <input
           type="number"
           min={0}
-          max={NUM_MAX}
+          max={teto(d)}
           value={n}
-          onChange={(e) => setN(trava(+e.target.value, NUM_MAX))}
+          onChange={(e) => setN(trava(+e.target.value, teto(d)))}
         />
       </label>
+      {n === teto(d) && (
+        <span className="br-teto">
+          no talo: {teto(d)}/{d} {comSoma ? 'é 1 inteiro' : 'são os 2 inteiros da barra'}
+        </span>
+      )}
     </div>
   );
 
@@ -304,14 +333,19 @@ export default function Barra({
 
       <div className="br-ctrl">
         <p className="br-como">
-          {duas ? 'As duas barras acima têm o mesmo tamanho' : 'A barra acima'} vale{' '}
+          {duas
+            ? 'As duas barras acima têm o mesmo tamanho, e cada uma vale '
+            : 'A barra acima vale '}
           <b>2 inteiros</b>: a marca do meio é o <b>1</b> e a ponta é o <b>2</b>. Aí embaixo você
           escolhe em quantas partes {duas ? 'cada uma' : 'ela'} vai ser cortada, e quantas dessas
-          partes vão ser pintadas.
+          partes vão ser pintadas
+          {comSoma
+            ? ', até no máximo um inteiro em cada, porque a soma das duas também tem que caber na barra de baixo.'
+            : ', até no máximo os 2 inteiros que ela tem.'}
         </p>
 
-        {controles('Barra 1', 'var(--azul)', na, da, setNa, setDa)}
-        {duas && controles('Barra 2', 'var(--grafite)', nb, db, setNb, setDb)}
+        {controles('Barra 1', 'var(--azul)', na, da, setNa, mudarCorteA)}
+        {duas && controles('Barra 2', 'var(--grafite)', nb, db, setNb, mudarCorteB)}
 
         <p className="br-nota">
           <b>Experimenta:</b> {experimente} Com o desenho em foco, ← → pintam e apagam e ↑ ↓ mudam
@@ -394,6 +428,9 @@ export default function Barra({
           width: 4.5ch; font: inherit; font-size: 0.82rem; color: var(--tinta);
           border: 1px solid var(--linha); border-radius: var(--raio);
           padding: 4px 5px; background: var(--papel); text-align: center;
+        }
+        .br-teto {
+          font-size: 0.7rem; color: var(--acento); flex: none;
         }
         .br-nota {
           font-size: 0.74rem; color: var(--tinta-fraca); line-height: 1.5;
