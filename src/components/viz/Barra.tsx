@@ -244,7 +244,12 @@ export default function Barra({
           onChange={(e) => setD(+e.target.value)}
         />
       </label>
-      <label className="br-campo">
+      <label className="br-campo br-campo-pinta">
+        {n === teto(d) && (
+          <span className="br-teto">
+            no talo: {teto(d)}/{d} {comSoma ? 'é 1 inteiro' : 'são os 2 inteiros da barra'}
+          </span>
+        )}
         pintar quantas partes:
         <input
           className="br-slider"
@@ -263,11 +268,6 @@ export default function Barra({
           onChange={(e) => setN(trava(+e.target.value, teto(d)))}
         />
       </label>
-      {n === teto(d) && (
-        <span className="br-teto">
-          no talo: {teto(d)}/{d} {comSoma ? 'é 1 inteiro' : 'são os 2 inteiros da barra'}
-        </span>
-      )}
     </div>
   );
 
@@ -404,7 +404,8 @@ export default function Barra({
         }
 
         .br-ctrl {
-          display: flex; flex-direction: column; gap: 8px;
+          /* 16px, e não 8, porque é nesse vão que o aviso do talo flutua */
+          display: flex; flex-direction: column; gap: 16px;
           margin-top: calc(var(--u) * 0.5); padding-top: calc(var(--u) * 0.5);
           border-top: 1px solid var(--linha);
         }
@@ -429,8 +430,13 @@ export default function Barra({
           border: 1px solid var(--linha); border-radius: var(--raio);
           padding: 4px 5px; background: var(--papel); text-align: center;
         }
+        /* o aviso do talo flutua acima do slider: dentro da linha ele empurrava os
+           campos e a fileira inteira quebrava justo quando o aluno estava arrastando */
+        .br-campo-pinta { position: relative; }
         .br-teto {
-          font-size: 0.7rem; color: var(--acento); flex: none;
+          position: absolute; bottom: calc(100% + 2px); right: 0;
+          font-size: 0.7rem; color: var(--acento); white-space: nowrap;
+          pointer-events: none;
         }
         .br-nota {
           font-size: 0.74rem; color: var(--tinta-fraca); line-height: 1.5;
