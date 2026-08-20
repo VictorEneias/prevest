@@ -1,0 +1,97 @@
+---
+resumo: Ler um gráfico de participação na força de trabalho e checar cinco afirmações sobre ele
+fonte: FUVEST
+ano: 2026
+fonte_url: https://www.fuvest.br/wp-content/uploads/fuvest2026-fase1-prova-V1.pdf
+fonte_questao: "13 (prova V1)"
+nivel: facil
+modulos: [leitura-de-graficos-e-tabelas]
+resposta: "(C) o maior crescimento anual das mulheres foi de 2020 para 2021"
+verificado: false
+---
+
+Na obra *Caminho de pedras*, de 1937, a autora Rachel de Queiroz aborda os desafios da personagem
+Noemi em busca de sua liberdade política, social e sexual, em uma sociedade conservadora. O papel
+da mulher na sociedade e sua inserção no mercado de trabalho são temas atuais. Em março de 2025, o
+governo federal lançou um boletim que tem como objetivo analisar a inserção das mulheres no
+mercado de trabalho brasileiro. Um dos gráficos apresentados pelo boletim trata da taxa de
+participação na força de trabalho no Brasil, no 3º trimestre de cada ano, no período de 2012 a
+2024.
+
+<Linhas
+  titulo="Taxa de participação na força de trabalho, por sexo, Brasil — 2012 a 2024"
+  categorias={[2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]}
+  series={[
+    { nome: 'Homens', cor: 2, traco: 'cheio',
+      valores: [74.5, 74.4, 74.0, 74.0, 73.5, 73.6, 73.6, 73.6, 68.6, 72.2, 72.6, 72.0, 72.6] },
+    { nome: 'Total', cor: 1, traco: 'pontilhado',
+      valores: [62.8, 62.6, 62.3, 62.9, 62.5, 63.2, 63.3, 63.8, 57.6, 61.9, 62.7, 61.8, 62.4] },
+    { nome: 'Mulheres', cor: 3, traco: 'tracejado',
+      valores: [51.9, 51.6, 51.4, 52.4, 52.2, 53.5, 53.7, 54.6, 47.3, 52.3, 53.4, 52.3, 52.8] },
+  ]}
+  minimo={30}
+  maximo={80}
+  rotulos={true}
+  legenda="PNAD Contínua, IBGE"
+/>
+
+Em relação ao gráfico apresentado, é correto afirmar:
+
+<Alternativas correta="C">
+  <Alt>A queda na taxa de participação de homens na força de trabalho foi maior do que a de mulheres no terceiro trimestre do ano em que a pandemia de Covid se iniciou.</Alt>
+  <Alt>A taxa de participação de mulheres na força de trabalho é crescente durante todo o período entre o terceiro trimestre do ano de início da pandemia de Covid e o terceiro trimestre de 2024.</Alt>
+  <Alt>A taxa de participação de mulheres na força de trabalho teve seu maior crescimento anual do terceiro trimestre de 2020 para o terceiro trimestre de 2021.</Alt>
+  <Alt>A diferença entre a taxa de participação de homens e mulheres na força de trabalho foi de 11,7 no terceiro trimestre de 2012.</Alt>
+  <Alt>A taxa de participação de mulheres na força de trabalho atingiu seu maior valor após o terceiro trimestre de 2020.</Alt>
+</Alternativas>
+
+<Dicas>
+  <Dica>
+    Toda alternativa aqui é uma conta pequena com dois números do gráfico. Não tenta julgar pela
+    forma da linha: acha os dois números e subtrai.
+  </Dica>
+  <Dica>
+    Três delas falam de 2020, o ano do tombo. Antes de ler as alternativas de novo, escreve de
+    lado quanto cada linha caiu de 2019 pra 2020.
+  </Dica>
+  <Dica>
+    Em "crescente durante todo o período", basta um ano em que a linha desce pra frase morrer.
+    Percorre 2020, 2021, 2022, 2023 e 2024 procurando esse ano.
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="(C) o maior crescimento anual das mulheres foi de 2020 para 2021">
+
+**(A) Falsa.** De 2019 pra 2020 os homens caíram $73{,}6 - 68{,}6 = 5{,}0$ e as mulheres caíram
+$54{,}6 - 47{,}3 = 7{,}3$. A queda das mulheres foi maior, e essa é a informação que o boletim
+inteiro está tentando mostrar.
+
+**(B) Falsa.** De 2022 para 2023 a linha das mulheres desce, de $53{,}4$ para $52{,}3$. Um ano de
+queda já derruba o "durante todo o período".
+
+**(C) Verdadeira.** De 2020 para 2021 as mulheres subiram $52{,}3 - 47{,}3 = 5{,}0$, e nenhum outro
+par de anos consecutivos chega perto: o segundo maior salto é de 2016 para 2017, com $1{,}3$.
+
+**(D) Falsa.** Em 2012 a diferença era $74{,}5 - 51{,}9 = 22{,}6$, quase o dobro do que a
+alternativa diz.
+
+**(E) Falsa.** O maior valor das mulheres no gráfico inteiro é $54{,}6$, e ele é de **2019**, antes
+da pandemia. Depois de 2020 a linha chegou no máximo a $53{,}4$.
+
+### Raciocínio
+
+Questão de gráfico com o valor escrito em cima de cada ponto não é questão de gráfico, é questão de
+tabela: o desenho serve pra você achar rápido, e a decisão sai da conta. Eu leio as alternativas
+com o lápis na mão e faço as cinco subtrações, porque cada uma custa três segundos e chutar pela
+inclinação da linha custa a questão.
+
+Repara também no que a queda de 2020 mostra sozinha: as três linhas caem, e a das mulheres cai
+mais que a dos homens, então a diferença entre eles **aumentou** naquele ano.
+
+### Erros comuns
+
+**Ler "maior valor" como "maior valor recente".** Na (E), o olho vai pro fim da linha, vê que ela
+está subindo e aceita a frase. O maior valor do gráfico inteiro está em 2019, e a pandemia
+interrompeu justamente uma sequência de crescimento.
+
+</Resolucao>

@@ -453,6 +453,36 @@ o nome dentro do módulo. `cor` é 0 a 5, a paleta das áreas.
 Quem vai deixar o aluno mexer nos coeficientes é o `<Funcao>` com sliders, que
 ainda não existe. Este aqui é a figura congelada, do jeito que uma prova desenha.
 
+### `<Linhas />` — o gráfico de linha por categoria, congelado
+
+O terceiro da família estática. Aqui o eixo de baixo não é numérico, é uma lista
+de rótulos (ano, mês, faixa), que é como quase todo gráfico de jornal e de prova
+é montado.
+
+```mdx
+<Linhas
+  categorias={[2012, 2013, 2014]}
+  series={[
+    { nome: 'Homens', cor: 2, traco: 'cheio', valores: [74.5, 74.4, 74.0] },
+    { nome: 'Mulheres', cor: 3, traco: 'tracejado', valores: [51.9, 51.6, 51.4] },
+  ]}
+  minimo={30}
+  maximo={80}
+  rotulos={true}          {/* escreve o valor em cima de cada ponto */}
+  titulo="Taxa de participação na força de trabalho"
+  legenda="PNAD Contínua, IBGE"
+/>
+```
+
+`rotulos` existe por causa de prova: quando a questão escreve o valor em cima de
+cada ponto, **aquele número é parte do enunciado**, e sem ele a alternativa que
+fala em "11,7" viraria adivinhação na régua. As casas decimais saem dos dados,
+porque um $74$ escrito onde a prova escreveu $74{,}0$ já não é o mesmo número.
+
+A série se distingue por traço além da cor (`cheio`, `tracejado`, `pontilhado`),
+porque três linhas no mesmo desenho é o caso em que quem não separa verde de
+vermelho fica sem saber qual é qual.
+
 ### `<RetaZoom />` — a reta com a escala na mão do aluno
 
 O interativo de escala: arrastar anda pelos números, o slider afasta e aproxima,

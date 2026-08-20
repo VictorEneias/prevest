@@ -1,0 +1,127 @@
+---
+resumo: O caminho até o topo de uma pirâmide, achando o lado pelo volume e a rampa pelo apótema
+fonte: FUVEST
+ano: 2026
+fonte_url: https://www.fuvest.br/wp-content/uploads/fuvest2026-fase1-prova-V1.pdf
+fonte_questao: "06 (prova V1)"
+nivel: medio
+modulos: [piramides, teorema-de-pitagoras]
+resposta: "(E) 61 m"
+verificado: false
+---
+
+Para uma atividade de campo voltada à valorização do patrimônio histórico e cultural, professores
+de geografia levaram seus estudantes a um parque temático de monumentos geográficos. Eles
+visitaram a réplica de uma pirâmide regular de base quadrada com vértice a 18 metros de altura em
+relação ao centro da base. As faces da pirâmide estão voltadas para as direções norte, sul, leste
+e oeste. Para acessar o vértice da pirâmide, os estudantes precisaram percorrer uma trilha de
+pedestre e subir a rampa localizada na face norte. A trilha compreende os lados oeste, sul, leste
+e metade do lado norte do quadrado. Essa rampa está localizada exatamente no meio da face, ou
+seja, é o apótema da pirâmide.
+
+Sabendo-se que o volume da pirâmide é de $864\ \text{m}^3$, quantos metros, aproximadamente, os
+estudantes tiveram que percorrer para chegar até o topo da pirâmide?
+
+<Alternativas correta="E">
+  <Alt>36</Alt>
+  <Alt>41</Alt>
+  <Alt>48</Alt>
+  <Alt>54</Alt>
+  <Alt>61</Alt>
+</Alternativas>
+
+<Dicas>
+  <Dica>
+    O enunciado dá o volume e a altura, e pede um caminho. Nada do caminho dá pra calcular sem uma
+    medida que ainda não foi dita: qual é ela, e qual dos dados te leva até ela?
+  </Dica>
+  <Dica>
+    O caminho tem duas partes bem diferentes: uma anda no chão, em volta do quadrado, e a outra
+    sobe pela face. Calcula as duas separado e só soma no fim.
+  </Dica>
+  <Dica>
+    A rampa é o apótema da pirâmide, que é a altura de uma face triangular. Ela é hipotenusa de um
+    triângulo retângulo que tem a altura da pirâmide como um cateto. Quem é o outro cateto?
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="(E) 61 m">
+
+**O lado da base.** O volume da pirâmide é um terço da base vezes a altura:
+
+$$
+V = \frac{1}{3}\,a^2\,h
+\qquad\Longrightarrow\qquad
+864 = \frac{1}{3}\,a^2 \cdot 18 = 6a^2
+$$
+
+$$
+a^2 = 144 \qquad\Longrightarrow\qquad a = 12 \text{ m}
+$$
+
+**A trilha no chão.** São três lados inteiros (oeste, sul e leste) mais metade do lado norte:
+
+$$
+3 \cdot 12 + \frac{12}{2} = 36 + 6 = 42 \text{ m}
+$$
+
+**A rampa.** O apótema da pirâmide é a altura de uma das faces triangulares, e ele fecha um
+triângulo retângulo com a altura da pirâmide ($18$) e o **apótema da base**, que é a metade do
+lado ($6$), porque a rampa sai do meio da aresta e sobe até o vértice:
+
+<figure className="fig-piramide">
+<svg viewBox="0 0 470 300" role="img" aria-label="Pirâmide de base quadrada vista de lado. Do vértice desce a altura de 18 metros até o centro da base; do centro sai um segmento de 6 metros até o meio da aresta da frente. A rampa liga o vértice a esse meio da aresta, e é a hipotenusa do triângulo retângulo formado pelos dois.">
+  <path d="M70 205 L230 152 L390 205" fill="none" stroke="var(--tinta-fraca)" strokeWidth="1.4" strokeDasharray="6 5" />
+  <path d="M230 45 L230 152" fill="none" stroke="var(--tinta-fraca)" strokeWidth="1.4" strokeDasharray="6 5" />
+  <path d="M230 45 L70 205 L230 258 Z" fill="var(--grafite-fraco)" fillOpacity="0.55" stroke="var(--tinta)" strokeWidth="1.8" strokeLinejoin="round" />
+  <path d="M230 45 L390 205 L230 258 Z" fill="none" stroke="var(--tinta)" strokeWidth="1.8" strokeLinejoin="round" />
+
+  <line x1="230" y1="45" x2="230" y2="205" stroke="var(--tinta-media)" strokeWidth="1.5" strokeDasharray="7 4" />
+  <line x1="230" y1="205" x2="150" y2="231" stroke="var(--tinta-media)" strokeWidth="1.5" strokeDasharray="7 4" />
+  <path d="M230 192 l-13 4 l4 12" fill="none" stroke="var(--tinta-media)" strokeWidth="1.3" />
+
+  <line x1="230" y1="45" x2="150" y2="231" stroke="var(--vermelho)" strokeWidth="2.6" />
+  <circle cx="150" cy="231" r="4" fill="var(--vermelho)" />
+  <circle cx="230" cy="205" r="4" fill="var(--tinta-media)" />
+
+  <text x="240" y="128" fontSize="15" fill="var(--tinta)">18 m</text>
+  <text x="176" y="211" fontSize="15" fill="var(--tinta)">6 m</text>
+  <text x="190" y="124" textAnchor="end" fontSize="15" fill="var(--vermelho)" fontWeight="700">rampa</text>
+  <text x="132" y="255" textAnchor="end" fontSize="12" fill="var(--tinta-fraca)">meio da aresta</text>
+  <text x="246" y="224" fontSize="12" fill="var(--tinta-fraca)">centro</text>
+</svg>
+<figcaption>O triângulo retângulo que a rampa fecha por dentro da pirâmide</figcaption>
+</figure>
+
+$$
+r^2 = 18^2 + 6^2 = 324 + 36 = 360
+\qquad\Longrightarrow\qquad
+r = \sqrt{360} \cong 18{,}97 \text{ m}
+$$
+
+**O total:**
+
+$$
+42 + 18{,}97 \cong 60{,}97 \cong 61 \text{ m}
+$$
+
+Alternativa **(E)**.
+
+### Raciocínio
+
+O enunciado é comprido e cheio de norte, sul, leste e oeste, e nada disso é geografia: é só um jeito
+de dizer que a trilha dá três lados e meio e que a rampa está no meio de uma face. Eu leio uma vez
+pra montar o desenho, e depois trabalho no desenho.
+
+A parte que decide a questão é reconhecer que a rampa **não** é a aresta da pirâmide. Aresta vai do
+vértice até o canto da base; a rampa vai do vértice até o **meio** do lado, e é por isso que o
+cateto de baixo é $6$, e não a metade da diagonal.
+
+### Erros comuns
+
+**Usar a aresta lateral no lugar do apótema.** Aí o cateto de baixo vira a metade da diagonal da
+base, $\frac{12\sqrt{2}}{2} \cong 8{,}5$, e a rampa daria $\sqrt{324 + 72} \cong 19{,}9$. Nesse caso
+o total ainda arredonda pra $62$, perto do certo, e é uma sorte que não se repete em outra prova:
+o erro é de leitura da figura, e ele cobra caro quando a diferença entre os dois é maior.
+
+</Resolucao>
