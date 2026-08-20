@@ -6,6 +6,7 @@ import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import revisar from './plugins/revisar';
 
 // Um comando só: `npm run dev` é o que eu uso pra escrever e pra dar aula.
 // `npm run build` existe pra subir na nuvem, e não faz parte do fluxo de aula.
@@ -30,5 +31,7 @@ export default defineConfig({
       }),
     },
     react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
+    // a mesa de auditoria da /revisar, que só existe no dev — ver plugins/revisar.ts
+    revisar(),
   ],
 });

@@ -51,7 +51,9 @@ isso**: não são enfeite, são o produto.
   isso por conta própria
 - Dashboard de progresso do aluno, gamificação, pontuação
 - Multi-tenant, pagamento, qualquer coisa de SaaS
-- Um CMS ou painel admin — o CMS é o VS Code
+- Um CMS ou painel admin no site publicado. O CMS é o VS Code, e a única exceção
+  é a `/revisar` do `npm run dev`, que existe pra aprovar exercício sem caçar
+  arquivo na pasta (seção 7)
 
 Se algo disso for pedido, pergunte antes de construir: quase sempre não melhora
 uma aula, e é o modo clássico de o projeto morrer com a infra linda e o conteúdo
@@ -103,6 +105,9 @@ src/
     Home.tsx               as duas portas de entrada e o mapa inteiro
     Indice.tsx             o índice remissivo: todo tópico de toda aula
     Exercicios.tsx         a busca de exercícios, com os filtros
+    Revisar.tsx            a mesa de auditoria, só no dev
+plugins/
+  revisar.ts             ← o middleware que grava o .mdx. Só no dev
     Conceito.tsx           serve de página e de conteúdo de painel
   styles/global.css      ← todo o CSS do site, sem escopo
 scripts/
@@ -956,10 +961,10 @@ $$
 
 <Resolucao resposta="1">
 
-As contas, e depois os `###` de sempre:
+As contas, e depois os dois `###` de sempre:
 
-### Como eu penso
-### Onde o pessoal escorrega
+### Raciocínio
+### Erros comuns
 
 </Resolucao>
 ```
@@ -975,9 +980,13 @@ entregava o procedimento inteiro. O degrau bom aponta pra onde olhar e devolve a
 pergunta; se depois de ler a dica não sobrou nada pro aluno descobrir, ela está
 alta demais.
 
-**Nem todo exercício merece cerimônia.** Básico de junção cabe em enunciado,
-resposta e talvez o erro comum. O "como eu penso" é pro exercício que aguenta, e
-é a parte que ninguém publica: o que eu olhei primeiro, o que descartei e por quê.
+**Nem todo exercício merece cerimônia, e enrolação é pior que seção faltando.**
+Básico de junção cabe em enunciado, resposta e talvez o erro comum. O
+**Raciocínio** é a parte que ninguém publica (o que eu olhei primeiro, o que
+descartei e por quê), e ela cabe em duas ou três linhas: se estiver com cinco,
+provavelmente duas são recheio. **Erros comuns** mostra a linha errada com a
+conta que ela dá, e depois uma frase dizendo qual conceito faltou. Uma frase, não
+um parágrafo.
 
 Não use `chaveUrl` em exercício. A busca mostra vários de uma vez e eles brigam
 pelo mesmo hash.
@@ -999,13 +1008,25 @@ pelo mesmo hash.
 **Questão com figura eu não invento.** Ou eu reconstruo a figura com um
 componente nosso, ou a questão fica de fora, e eu digo qual foi e por quê.
 
-### A auditoria, enquanto não existe conta
+### A auditoria: a página `/revisar`
 
 Exercício com `verificado: false` **não aparece no site publicado**, e não fica
-escondido atrás de um selo. Em `npm run dev` ele aparece com o selo de "não
-verificado" e o filtro "só os não verificados", que é a mesa de auditoria: quem
-roda o dev é o Victor. Editar continua sendo no VS Code, e o `title` do selo é o
-caminho do arquivo.
+escondido atrás de um selo. Em `npm run dev` ele aparece na busca com o selo de
+"não verificado", e a mesa de auditoria é a rota **`/revisar`**: cada exercício
+aparece renderizado, do jeito que o aluno vê, com o botão de **aprovar** (que
+troca o `verificado` no arquivo) e o texto do `.mdx` aberto ao lado pra corrigir
+e gravar.
+
+Ela existe porque procurar um arquivo entre mil na pasta pra trocar um `false`
+por `true` custa mais que ler a resolução. Quem escreve em disco é o middleware
+de `plugins/revisar.ts`, que é do servidor de desenvolvimento do Vite: ele monta
+só no `serve`, some no `npm run build`, e o `id` passa por `^[a-z0-9-]+$` antes
+de virar caminho, senão um `../../` do corpo do POST escreveria em qualquer lugar
+da máquina. A rota também só é registrada com `import.meta.env.DEV`.
+
+**Isso não é o CMS que a seção 1 proíbe.** O trabalho grande continua no VS Code;
+a `/revisar` é a passada de revisão, que é ler, cortar uma dica repetida, trocar
+uma palavra e aprovar. Não tem histórico nem trava, porque o histórico é o git.
 
 Quando as contas existirem, isso vira papel de admin (seção 1).
 
@@ -1018,6 +1039,8 @@ Quando as contas existirem, isso vira papel de admin (seção 1).
 | `src/components/CartaoExercicio.tsx` | o cartão, usado na busca e no fim da aula |
 | `src/components/Dicas.tsx` | `<Dicas>` e `<Dica>` |
 | `src/components/Resolucao.tsx` | `<Resolucao>` |
+| `src/pages/Revisar.tsx` | a mesa de auditoria, só no dev |
+| `plugins/revisar.ts` | o middleware que lê e grava o `.mdx`, só no dev |
 | `src/conteudo.ts` | o índice e o `exerciciosDaAula()` |
 
 O bloco do fim da aula é automático, no `Conceito.tsx`: ele pega os `basico`

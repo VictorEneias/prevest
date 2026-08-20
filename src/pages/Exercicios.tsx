@@ -186,6 +186,9 @@ export default function Exercicios() {
               <button aria-pressed={soPendentes} onClick={() => escrever('pendentes', !soPendentes)}>
                 Só os não verificados <span>{pendentes}</span>
               </button>
+              <Link className="filtro-ir" to="/revisar">
+                abrir a mesa de auditoria →
+              </Link>
             </div>
           </div>
         )}

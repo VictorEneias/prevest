@@ -6,6 +6,7 @@ import { useAula, type ItemPilha } from './estado';
 import Conceito, { PaginaConceito } from './pages/Conceito';
 import EmBreve from './pages/EmBreve';
 import Exercicios from './pages/Exercicios';
+import Revisar from './pages/Revisar';
 import Home from './pages/Home';
 import Indice from './pages/Indice';
 import Sobre from './pages/Sobre';
@@ -36,6 +37,10 @@ export default function App() {
           <Route path="/conceitos/:id" element={<PaginaConceito />} />
           <Route path="/sobre" element={<Sobre />} />
           <Route path="/exercicios" element={<Exercicios />} />
+          {/* a mesa de auditoria só existe no dev, junto com o middleware que
+              escreve em disco (plugins/revisar.ts). No site publicado a rota
+              cai no "essa página não existe", que é a verdade. */}
+          {import.meta.env.DEV && <Route path="/revisar" element={<Revisar />} />}
           <Route
             path="/entrar"
             element={

@@ -1229,6 +1229,18 @@ pre code {
   opacity: 0.75;
 }
 
+/* o atalho pra /revisar, que só existe no npm run dev */
+.filtro-ir {
+  align-self: center;
+  font-family: var(--f-ui);
+  font-size: 0.74rem;
+  color: var(--acento);
+  text-decoration: none;
+}
+.filtro-ir:hover {
+  text-decoration: underline;
+}
+
 .ex {
   margin: calc(var(--u) * 1.1) 0;
   padding: calc(var(--u) * 0.7) calc(var(--u) * 0.9);
