@@ -8,15 +8,16 @@
  * retráteis (explicação, curiosidade, dica, resolução) saíram, porque cada uma
  * obrigava o texto a saber em que caixa ele morava.
  *
- * <Dicas>, <Dica> e <Resolucao> voltaram, e só valem pra exercício: ali a caixa
- * não é arquivamento, é função. A dica precisa abrir uma por vez e a resolução
- * precisa começar fechada, senão o aluno lê a resposta antes de tentar.
+ * <Dicas>, <Dica>, <Alternativas>, <Alt> e <Resolucao> só valem pra exercício:
+ * ali a caixa não é arquivamento, é função. A dica precisa abrir uma por vez e a
+ * resolução precisa começar fechada, senão o aluno lê a resposta antes de tentar.
  */
 import type { ComponentType } from 'react';
 import C from './C';
 import Par from './Par';
 import Alem from './Alem';
 import Dicas, { Dica } from './Dicas';
+import Alternativas, { Alt } from './Alternativas';
 import Resolucao from './Resolucao';
 import Juncao from './viz/Juncao';
 import Setas from './viz/Setas';
@@ -35,6 +36,8 @@ export const componentesMDX: Record<string, ComponentType<any>> = {
   Alem,
   Dicas,
   Dica,
+  Alternativas,
+  Alt,
   Resolucao,
   Juncao,
   Setas,

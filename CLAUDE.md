@@ -633,6 +633,28 @@ todo parágrafo a escolher uma caixa antes de ser escrito; esta é uma caixa só
 um trabalho só, e o texto normal continua sendo prosa solta. Se aparecer uma segunda
 caixa, releia esta frase antes de criar.
 
+### `<Alternativas>` e `<Alt>` — a múltipla escolha que o aluno responde
+
+```mdx
+<Alternativas correta="D">
+  <Alt>$w(x) = 2h(x)$ e $n(x) = -f(x - 4)$</Alt>
+  <Alt>$h(x) = f(x) - 2$ e $m(x) = f(x - 3)$</Alt>
+</Alternativas>
+```
+
+Uma por linha, e clicável: a certa fica verde, a errada fica vermelha, e o
+"tentar novamente" limpa. A letra sai da posição, então não se escreve "(A)" no
+texto. As erradas **continuam marcadas**, porque eliminar alternativa é parte de
+resolver questão de prova, e apagar a eliminação seria apagar o raciocínio.
+
+Antes isso era prosa com "(A) … (B) …" na mesma linha, e numa questão com fórmula
+o (B) encostava no fim da fórmula do (A). Agora também é a única parte do
+exercício em que o aluno responde antes de abrir a resolução.
+
+Cor nunca vai sozinha: cada marca leva um glifo (✓ ou ✗) e a linha de baixo diz
+em palavra o que aconteceu, que é a regra da paleta do `global.css` — deutan e
+protan não separam verde de vermelho.
+
 ### `<Dicas>`, `<Dica>` e `<Resolucao>` — só em exercício
 
 A escada que abre um degrau por vez e a resolução que nasce fechada. Não use em
@@ -999,7 +1021,8 @@ escondido depois que a fileira de anos some da tela.
 
 ### O corpo
 
-Enunciado em prosa solta no topo, depois a escada e a resolução:
+Enunciado em prosa solta no topo, as alternativas quando a questão for de prova,
+e depois a escada e a resolução:
 
 ```mdx
 Resolva, usando junção:

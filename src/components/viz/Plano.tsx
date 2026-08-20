@@ -107,7 +107,17 @@ export default function Plano({
       {titulo && <figcaption className="pl-titulo">{titulo}</figcaption>}
       {legenda && <div className="pl-legenda">{legenda}</div>}
 
-      <svg className="pl-svg" viewBox={`0 0 ${L} ${A}`} role="img" aria-label={aria}>
+      {/* o quadrado de −4 a 4 nos dois eixos dá uma figura de 720 por 720, e em
+          largura cheia isso é uma tela inteira de rolagem pra ver um gráfico. O
+          teto é a altura, e a largura máxima sai dela pela proporção, senão a
+          figura encolhe e sobra faixa branca dos dois lados. */}
+      <svg
+        className="pl-svg"
+        viewBox={`0 0 ${L} ${A}`}
+        style={{ maxWidth: `calc(58vh * ${(L / A).toFixed(3)})` }}
+        role="img"
+        aria-label={aria}
+      >
         {marcas(xmin, xmax).map((v) => (
           <line key={`gx${v}`} x1={px(v)} y1={MARGEM} x2={px(v)} y2={A - MARGEM} className="pl-grade" />
         ))}
@@ -176,7 +186,7 @@ export default function Plano({
           font-size: 0.95rem; color: var(--tinta-media);
           margin-bottom: calc(var(--u) * 0.2);
         }
-        .pl-svg { width: 100%; height: auto; display: block; overflow: visible; }
+        .pl-svg { width: 100%; height: auto; display: block; margin: 0 auto; overflow: visible; }
         .pl-grade { stroke: var(--grade-forte); stroke-width: 1; }
         .pl-eixo { stroke: var(--tinta); stroke-width: 1.5; }
         .pl-ponta { fill: var(--tinta); }
