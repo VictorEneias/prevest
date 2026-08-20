@@ -425,6 +425,34 @@ cabe do 0 ao 100 e com passo pequeno mostra quem mora entre o 1 e o 2.
 
 Rótulo decimal sai com vírgula, que é como se escreve em português.
 
+### `<Plano />` — o plano cartesiano com curvas, congelado
+
+A `<Reta>` um andar acima: mesma família de figura estática, sem controle nenhum,
+pro caso em que o argumento é o desenho. A curva chega como **função de x**, e
+não como lista de pontos, porque quem escreve o `.mdx` pensa em "−x² + 2x + 1" e
+não em duzentos pares de números.
+
+```mdx
+<Plano
+  dominio={[-4, 4]}
+  imagem={[-4, 4]}          {/* opcional; sem isto, o mesmo do x */}
+  curvas={[
+    { f: (x) => -x * x + 2 * x + 1, de: 0, ate: 3, nome: 'f', rotuloEm: 1.55, cor: 1 },
+    { f: (x) => 2 * (-x * x + 2 * x + 1), de: 0, ate: 3, nome: 'w', cor: 2 },
+  ]}
+  titulo="As duas curvas"
+/>
+```
+
+A escala é a mesma nos dois eixos e quem se ajusta é a altura da figura, senão a
+parábola sai achatada e o aluno lê uma inclinação que não existe. O rótulo fica
+encostado na curva, e não numa legenda ao lado: com seis curvas, legenda lateral
+obriga o olho a ir e voltar seis vezes: é o mesmo motivo pelo qual o mapa escreve
+o nome dentro do módulo. `cor` é 0 a 5, a paleta das áreas.
+
+Quem vai deixar o aluno mexer nos coeficientes é o `<Funcao>` com sliders, que
+ainda não existe. Este aqui é a figura congelada, do jeito que uma prova desenha.
+
 ### `<RetaZoom />` — a reta com a escala na mão do aluno
 
 O interativo de escala: arrastar anda pelos números, o slider afasta e aproxima,
@@ -1032,8 +1060,14 @@ pelo mesmo hash.
 6. O Victor lê, corta a dica repetida, ajusta o que ficou didaticamente ruim e
    **só ele troca `verificado` pra true**.
 
-**Questão com figura eu não invento.** Ou eu reconstruo a figura com um
-componente nosso, ou a questão fica de fora, e eu digo qual foi e por quê.
+**Questão com figura eu não invento, e "não invento" não quer dizer "desisto".**
+Antes de pular, eu abro a figura e olho pra ela: dá pra extrair as imagens do PDF
+da prova com o `pdfjs-dist`, e daí decidir. Se ela for reproduzível com um
+componente nosso (gráfico de função é o `<Plano>`), eu reproduzo e a questão
+entra; se ela for um desenho de uma vez só, como um perfil de terreno, o `<svg>`
+escrito à mão dentro do próprio `.mdx` resolve, e não vira componente no sistema.
+Fica de fora a figura que eu não consigo ler ou que eu teria que adivinhar, e aí
+eu digo qual foi e por quê.
 
 ### A auditoria: a página `/revisar`
 

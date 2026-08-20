@@ -1,0 +1,98 @@
+---
+resumo: Reconhecer no gráfico qual transformação levou f em cada uma das outras cinco curvas
+fonte: FUVEST
+ano: 2026
+fonte_url: https://www.fuvest.br/wp-content/uploads/fuvest2026-fase1-prova-V1.pdf
+fonte_questao: "74 (prova V1)"
+nivel: medio
+modulos: [transformacoes-de-graficos, funcao-quadratica]
+resposta: "(D) n(x) = −m(x + 1) e g(x) = f(2x)"
+verificado: false
+---
+
+Observe a imagem a seguir:
+
+<Plano
+  dominio={[-4, 4]}
+  curvas={[
+    { f: (x) => -x * x + 2 * x + 1, de: 0, ate: 3, nome: 'f', rotuloEm: 1.55, cor: 1 },
+    { f: (x) => -4 * x * x + 4 * x + 1, de: 0, ate: 1.5, nome: 'g', rotuloEm: 1.02, rotuloAcima: 0.5, cor: 5 },
+    { f: (x) => -x * x + 2 * x - 1, de: 0, ate: 3, nome: 'h', rotuloEm: 0.35, rotuloAcima: -0.55, cor: 3 },
+    { f: (x) => 2 * (-x * x + 2 * x + 1), de: 0, ate: 3, nome: 'w', rotuloEm: 1.75, cor: 2 },
+    { f: (x) => -(x + 3) * (x + 3) + 2 * (x + 3) + 1, de: -3, ate: 0, nome: 'm', rotuloEm: -2.85, rotuloAcima: 0.5, cor: 4 },
+    { f: (x) => (x + 4) * (x + 4) - 2 * (x + 4) - 1, de: -4, ate: -1, nome: 'n', rotuloEm: -3.75, rotuloAcima: -0.55, cor: 0 },
+  ]}
+  titulo="As seis curvas da questão"
+/>
+
+Com base nos gráficos das funções apresentados na imagem, é correto afirmar que:
+
+(A) $w(x) = 2h(x)$ e $n(x) = -f(x - 4)$
+(B) $h(x) = f(x) - 2$ e $m(x) = f(x - 3)$
+(C) $w(x) = 2f(x)$ e $g(x) = f(x/2)$
+(D) $n(x) = -m(x + 1)$ e $g(x) = f(2x)$
+(E) $m(x) = f(x + 3)$ e $h(x) = f(x) + 2$
+
+<Dicas>
+  <Dica>
+    Cada alternativa faz duas afirmações, e basta uma ser falsa pra ela cair inteira. Então procura
+    a mais barata de testar em cada par, e não a mais bonita.
+  </Dica>
+  <Dica>
+    O jeito mais rápido de testar é olhar um ponto só. O vértice serve pra quase tudo: onde fica o
+    vértice de $f$, e pra onde ele foi em cada uma das outras?
+  </Dica>
+  <Dica>
+    Cuidado com o par que confunde todo mundo: mexer no $x$ **dentro** da função mexe na
+    horizontal e ao contrário do que parece, e mexer do lado de fora mexe na vertical e no sentido
+    que parece.
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="(D) n(x) = −m(x + 1) e g(x) = f(2x)">
+
+A $f$ é a curva de referência: ela sai de $(0,1)$, tem vértice em $(1,2)$ e termina em $(3,-2)$.
+Guardando esses três pontos, dá pra testar todas as outras.
+
+**$g$** tem a mesma altura da $f$ (vértice em $2$) e acaba na metade do caminho: o vértice dela
+está em $x = \frac{1}{2}$ e ela termina em $x = 1{,}5$. Tudo aconteceu na metade do $x$, então ela
+é a $f$ **espremida** na horizontal:
+
+$$
+g(x) = f(2x)
+$$
+
+**$n$** é a única virada pra baixo, com um mínimo em $(-3,-2)$, começando em $(-4,-1)$ e terminando
+em $(-1, 2)$. Já a **$m$** é a $f$ inteira empurrada $3$ pra esquerda, com vértice em $(-2, 2)$.
+Virando a $m$ de cabeça pra baixo o vértice dela viraria mínimo em $(-2,-2)$, e o mínimo da $n$
+está em $x = -3$, ou seja, mais um passo pra esquerda:
+
+$$
+n(x) = -m(x + 1)
+$$
+
+As duas afirmações da **(D)** são verdadeiras, e é essa a resposta.
+
+E as outras quatro caem assim:
+
+| | por quê |
+|---|---|
+| (A) | $w$ é o dobro de $f$, e não de $h$: no vértice, $w$ vale $4$ e $h$ vale $0$ |
+| (B) | $m$ é $f(x+3)$, e não $f(x-3)$: o sinal de dentro empurra pro lado contrário do que parece |
+| (C) | $g$ ficou mais estreita, e $f(x/2)$ deixaria ela mais larga |
+| (E) | $h$ é $f(x) - 2$: o vértice desceu de $2$ pra $0$ |
+
+### Raciocínio
+
+Eu não tento entender as seis curvas de uma vez. Escolho a $f$ como régua, anoto três pontos dela
+(começo, vértice e fim) e vou perguntando pra cada curva o que aconteceu com esses três. Toda
+transformação dessa lista mexe nos três do mesmo jeito, então três pontos bastam pra decidir.
+
+### Erros comuns
+
+**Trocar o lado do deslocamento horizontal.** Como $m$ está à esquerda, a mão escreve
+$m(x) = f(x-3)$, e o certo é $f(x+3)$: quem está dentro da função anda ao contrário. O teste que
+não deixa errar é pelo vértice — se $m(x) = f(x+3)$, o vértice acontece quando $x + 3 = 1$, ou seja,
+em $x = -2$, que é onde ele está desenhado.
+
+</Resolucao>
