@@ -18,7 +18,19 @@ import CartaoExercicio from '../components/CartaoExercicio';
  *
  * O editor continua sendo o VS Code pro trabalho grande. Isto aqui é pra passada
  * de revisão: cortar uma dica repetida, trocar uma palavra e aprovar.
+ *
+ * A fila de pendentes vem inteira na tela, porque ela é o trabalho do dia. Os
+ * aprovados não: eles só crescem, e desenhar mil exercícios renderizados no fim
+ * da página mata o navegador pra atender o caso raro de eu querer voltar num que
+ * passou batido. Esse caso virou uma busca, e ela só desenha o que eu procurei.
  */
+
+/* quantos aprovados a busca desenha de uma vez. Cada um traz o cartão inteiro
+   renderizado, então isso é o que separa a página de travar. */
+const TETO_ACHADOS = 10;
+
+const semAcento = (s: string) =>
+  s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
 const api = async (caminho: string, opcoes?: RequestInit) => {
   const r = await fetch(`/__revisar${caminho}`, opcoes);
@@ -37,6 +49,8 @@ export default function Revisar() {
      mudou pra tela não continuar dizendo "pendente" até o HMR passar */
   const [aprovados, setAprovados] = useState<Set<string>>(new Set());
 
+  const [busca, setBusca] = useState('');
+
   const { pendentes, prontos } = useMemo(() => {
     const jaFoi = (e: Exercicio) => e.verificado || aprovados.has(e.id);
     return {
@@ -44,6 +58,19 @@ export default function Revisar() {
       prontos: exercicios.filter(jaFoi),
     };
   }, [aprovados]);
+
+  /* procuro por id, resumo, fonte e nome da aula de uma vez, porque na hora de
+     voltar num exercício eu lembro de um desses quatro e nunca sei de qual */
+  const achados = useMemo(() => {
+    const q = semAcento(busca.trim());
+    if (!q) return [];
+    return prontos.filter((e) =>
+      semAcento(
+        [e.id, e.resumo, rotuloFonte(e), e.nivel, ...e.modulos.map((m) => porId.get(m)?.titulo ?? m)]
+          .join(' '),
+      ).includes(q),
+    );
+  }, [busca, prontos]);
 
   const abrir = async (id: string) => {
     if (aberto === id) return setAberto(null);
@@ -82,64 +109,64 @@ export default function Revisar() {
     }
   };
 
+  const item = (e: Exercicio, pendente: boolean) => (
+    <div className="rv-item" key={e.id}>
+      <div className="rv-barra">
+        <code>{e.id}.mdx</code>
+        <span className="rv-tag">{rotuloFonte(e)}</span>
+        <span className="rv-tag">{e.nivel}</span>
+        {e.modulos.map((m) => (
+          <span className="rv-tag" key={m}>
+            {porId.get(m)?.titulo ?? m}
+          </span>
+        ))}
+        <span className="rv-espaco" />
+        <button
+          className="rv-botao"
+          disabled={salvando}
+          onClick={() => gravar(e.id, { verificado: pendente })}
+        >
+          {pendente ? '✓ Aprovar' : 'Voltar pra rascunho'}
+        </button>
+        <button className="rv-botao" onClick={() => abrir(e.id)}>
+          {aberto === e.id ? 'Fechar o arquivo' : 'Editar o arquivo'}
+        </button>
+      </div>
+
+      {aberto === e.id && (
+        <div className="rv-editor">
+          <textarea
+            value={texto}
+            onChange={(ev) => setTexto(ev.target.value)}
+            spellCheck={false}
+            rows={Math.min(40, texto.split('\n').length + 2)}
+          />
+          <div className="rv-barra">
+            <button
+              className="rv-botao forte"
+              disabled={salvando}
+              onClick={() => gravar(e.id, { texto })}
+            >
+              Gravar no arquivo
+            </button>
+            <span className="rv-dica">
+              grava direto em <code>content/exercicios/{e.id}.mdx</code>, e o histórico é o git
+            </span>
+          </div>
+        </div>
+      )}
+
+      <CartaoExercicio e={e} />
+    </div>
+  );
+
   const fila = (titulo: string, lista: Exercicio[], pendente: boolean) => (
     <section className="rv-fila">
       <p className="rotulo-secao">
         {titulo} <b>{lista.length}</b>
       </p>
-      {lista.length === 0 && (
-        <p className="nota-secao">{pendente ? 'Nada esperando você.' : 'Nenhum aprovado ainda.'}</p>
-      )}
-      {lista.map((e) => (
-        <div className="rv-item" key={e.id}>
-          <div className="rv-barra">
-            <code>{e.id}.mdx</code>
-            <span className="rv-tag">{rotuloFonte(e)}</span>
-            <span className="rv-tag">{e.nivel}</span>
-            {e.modulos.map((m) => (
-              <span className="rv-tag" key={m}>
-                {porId.get(m)?.titulo ?? m}
-              </span>
-            ))}
-            <span className="rv-espaco" />
-            <button
-              className="rv-botao"
-              disabled={salvando}
-              onClick={() => gravar(e.id, { verificado: pendente })}
-            >
-              {pendente ? '✓ Aprovar' : 'Voltar pra rascunho'}
-            </button>
-            <button className="rv-botao" onClick={() => abrir(e.id)}>
-              {aberto === e.id ? 'Fechar o arquivo' : 'Editar o arquivo'}
-            </button>
-          </div>
-
-          {aberto === e.id && (
-            <div className="rv-editor">
-              <textarea
-                value={texto}
-                onChange={(ev) => setTexto(ev.target.value)}
-                spellCheck={false}
-                rows={Math.min(40, texto.split('\n').length + 2)}
-              />
-              <div className="rv-barra">
-                <button
-                  className="rv-botao forte"
-                  disabled={salvando}
-                  onClick={() => gravar(e.id, { texto })}
-                >
-                  Gravar no arquivo
-                </button>
-                <span className="rv-dica">
-                  grava direto em <code>content/exercicios/{e.id}.mdx</code>, e o histórico é o git
-                </span>
-              </div>
-            </div>
-          )}
-
-          <CartaoExercicio e={e} />
-        </div>
-      ))}
+      {lista.length === 0 && <p className="nota-secao">Nada esperando você.</p>}
+      {lista.map((e) => item(e, pendente))}
     </section>
   );
 
@@ -149,17 +176,50 @@ export default function Revisar() {
       <h1>Revisar exercícios</h1>
       <p className="nota-secao">
         Esta página só existe no <code>npm run dev</code>, e é a única do site que escreve em
-        disco. Exercício aprovado passa a aparecer na <Link to="/exercicios">busca</Link> do site
-        publicado; enquanto não for, ele fica só aqui e no dev.
+        disco. Exercício aprovado passa a aparecer na <Link to="/exercicios">busca</Link>;
+        enquanto não for, ele não existe pro aluno e só aparece aqui.
       </p>
 
       {recado && <p className={`rv-recado ${recado === 'gravado' ? 'ok' : 'ruim'}`}>{recado}</p>}
 
       {fila('Esperando auditoria', pendentes, true)}
-      {fila('Já aprovados', prontos, false)}
+
+      <section className="rv-fila">
+        <p className="rotulo-secao">
+          Já aprovados <b>{prontos.length}</b>
+        </p>
+        <p className="nota-secao">
+          Estes não vêm desenhados na tela. Procure pelo id, pelo resumo, pela banca ou pelo nome
+          da aula pra voltar num que passou batido.
+        </p>
+        <input
+          type="search"
+          className="rv-busca"
+          placeholder="Qual exercício você quer rever?"
+          aria-label="Procurar exercício já aprovado"
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+        />
+        {busca.trim() !== '' && achados.length === 0 && (
+          <p className="nota-secao">Nenhum aprovado com esse nome.</p>
+        )}
+        {achados.length > TETO_ACHADOS && (
+          <p className="nota-secao">
+            {achados.length} batem com a busca, e eu desenho os {TETO_ACHADOS} primeiros. Escreve
+            mais um pedaço do nome pra afinar.
+          </p>
+        )}
+        {achados.slice(0, TETO_ACHADOS).map((e) => item(e, false))}
+      </section>
 
       <style>{`
         .rv-fila { margin-top: calc(var(--u) * 1.2); }
+        .rv-busca {
+          width: 100%; max-width: 420px; margin: 6px 0 calc(var(--u) * 0.4);
+          padding: 6px 10px; font-family: var(--f-ui); font-size: 0.8rem;
+          color: var(--tinta); background: var(--papel);
+          border: 1px solid var(--linha); border-radius: 6px;
+        }
         .rv-item {
           margin: calc(var(--u) * 0.8) 0;
           border-left: 3px solid var(--linha);

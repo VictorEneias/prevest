@@ -1337,6 +1337,35 @@ pre code {
   text-decoration: underline;
 }
 
+/* o botão que traz o próximo lote; ele é largo de propósito, porque é o fim da
+   lista e não tem nada competindo com ele ali */
+.mais-exercicios {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+  margin: calc(var(--u) * 1.1) 0;
+  padding: calc(var(--u) * 0.6);
+  font-family: var(--f-ui);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--tinta-media);
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.mais-exercicios span {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--tinta-fraca);
+}
+.mais-exercicios:hover {
+  border-color: var(--tinta);
+  color: var(--tinta);
+}
+
 .ex {
   margin: calc(var(--u) * 1.1) 0;
   padding: calc(var(--u) * 0.7) calc(var(--u) * 0.9);

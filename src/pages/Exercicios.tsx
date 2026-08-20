@@ -39,6 +39,12 @@ const NIVEIS = [
 
 const AUTORAL = 'Autoral';
 
+/* Quantos exercícios entram na tela de uma vez, e quantos o botão traz. Cada
+   cartão carrega o enunciado, a escada e a resolução renderizados, então uma
+   lista de 300 achados desenhada de uma vez é a página travando pra mostrar o
+   que ninguém ia rolar até o fim. */
+const LOTE = 30;
+
 const semAcento = (s: string) =>
   s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
@@ -294,6 +300,14 @@ export default function Exercicios() {
   const filtrando =
     niveis.length > 0 || fontes.length > 0 || anos.length > 0 || modulos.length > 0;
 
+  /* mexeu em filtro, a lista volta pro primeiro lote: se ela continuasse no
+     tamanho de antes, trocar de aula despejaria 300 cartões de outra matéria */
+  const [quantos, setQuantos] = useState(LOTE);
+  const assinatura = [niveis.join(), fontes.join(), anos.join(), modulos.join()].join('|');
+  useEffect(() => setQuantos(LOTE), [assinatura]);
+  const naTela = achados.slice(0, quantos);
+  const faltam = achados.length - naTela.length;
+
   return (
     <div className="folha folha-larga">
       <p className="aula-etiqueta">exercícios</p>
@@ -404,6 +418,7 @@ export default function Exercicios() {
           <b>{achados.length}</b> {achados.length === 1 ? 'exercício' : 'exercícios'}
           {filtrando && ` de ${exerciciosVisiveis.length}`}
         </li>
+        {faltam > 0 && <li>mostrando os {naTela.length} primeiros</li>}
       </ul>
 
       {achados.length === 0 ? (
@@ -412,7 +427,15 @@ export default function Exercicios() {
           <Link to="/">mapa</Link> pra ver quais aulas já existem.
         </p>
       ) : (
-        achados.map((e) => <CartaoExercicio key={e.id} e={e} />)
+        <>
+          {naTela.map((e) => <CartaoExercicio key={e.id} e={e} />)}
+          {faltam > 0 && (
+            <button className="mais-exercicios" onClick={() => setQuantos((q) => q + LOTE)}>
+              Carregar mais {Math.min(LOTE, faltam)}
+              <span>{faltam} ainda fora da tela</span>
+            </button>
+          )}
+        </>
       )}
     </div>
   );
