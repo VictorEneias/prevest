@@ -1010,8 +1010,13 @@ pre code {
   border-bottom-color: var(--tinta);
 }
 
+/* Presa na janela, e não no palco: com a página no topo o palco ainda não
+   grudou, ele nasce embaixo do cabeçalho e o rodapé dele cai 58px fora da tela,
+   levando junto a chamada, que é justamente a que ensina a rolar e apaga no
+   primeiro terço do zoom. Somar a altura da barra também resolveria, e ficaria
+   dependendo dela; presa na janela ela aparece de cara em qualquer altura. */
 .abertura-chamado {
-  position: absolute;
+  position: fixed;
   z-index: 6;
   left: calc(var(--u) * 1.5);
   bottom: calc(var(--u) * 1.2);
