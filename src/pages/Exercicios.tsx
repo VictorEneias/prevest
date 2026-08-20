@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { exerciciosVisiveis, porId, type Exercicio } from '../conteudo';
 import { slotDeCor } from '../lib/curriculo';
@@ -10,13 +10,16 @@ import CartaoExercicio from '../components/CartaoExercicio';
  *
  * Ela é uma página de filtro, e não uma lista: com o currículo inteiro coberto
  * são centenas de exercícios, e o aluno chega querendo "os básicos de fração" ou
- * "o que a FUVEST já cobrou disso". Os três filtros são os três eixos que o
- * exercício declara, mais o "multidisciplinar", que ninguém declara porque ele é
- * `modulos.length > 1`.
+ * "o que a FUVEST já cobrou disso".
+ *
+ * Dificuldade e banca são fichas que ligam e desligam porque são três e cinco.
+ * A aula não: são 84 quando o currículo fechar, e 84 fichas na tela viram uma
+ * parede que ninguém lê. Então ali eu procuro pelo nome e vou somando aula, e o
+ * que fica desenhado é só o que eu escolhi.
  *
  * A ordem com vários módulos escolhidos é o tamanho da interseção: quem cobra
  * dois dos módulos que você marcou vem antes de quem cobra um. É o que faz
- * marcar duas aulas significar "quero o exercício que junta as duas".
+ * escolher duas aulas significar "quero o exercício que junta as duas".
  *
  * O estado inteiro mora na URL, então o filtro montado é um link: o Victor
  * manda "resolve estes" pro aluno sem precisar de lista de tarefa nenhuma.
@@ -34,6 +37,10 @@ const semAcento = (s: string) =>
 /** Lê um parâmetro que guarda lista, como ?modulos=juncao,fracoes */
 const lista = (v: string | null) => (v ? v.split(',').filter(Boolean) : []);
 
+const tituloDe = (id: string) => porId.get(id)?.titulo ?? id;
+const slotDe = (id: string) =>
+  slotDeCor(porId.get(id)?.materia ?? 'matematica', porId.get(id)?.bloco ?? '');
+
 export default function Exercicios() {
   useTitulo('Exercícios');
   const [parametros, setParametros] = useSearchParams();
@@ -41,9 +48,12 @@ export default function Exercicios() {
   const niveis = lista(parametros.get('nivel'));
   const fontes = lista(parametros.get('fonte'));
   const modulos = lista(parametros.get('modulos'));
-  const soMulti = parametros.get('multi') === 'sim';
   const soPendentes = parametros.get('pendentes') === 'sim';
+
   const [buscaModulo, setBuscaModulo] = useState('');
+  const [aberta, setAberta] = useState(false);
+  const [destaque, setDestaque] = useState(0);
+  const campo = useRef<HTMLInputElement>(null);
 
   /* Escrever um filtro é reescrever a URL inteira, com replace: assim o botão
      de voltar do navegador não vira um desfazer de clique em clique. */
@@ -69,7 +79,7 @@ export default function Exercicios() {
     return {
       fontesExistentes: [...porFonte.entries()].sort((a, b) => a[0].localeCompare(b[0], 'pt-BR')),
       modulosExistentes: [...porModulo.entries()].sort((a, b) =>
-        (porId.get(a[0])?.titulo ?? a[0]).localeCompare(porId.get(b[0])?.titulo ?? b[0], 'pt-BR'),
+        tituloDe(a[0]).localeCompare(tituloDe(b[0]), 'pt-BR'),
       ),
       pendentes: exerciciosVisiveis.filter((e) => !e.verificado).length,
     };
@@ -79,7 +89,6 @@ export default function Exercicios() {
     const filtrados = exerciciosVisiveis.filter((e) => {
       if (niveis.length && !niveis.includes(e.nivel)) return false;
       if (fontes.length && !fontes.includes(e.fonte)) return false;
-      if (soMulti && e.modulos.length < 2) return false;
       if (soPendentes && e.verificado) return false;
       if (modulos.length && !e.modulos.some((m) => modulos.includes(m))) return false;
       return true;
@@ -90,23 +99,53 @@ export default function Exercicios() {
     return filtrados.sort(
       (a, b) => juntos(b) - juntos(a) || ordem[a.nivel] - ordem[b.nivel] || a.id.localeCompare(b.id),
     );
-  }, [niveis.join(), fontes.join(), modulos.join(), soMulti, soPendentes]);
+  }, [niveis.join(), fontes.join(), modulos.join(), soPendentes]);
 
-  const filtrando =
-    niveis.length > 0 || fontes.length > 0 || modulos.length > 0 || soMulti || soPendentes;
+  const filtrando = niveis.length > 0 || fontes.length > 0 || modulos.length > 0 || soPendentes;
 
-  const modulosNaLista = modulosExistentes.filter(([id]) => {
+  /* A sugestão nunca oferece o que já está escolhido, senão o aluno clica de novo
+     na aula que já somou e nada acontece na tela. */
+  const sugestoes = useMemo(() => {
     const q = semAcento(buscaModulo.trim());
-    if (!q) return true;
-    return semAcento(porId.get(id)?.titulo ?? id).includes(q);
-  });
+    return modulosExistentes.filter(
+      ([id]) => !modulos.includes(id) && (!q || semAcento(tituloDe(id)).includes(q)),
+    );
+  }, [buscaModulo, modulos.join(), modulosExistentes]);
+
+  useEffect(() => setDestaque(0), [buscaModulo, modulos.join()]);
+
+  const somar = (id: string) => {
+    escrever('modulos', [...modulos, id]);
+    setBuscaModulo('');
+    setDestaque(0);
+    campo.current?.focus();
+  };
+
+  const teclado = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!aberta) return setAberta(true);
+      const passo = e.key === 'ArrowDown' ? 1 : -1;
+      setDestaque((i) => (sugestoes.length ? (i + passo + sugestoes.length) % sugestoes.length : 0));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const alvo = sugestoes[destaque];
+      if (alvo) somar(alvo[0]);
+    } else if (e.key === 'Escape') {
+      setAberta(false);
+    } else if (e.key === 'Backspace' && !buscaModulo && modulos.length) {
+      /* apagar com o campo vazio tira a última aula somada, que é o que todo campo
+         de etiqueta faz e o que a mão tenta antes de procurar o × */
+      escrever('modulos', modulos.slice(0, -1));
+    }
+  };
 
   return (
     <div className="folha folha-larga">
       <p className="aula-etiqueta">exercícios</p>
       <h1>Praticar</h1>
       <p className="nota-secao">
-        Escolha as aulas que você quer treinar e o quanto quer apanhar. Marcando mais de uma aula,
+        Escolha as aulas que você quer treinar e o quanto quer apanhar. Somando mais de uma aula,
         os exercícios que cobram as duas juntas aparecem primeiro.
       </p>
 
@@ -123,13 +162,6 @@ export default function Exercicios() {
                 {rot}
               </button>
             ))}
-            <button
-              aria-pressed={soMulti}
-              onClick={() => escrever('multi', !soMulti)}
-              title="Exercícios que cobram mais de uma aula"
-            >
-              Multidisciplinar
-            </button>
           </div>
         </div>
 
@@ -153,28 +185,79 @@ export default function Exercicios() {
               </button>
             )}
           </p>
-          {modulosExistentes.length > 6 && (
+
+          <div
+            className="filtro-combo"
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setAberta(false);
+            }}
+          >
             <input
-              type="search"
+              ref={campo}
+              type="text"
+              role="combobox"
               className="filtro-busca"
-              placeholder="Qual aula?"
-              aria-label="Procurar aula"
+              placeholder="Procure a aula e vá somando"
+              aria-label="Procurar aula pelo nome"
+              aria-expanded={aberta}
+              aria-controls="sugestao-aulas"
+              autoComplete="off"
               value={buscaModulo}
-              onChange={(e) => setBuscaModulo(e.target.value)}
+              onChange={(e) => {
+                setBuscaModulo(e.target.value);
+                setAberta(true);
+              }}
+              onFocus={() => setAberta(true)}
+              onKeyDown={teclado}
             />
-          )}
-          <div className="filtro-fichas">
-            {modulosNaLista.map(([id, n]) => (
-              <button
-                key={id}
-                data-slot={slotDeCor(porId.get(id)?.materia ?? 'matematica', porId.get(id)?.bloco ?? '')}
-                aria-pressed={modulos.includes(id)}
-                onClick={() => alternar('modulos', modulos, id)}
-              >
-                {porId.get(id)?.titulo ?? id} <span>{n}</span>
-              </button>
-            ))}
+            {aberta && (
+              <ul className="filtro-sugestoes" id="sugestao-aulas" role="listbox">
+                {sugestoes.length === 0 ? (
+                  <li className="filtro-vazio">
+                    {modulosExistentes.length === modulos.length
+                      ? 'você já somou todas as aulas que têm exercício'
+                      : 'nenhuma aula com exercício por esse nome'}
+                  </li>
+                ) : (
+                  sugestoes.map(([id, n], i) => (
+                    <li key={id}>
+                      <button
+                        role="option"
+                        aria-selected={i === destaque}
+                        data-slot={slotDe(id)}
+                        /* o mousedown tira o foco do campo antes do clique chegar, e aí
+                           a lista fecha debaixo do dedo */
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => somar(id)}
+                        ref={(el) => {
+                          if (el && i === destaque) el.scrollIntoView({ block: 'nearest' });
+                        }}
+                      >
+                        <i className="filtro-ponto" aria-hidden="true" />
+                        {tituloDe(id)} <span>{n}</span>
+                      </button>
+                    </li>
+                  ))
+                )}
+              </ul>
+            )}
           </div>
+
+          {modulos.length > 0 && (
+            <div className="filtro-fichas filtro-escolhidas">
+              {modulos.map((id) => (
+                <button
+                  key={id}
+                  data-slot={slotDe(id)}
+                  aria-pressed={true}
+                  title="tirar esta aula do filtro"
+                  onClick={() => alternar('modulos', modulos, id)}
+                >
+                  {tituloDe(id)} <span aria-hidden="true">×</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Só aparece em npm run dev, porque em produção não existe exercício não

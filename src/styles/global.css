@@ -1182,7 +1182,6 @@ pre code {
 }
 .filtro-busca {
   width: 100%;
-  margin-bottom: 7px;
   padding: 5px 9px;
   font-family: var(--f-ui);
   font-size: 0.76rem;
@@ -1191,6 +1190,75 @@ pre code {
   border: 1px solid var(--linha);
   border-radius: 6px;
 }
+/* A aula não vira ficha ligada/desligada como a dificuldade e a banca: são 84
+   quando o currículo fechar, e 84 fichas é uma parede que ninguém lê. O campo
+   procura, a lista sugere, e o que fica desenhado é só o que já foi somado. */
+.filtro-combo {
+  position: relative;
+}
+.filtro-sugestoes {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 3px);
+  left: 0;
+  right: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 12%);
+}
+.filtro-sugestoes li {
+  margin: 0;
+}
+.filtro-sugestoes button {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  width: 100%;
+  font-family: var(--f-ui);
+  font-size: 0.76rem;
+  text-align: left;
+  padding: 5px 8px;
+  color: var(--tinta-media);
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.filtro-sugestoes button span {
+  margin-left: auto;
+  font-size: 0.64rem;
+  color: var(--tinta-fraca);
+}
+.filtro-sugestoes button:hover,
+.filtro-sugestoes button[aria-selected='true'] {
+  color: var(--tinta);
+  background: var(--papel-fundo);
+}
+/* a bolinha é a cor da área, a mesma da caixa dela no mapa */
+.filtro-ponto {
+  flex: none;
+  align-self: center;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--cor-bloco, var(--tinta-fraca));
+}
+.filtro-vazio {
+  padding: 6px 8px;
+  font-family: var(--f-ui);
+  font-size: 0.74rem;
+  color: var(--tinta-fraca);
+}
+.filtro-escolhidas {
+  margin-top: 8px;
+}
+
 .filtro-fichas {
   display: flex;
   flex-wrap: wrap;
