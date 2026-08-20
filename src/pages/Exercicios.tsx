@@ -210,7 +210,6 @@ export default function Exercicios() {
   const fontes = lista(parametros.get('fonte'));
   const anos = lista(parametros.get('ano'));
   const modulos = lista(parametros.get('modulos'));
-  const soPendentes = parametros.get('pendentes') === 'sim';
 
   const bancasEscolhidas = fontes.filter((f) => f !== AUTORAL);
   const comBasicos = fontes.includes(AUTORAL);
@@ -231,7 +230,7 @@ export default function Exercicios() {
 
   /* Os filtros só oferecem o que existe: banca sem exercício nenhum na lista é
      um botão que só sabe devolver "nada encontrado". */
-  const { bancas, modulosExistentes, quantosBasicos, pendentes } = useMemo(() => {
+  const { bancas, modulosExistentes, quantosBasicos } = useMemo(() => {
     const porBanca = new Map<string, number>();
     const porModulo = new Map<string, number>();
     for (const e of exerciciosVisiveis) {
@@ -246,7 +245,6 @@ export default function Exercicios() {
         .sort((a, b) => tituloDe(a[0]).localeCompare(tituloDe(b[0]), 'pt-BR'))
         .map(([id, n]): Opcao => ({ valor: id, rotulo: tituloDe(id), n, slot: slotDe(id) })),
       quantosBasicos: exerciciosVisiveis.filter(ehBasico).length,
-      pendentes: exerciciosVisiveis.filter((e) => !e.verificado).length,
     };
   }, []);
 
@@ -282,7 +280,6 @@ export default function Exercicios() {
       if (niveis.length && !niveis.includes(e.nivel)) return false;
       if (fontes.length && !fontes.includes(ehBasico(e) ? AUTORAL : e.fonte)) return false;
       if (anos.length && !(e.ano && anos.includes(String(e.ano)))) return false;
-      if (soPendentes && e.verificado) return false;
       if (modulos.length && !e.modulos.some((m) => modulos.includes(m))) return false;
       return true;
     });
@@ -292,10 +289,10 @@ export default function Exercicios() {
     return filtrados.sort(
       (a, b) => juntos(b) - juntos(a) || ordem[a.nivel] - ordem[b.nivel] || a.id.localeCompare(b.id),
     );
-  }, [niveis.join(), fontes.join(), anos.join(), modulos.join(), soPendentes]);
+  }, [niveis.join(), fontes.join(), anos.join(), modulos.join()]);
 
   const filtrando =
-    niveis.length > 0 || fontes.length > 0 || anos.length > 0 || modulos.length > 0 || soPendentes;
+    niveis.length > 0 || fontes.length > 0 || anos.length > 0 || modulos.length > 0;
 
   return (
     <div className="folha folha-larga">
@@ -400,25 +397,6 @@ export default function Exercicios() {
             </>
           )}
         </div>
-
-        {/* Só aparece em npm run dev, porque em produção não existe exercício não
-            verificado pra listar. É a mesa de auditoria enquanto não tem conta. */}
-        {import.meta.env.DEV && pendentes > 0 && (
-          <div className="filtro-grupo">
-            <p className="filtro-rot">Auditoria</p>
-            <div className="filtro-fichas">
-              <button
-                aria-pressed={soPendentes}
-                onClick={() => escrever({ pendentes: !soPendentes })}
-              >
-                Só os não verificados <span>{pendentes}</span>
-              </button>
-              <Link className="filtro-ir" to="/revisar">
-                abrir a mesa de auditoria →
-              </Link>
-            </div>
-          </div>
-        )}
       </div>
 
       <ul className="ficha">

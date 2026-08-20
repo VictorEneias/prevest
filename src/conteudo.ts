@@ -156,17 +156,20 @@ export const rotuloFonte = (e: Exercicio) =>
   ehBasico(e) ? 'básico da aula' : e.ano ? `${e.fonte} ${e.ano}` : e.fonte;
 
 /**
- * O que aparece no site. Exercício não verificado fica FORA do site publicado, e
- * não escondido atrás de um selo: resolução com sinal trocado que o Victor ainda
- * não leu é pior que exercício nenhum.
+ * O que aparece no site. Exercício não verificado fica de fora, e não escondido
+ * atrás de um selo: resolução com sinal trocado que o Victor ainda não leu é
+ * pior que exercício nenhum.
  *
- * Em `npm run dev` ele aparece, com o selo de não verificado e um filtro só pra
- * ele. É essa a mesa de auditoria enquanto não existe conta de admin: quem roda
- * o dev é o Victor, e o editor continua sendo o VS Code.
+ * Isso vale também no `npm run dev`. Já valeu só na publicação, com um filtro de
+ * "só os não verificados" na busca, e a busca virou a mesa de auditoria por
+ * acidente: quem abre a página de exercícios está estudando, e o rascunho no
+ * meio da lista atrapalha as duas coisas. O lugar do não verificado é a
+ * /revisar, e o caminho pra lá mora no menu da conta.
  */
-export const exerciciosVisiveis = import.meta.env.DEV
-  ? exercicios
-  : exercicios.filter((e) => e.verificado);
+export const exerciciosVisiveis = exercicios.filter((e) => e.verificado);
+
+/** A fila da mesa de auditoria, e o número que o menu da conta mostra. */
+export const exerciciosPendentes = exercicios.filter((e) => !e.verificado);
 
 /** Os do fim da aula: os básicos daquele módulo, na ordem que o arquivo dá. */
 export const exerciciosDaAula = (id: string) =>

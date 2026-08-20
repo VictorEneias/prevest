@@ -536,6 +536,15 @@ pre code {
   background: var(--acento-fraco);
   color: var(--tinta);
 }
+/* o número de exercícios esperando auditoria, encostado na direita do item */
+.conta-fila {
+  margin-left: auto;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  color: var(--papel);
+  background: var(--acento);
+}
 .conta-secao {
   padding: calc(var(--u) * 0.45) calc(var(--u) * 0.55) 2px;
   margin: 0;

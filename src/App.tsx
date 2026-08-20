@@ -2,6 +2,7 @@ import { MDXProvider } from '@mdx-js/react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { componentesMDX } from './components/mdx';
+import { exerciciosPendentes } from './conteudo';
 import { useAula, type ItemPilha } from './estado';
 import Conceito, { PaginaConceito } from './pages/Conceito';
 import EmBreve from './pages/EmBreve';
@@ -189,6 +190,12 @@ function Topo() {
  * Os atalhos (Alt+1, Alt+2, Alt+Z) continuam sendo o caminho rápido; o menu
  * existe pra quem nunca vai descobrir que eles existem, e é por isso que cada
  * atalho está escrito ao lado do controle.
+ *
+ * A mesa de auditoria mora aqui porque ela é trabalho de quem escreve o site, e
+ * não de quem estuda nele: na página de exercícios ela virava um filtro no meio
+ * do caminho do aluno. Hoje o portão dela é o `import.meta.env.DEV`, e quando a
+ * conta existir ele vira o papel de admin, do mesmo jeito que o Modo Aula vai
+ * virar coisa de professor.
  */
 function MenuDaConta() {
   const { modo, trocarModo, tamanho, trocarTamanho, tema, trocarTema } = useAula();
@@ -230,6 +237,14 @@ function MenuDaConta() {
           <Link className="conta-item" to="/criar-conta" onClick={() => setAberto(false)}>
             Criar conta
           </Link>
+          {import.meta.env.DEV && (
+            <Link className="conta-item" to="/revisar" onClick={() => setAberto(false)}>
+              Mesa de auditoria
+              {exerciciosPendentes.length > 0 && (
+                <span className="conta-fila">{exerciciosPendentes.length}</span>
+              )}
+            </Link>
+          )}
 
           <p className="conta-secao">Como a página aparece</p>
 

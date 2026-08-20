@@ -1037,12 +1037,17 @@ componente nosso, ou a questão fica de fora, e eu digo qual foi e por quê.
 
 ### A auditoria: a página `/revisar`
 
-Exercício com `verificado: false` **não aparece no site publicado**, e não fica
-escondido atrás de um selo. Em `npm run dev` ele aparece na busca com o selo de
-"não verificado", e a mesa de auditoria é a rota **`/revisar`**: cada exercício
-aparece renderizado, do jeito que o aluno vê, com o botão de **aprovar** (que
-troca o `verificado` no arquivo) e o texto do `.mdx` aberto ao lado pra corrigir
-e gravar.
+Exercício com `verificado: false` **não aparece em lugar nenhum do site**, nem no
+`npm run dev`, e não fica escondido atrás de um selo. Ele já apareceu na busca
+com o selo de "não verificado" e um filtro de "só os não verificados", e aí a
+busca virou mesa de auditoria por acidente: quem abre a página de exercícios está
+estudando, e rascunho no meio da lista atrapalha as duas coisas.
+
+O único lugar dele é a rota **`/revisar`**: cada exercício aparece renderizado, do
+jeito que o aluno vê, com o botão de **aprovar** (que troca o `verificado` no
+arquivo) e o texto do `.mdx` aberto ao lado pra corrigir e gravar. O caminho pra
+lá é o **menu do ícone de conta**, com o número da fila do lado, e não um link na
+página de exercícios.
 
 Ela existe porque procurar um arquivo entre mil na pasta pra trocar um `false`
 por `true` custa mais que ler a resolução. Quem escreve em disco é o middleware
@@ -1055,7 +1060,9 @@ da máquina. A rota também só é registrada com `import.meta.env.DEV`.
 a `/revisar` é a passada de revisão, que é ler, cortar uma dica repetida, trocar
 uma palavra e aprovar. Não tem histórico nem trava, porque o histórico é o git.
 
-Quando as contas existirem, isso vira papel de admin (seção 1).
+Quando as contas existirem, isso vira papel de admin (seção 1): o portão de hoje
+é o `import.meta.env.DEV`, tanto na rota quanto no item do menu, e ele troca pelo
+papel do mesmo jeito que o Modo Aula vai virar coisa de professor.
 
 ### Onde as coisas moram
 
