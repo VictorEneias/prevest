@@ -1,0 +1,72 @@
+---
+resumo: Cortar o fator repetido de uma fração, e reconhecer o caso em que cortar é proibido
+fonte: Autoral
+nivel: medio
+modulos: [escalamento]
+resposta: "4, e na segunda não dá pra cortar"
+verificado: false
+---
+
+**(a)** Calcule, cortando antes de multiplicar:
+
+$$
+\frac{12 \cdot 7}{7 \cdot 3}
+$$
+
+**(b)** Agora olha esta outra, e responda se dá pra cortar o $7$ do mesmo jeito:
+
+$$
+\frac{12 + 7}{7 \cdot 3}
+$$
+
+<Dicas>
+  <Dica>
+    Reescreve a fração de (a) como multiplicação, que é o que a barra autoriza: quem está embaixo
+    entra como inverso.
+  </Dica>
+  <Dica>
+    Nessa forma, o $7$ encontra alguém. Quem, e quanto dá esse encontro?
+  </Dica>
+  <Dica>
+    Na (b), tenta fazer a mesma reescrita. O $7$ de cima é dono do numerador inteiro, ou só de um
+    pedaço dele?
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="4, e na segunda não dá pra cortar">
+
+**(a)** A barra autoriza escrever tudo como multiplicação:
+
+$$
+\frac{12 \cdot 7}{7 \cdot 3} \;=\; 12 \cdot 7 \cdot \frac{1}{7} \cdot \frac{1}{3}
+$$
+
+E como a ordem da multiplicação é livre, eu junto o $7$ com o inverso dele:
+
+$$
+12 \cdot \frac{1}{3} \cdot \underbrace{7 \cdot \frac{1}{7}}_{=\;1} \;=\; 12 \cdot \frac{1}{3}
+\;=\; 4
+$$
+
+O $7$ não sumiu por decreto: ele **encontrou o inverso dele e virou $1$**, e o $1$ pode ir embora
+sem levar nada, porque multiplicar por $1$ não mexe em ninguém.
+
+**(b)** Não dá. Fazendo a mesma leitura, o numerador é $12 + 7$, e ali o $7$ é dono de **um pedaço
+só** do de cima, não do numerador inteiro. Sem estar multiplicando tudo, ele não tem como
+encontrar o $\frac{1}{7}$ e virar $1$.
+
+Confere pelo resultado: $\frac{12 + 7}{7 \cdot 3} = \frac{19}{21}$, que nem chega perto de $4$.
+
+### Raciocínio
+
+Antes de cortar qualquer coisa eu pergunto se aquilo é **fator** ou **parcela**. Cortar é
+permitido entre fator e fator, e num numerador que é soma eu não tenho fator pra cortar, a não ser
+que dê pra transformar aquela soma num produto, que é o assunto da aula de fatoração.
+
+### Erros comuns
+
+**Cortar dentro da soma**, escrevendo $\frac{12 + 7}{7 \cdot 3} \to \frac{12}{3} = 4$. É o corte
+mais caro do ensino médio, porque ele parece igualzinho ao da (a) e dá um número redondo, que é
+exatamente o tipo de resposta que não levanta suspeita.
+
+</Resolucao>

@@ -1,0 +1,58 @@
+---
+resumo: Contar quantas viradas tem um produto de negativos pra saber o sinal antes da conta
+fonte: Autoral
+nivel: facil
+modulos: [escalamento]
+resposta: "-30, e depois +30"
+verificado: false
+---
+
+Diga o **sinal** antes de fazer qualquer multiplicação, e só depois calcule:
+
+$$
+(-2) \cdot (-3) \cdot (-5)
+$$
+
+E depois de resolver essa, responda o que acontece com o sinal se aparecer mais um fator $(-1)$
+no fim.
+
+<Dicas>
+  <Dica>
+    Multiplicar por um negativo faz o quê com a seta? Não é o tamanho dela que muda.
+  </Dica>
+  <Dica>
+    Se cada fator negativo é uma virada, o que duas viradas seguidas fazem com quem virou?
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="-30, e depois +30">
+
+São três fatores negativos, ou seja, **três viradas**. A primeira vira, a segunda desfaz, e a
+terceira vira de novo, então o resultado é negativo:
+
+$$
+(-2) \cdot (-3) \cdot (-5) \;=\; -30
+$$
+
+Pondo mais um $(-1)$ no fim, viram quatro viradas, e quatro é par, então volta pro positivo:
+
+$$
+(-2) \cdot (-3) \cdot (-5) \cdot (-1) \;=\; +30
+$$
+
+A regra inteira cabe nisso: **quantidade par de menos dá positivo, quantidade ímpar dá negativo**.
+
+<Esticar valor={3} fator={-2} titulo="Multiplicar por negativo vira a seta pro outro lado" />
+
+### Raciocínio
+
+Eu resolvo o sinal e o tamanho em contas separadas: conto os menos primeiro, escrevo o sinal, e
+só aí multiplico $2 \cdot 3 \cdot 5$. Fazendo tudo junto, o sinal é a primeira coisa que escapa
+quando a conta tem quatro ou cinco fatores.
+
+### Erros comuns
+
+**Achar que menos com menos dá mais sempre**, e escrever $+30$ na primeira. Dá mais **aos pares**:
+com três negativos sobra uma virada sem par, e essa deixa o resultado do lado esquerdo do zero.
+
+</Resolucao>

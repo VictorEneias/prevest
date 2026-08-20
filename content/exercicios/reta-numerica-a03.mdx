@@ -1,0 +1,55 @@
+---
+resumo: Achar números entre 1,2 e 1,3 e descobrir que não existe "o próximo número"
+fonte: Autoral
+nivel: medio
+modulos: [reta-numerica]
+resposta: "cabem infinitos, e não existe o número logo depois de 1,2"
+verificado: false
+---
+
+Escreva três números que moram entre $1{,}2$ e $1{,}3$.
+
+Depois responda a pergunta que interessa: qual é o número que vem **logo depois** de $1{,}2$?
+
+<Dicas>
+  <Dica>
+    Pra achar os três, aumenta a escala da reta na sua cabeça até o pedaço entre $1{,}2$ e $1{,}3$
+    ficar do tamanho da folha. Que marcas aparecem ali dentro?
+  </Dica>
+  <Dica>
+    Pra segunda pergunta, tenta responder e depois testa: seja qual for o número que você
+    escolheu, o que acontece se você pegar o ponto que está bem no meio do caminho entre ele e o
+    $1{,}2$?
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="cabem infinitos, e não existe o número logo depois de 1,2">
+
+Três que servem: $1{,}21$, $1{,}25$ e $1{,}299$. E dava pra escrever mais três, e mais trezentos.
+
+<Reta
+  dominio={[1, 2]}
+  passo={0.1}
+  menores={5}
+  destacar={[1, 2]}
+  titulo="A reta esticada entre o 1 e o 2"
+  legenda="cada marquinha entre 1,2 e 1,3 é um endereço, e ainda cabem infinitos entre duas delas"
+/>
+
+A segunda pergunta não tem resposta, e essa é a graça: **não existe o número logo depois de
+$1{,}2$**. Se você chutar o $1{,}21$, eu pego o meio do caminho e apareço com o $1{,}205$, que
+está mais perto. Se você chutar esse, eu faço de novo com o $1{,}2005$, e isso nunca acaba.
+
+### Raciocínio
+
+Eu não tentei achar o próximo número: eu testei se ele pode existir. Todo candidato morre pelo
+mesmo golpe, que é o ponto médio entre ele e o $1{,}2$, e quando um argumento derruba qualquer
+candidato de uma vez, a resposta deixa de ser "ainda não achei" e passa a ser "não existe".
+
+### Erros comuns
+
+**Responder $1{,}3$**, ou responder $1{,}21$. É a fileira de casinhas na cabeça: no $5$ vem o
+$6$, então no $1{,}2$ tem que vir alguma coisa. Só que os números não moram em casinhas
+enfileiradas, eles moram numa reta lotada, e é por isso que a reta é o desenho certo pra eles.
+
+</Resolucao>

@@ -1,0 +1,58 @@
+---
+resumo: Dizer em quais das caixas N, Z e Q cada número cai, usando pertence e não pertence
+fonte: Autoral
+nivel: medio
+modulos: [conjuntos-numericos]
+resposta: "-4 ∈ Z e ∈ Q; 8/4 ∈ N, Z e Q; 0,2 ∈ Q só; 0 ∈ N, Z e Q; √2 fica fora das três"
+verificado: false
+---
+
+Pra cada um destes cinco números, diga em quais das três caixas ele entra, escrevendo com $\in$ e
+$\notin$:
+
+$$
+-4 \qquad \frac{8}{4} \qquad 0{,}2 \qquad 0 \qquad \sqrt{2}
+$$
+
+<Dicas>
+  <Dica>
+    A regra de entrada de cada caixa é curta: natural é marca inteira da reta e não é negativo,
+    inteiro é marca inteira dos dois lados, e racional é quem dá pra escrever como fração de
+    inteiros. Testa um número de cada vez nas três regras.
+  </Dica>
+  <Dica>
+    Dois desses cinco estão disfarçados. Um está vestido de fração e não é quebrado, e o outro
+    está vestido de número comum e não cabe em fração nenhuma.
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="-4 ∈ Z e ∈ Q; 8/4 ∈ N, Z e Q; 0,2 ∈ Q só; 0 ∈ N, Z e Q; √2 fica fora das três">
+
+| número | onde ele cai |
+|---|---|
+| $-4$ | $-4 \notin \mathbb{N}$, porém $-4 \in \mathbb{Z}$ e $-4 \in \mathbb{Q}$ |
+| $\frac{8}{4}$ | é o $2$, então $\in \mathbb{N}$, $\in \mathbb{Z}$ e $\in \mathbb{Q}$ |
+| $0{,}2$ | $\notin \mathbb{N}$, $\notin \mathbb{Z}$, e $\in \mathbb{Q}$, porque é $\frac{1}{5}$ |
+| $0$ | $\in \mathbb{N}$, $\in \mathbb{Z}$ e $\in \mathbb{Q}$ |
+| $\sqrt{2}$ | fica fora das três: ele é irracional |
+
+O $\frac{8}{4}$ é o que pega mais gente. **Estar escrito como fração não faz o número ser
+quebrado**: aquela divisão fecha redondo e dá $2$, que é número de contar. A fração é a roupa, e
+a caixa é escolhida pelo número, não pela roupa.
+
+O $-4$ e o $0{,}2$ mostram os dois motivos diferentes de ficar fora dos naturais: um é negativo e
+o outro não cai em marca inteira.
+
+### Raciocínio
+
+Eu leio cada número duas vezes: primeiro do jeito que ele está escrito, e depois do jeito mais
+simples que ele aceita. É na segunda leitura que o $\frac{8}{4}$ vira $2$ e que o $0{,}2$ vira
+$\frac{1}{5}$, e é ela que decide a caixa.
+
+### Erros comuns
+
+**Dizer que o $0$ não é natural.** Aqui no Brasil, na escola e no vestibular, o zero está dentro
+dos naturais. Quando alguém quer os naturais sem ele, escreve $\mathbb{N}^*$, e o asterisco quer
+dizer exatamente "esse conjunto tirando o zero".
+
+</Resolucao>

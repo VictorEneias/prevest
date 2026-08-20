@@ -1,0 +1,63 @@
+---
+resumo: Achar os dois números de módulo 6 e dizer qual informação as barrinhas jogam fora
+fonte: Autoral
+nivel: facil
+modulos: [reta-numerica]
+resposta: "6 e -6"
+verificado: false
+---
+
+Quais números têm módulo $6$? Ou seja, pra quais valores de $x$ vale
+
+$$
+|x| = 6
+$$
+
+E antes de responder quantos são: das duas informações que um número com sinal carrega, qual
+delas as barrinhas do módulo jogam fora?
+
+<Dicas>
+  <Dica>
+    Módulo é distância até o zero. A pergunta então é: quem mora a seis passos do zero?
+  </Dica>
+  <Dica>
+    Você tem dois lados pra andar, e o enunciado não disse pra qual lado. Isso muda a quantidade
+    de respostas?
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="6 e -6">
+
+Andando seis passos pra direita eu chego no $6$, e andando seis pra esquerda eu chego no $-6$.
+Os dois estão à mesma distância do zero, então os dois têm módulo $6$:
+
+$$
+|6| = 6 \qquad\qquad |-6| = 6
+$$
+
+São **duas** respostas, $x = 6$ e $x = -6$.
+
+<Setas
+  parcelas={[6]}
+  legenda="seis passos pra direita"
+  titulo="O 6"
+  dominio={[-8, 8]}
+/>
+
+<Setas
+  parcelas={[-6]}
+  legenda="seis passos pra esquerda, do mesmo tamanho"
+  titulo="O −6"
+  dominio={[-8, 8]}
+/>
+
+E o que as barrinhas jogam fora é o **sinal**, que é a direção. Sobra só o tamanho do passo, e é
+por isso que módulo nunca sai negativo.
+
+### Erros comuns
+
+**Responder só o $6$.** Quem responde assim leu $|x| = 6$ como se fosse $x = 6$, e aí perdeu
+metade da reta. Toda equação com módulo tem essa cara de dar duas respostas, e ela vai voltar
+quando você estudar equação modular.
+
+</Resolucao>

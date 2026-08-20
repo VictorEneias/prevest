@@ -1,0 +1,62 @@
+---
+resumo: Escrever a união e a interseção de dois conjuntos que se cruzam
+fonte: Autoral
+nivel: facil
+modulos: [conjuntos-numericos]
+resposta: "A ∪ B = {1,2,3,4,5,6,7,8} e A ∩ B = {5,6}"
+verificado: false
+---
+
+Com os mesmos dois de sempre:
+
+$$
+A = \{1,\, 2,\, 3,\, 4,\, 5,\, 6\} \qquad B = \{5,\, 6,\, 7,\, 8\}
+$$
+
+escreva, elemento por elemento, quem é $A \cup B$ e quem é $A \cap B$.
+
+E responda também: por que o $5$ aparece **uma vez só** na união, se ele estava nos dois?
+
+<Dicas>
+  <Dica>
+    União é tudo que está num ou no outro; interseção é só quem está nos dois ao mesmo tempo. Faz
+    a lista dos moradores de cada conjunto e vai marcando quem aparece duas vezes.
+  </Dica>
+  <Dica>
+    Pra última pergunta, lembra da pergunta que um conjunto sabe responder sobre cada coisa do
+    mundo. Ela é "você está aqui dentro?" ou "quantas vezes você está aqui dentro?"
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="A ∪ B = {1,2,3,4,5,6,7,8} e A ∩ B = {5,6}">
+
+$$
+A \cup B = \{1,\, 2,\, 3,\, 4,\, 5,\, 6,\, 7,\, 8\}
+\qquad\qquad
+A \cap B = \{5,\, 6\}
+$$
+
+<Conjunto
+  layout="venn"
+  conjuntos={[
+    { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
+    { nome: 'B', elementos: [5, 6, 7, 8] },
+  ]}
+  destacar={[5, 6]}
+  regiao="intersecao"
+  titulo="A ∩ B é só o miolo"
+  legenda="o 5 e o 6 são os únicos que estão nas duas casas"
+/>
+
+E o $5$ aparece uma vez só porque um conjunto responde **uma pergunta só** sobre cada coisa: "você
+está aqui dentro?". Ele não conta quantas vezes, e não guarda de onde a pessoa veio. Escrever
+$\{1, 2, 3, 4, 5, 5, 6, 6, 7, 8\}$ seria só um jeito esquisito de escrever o mesmo conjunto.
+
+### Erros comuns
+
+**Somar as quantidades pra saber o tamanho da união.** O $A$ tem seis moradores e o $B$ tem
+quatro, e a união não tem dez, tem oito: os dois que estavam nos dois lados foram contados duas
+vezes. Guarda esse desconto, porque ele volta com nome de "princípio da inclusão-exclusão" quando
+você chegar em contagem.
+
+</Resolucao>

@@ -1,0 +1,57 @@
+---
+resumo: Uma expressão numérica resolvida linha por linha, na ordem obrigatória
+fonte: Autoral
+nivel: facil
+modulos: [quatro-operacoes]
+resposta: "28"
+verificado: false
+---
+
+Resolva, reescrevendo a linha inteira a cada passo:
+
+$$
+30 - 4 \times (7 - 3) \div 8
+$$
+
+<Dicas>
+  <Dica>
+    Antes de calcular qualquer coisa, decide quem é o primeiro da fila. Tem alguém aqui que ganha
+    de todo mundo pela escrita?
+  </Dica>
+  <Dica>
+    Resolvido o parêntese, sobraram três operações de dois níveis diferentes. Quais duas moram no
+    mesmo nível, e como você decide qual delas vem antes?
+  </Dica>
+  <Dica>
+    A subtração é a última a entrar, e não a primeira, mesmo estando escrita logo no começo da
+    linha.
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="28">
+
+| o que eu resolvi | como ficou |
+|---|---|
+| o parêntese, $7 - 3$ | $30 - 4 \times 4 \div 8$ |
+| $4 \times 4$, que vem antes por estar mais à esquerda | $30 - 16 \div 8$ |
+| $16 \div 8$ | $30 - 2$ |
+| a subtração, que era a última da fila | $28$ |
+
+### Raciocínio
+
+A multiplicação e a divisão entram antes da subtração porque o $4 \times (7-3) \div 8$ inteiro
+descreve **um bloco só**, e é o bloco que é tirado do $30$. Enquanto esse bloco não vira um número
+sozinho, não tem o que subtrair.
+
+### Erros comuns
+
+**Começar pelo $30 - 4$**, porque está escrito primeiro:
+
+$$
+30 - 4 = 26 \;\to\; 26 \times 4 \div 8 = 13 \qquad \text{(errado)}
+$$
+
+Quem faz isso não errou conta nenhuma, errou a leitura: tratou o $4$ como uma quantidade solta
+quando ele era a descrição de quantas vezes o bloco se repete.
+
+</Resolucao>

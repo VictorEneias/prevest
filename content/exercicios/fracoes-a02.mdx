@@ -1,0 +1,59 @@
+---
+resumo: Simplificar até a fração ficar irredutível, usando os critérios de divisibilidade
+fonte: Autoral
+nivel: facil
+modulos: [fracoes]
+resposta: "3/4"
+verificado: false
+---
+
+Simplifique até não dar mais:
+
+$$
+\frac{42}{56}
+$$
+
+E no fim, responda: como você sabe que parou na hora certa?
+
+<Dicas>
+  <Dica>
+    Não precisa achar o divisor perfeito de primeira. Olha os dois números e pergunta se existe
+    algum critério que corta os dois de uma vez.
+  </Dica>
+  <Dica>
+    Cortou por $2$ e sobrou $\frac{21}{28}$. Agora nenhum dos dois é par, então o $2$ acabou.
+    Testa os ímpares pequenos: existe um que divide $21$ e $28$?
+  </Dica>
+  <Dica>
+    Pra saber se acabou, procura um número maior que $1$ que divida os dois que sobraram. Se não
+    existir nenhum, acabou.
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="3/4">
+
+Os dois são pares, então corto por $2$. Aí nenhum dos dois é par mais, e o $7$ divide os dois:
+
+$$
+\frac{42}{56} \;\xrightarrow{\;\div 2\;}\; \frac{21}{28} \;\xrightarrow{\;\div 7\;}\; \frac{3}{4}
+$$
+
+Parei porque $3$ e $4$ não têm mais divisor comum além do $1$, e é isso que quer dizer
+**irredutível**.
+
+Dava pra fazer num corte só, dividindo os dois por $14$, que é o **MDC** de $42$ e $56$. Os dois
+caminhos chegam no mesmo lugar, e cortar aos poucos só custa uma linha a mais.
+
+A barra não corta em $56$ pedaços, então olha a mesma ideia num tamanho que cabe na tela:
+
+<Barra a={[6, 8]} b={[3, 4]} titulo="Corte fino e corte grosso pintam o mesmo tanto" />
+
+O pintado é igual nas duas, e é isso que simplificar faz: cortar em cima e embaixo pelo mesmo
+número muda o nome da fração e não muda o número.
+
+### Erros comuns
+
+**Cortar só um dos dois lados**, escrevendo $\frac{42}{56} \to \frac{21}{56}$. Isso não é
+simplificar, é dividir a fração pela metade: você acabou de mexer no número, e não no nome dele.
+
+</Resolucao>

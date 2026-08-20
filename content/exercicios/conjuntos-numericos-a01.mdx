@@ -1,0 +1,65 @@
+---
+resumo: Verdadeiro ou falso com pertence, não pertence e está contido
+fonte: Autoral
+nivel: facil
+modulos: [conjuntos-numericos]
+resposta: "F, V, F, V"
+verificado: false
+---
+
+Com estes três conjuntos:
+
+$$
+A = \{1,\, 2,\, 3,\, 4,\, 5,\, 6\} \qquad B = \{5,\, 6,\, 7,\, 8\} \qquad C = \{2,\, 4\}
+$$
+
+diga se cada frase é verdadeira ou falsa, e leia cada uma em voz alta antes de responder:
+
+$$
+\text{(a) } 4 \in B \qquad \text{(b) } C \subset A \qquad \text{(c) } 2 \subset C
+\qquad \text{(d) } 7 \notin A
+$$
+
+<Dicas>
+  <Dica>
+    Traduz cada símbolo pra português antes de decidir. Três delas viram frases sobre morador, e
+    uma vira frase sobre conjunto inteiro.
+  </Dica>
+  <Dica>
+    Na (c), olha de novo quem está de cada lado do símbolo. O $\subset$ aceita um número solto do
+    lado esquerdo dele?
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="F, V, F, V">
+
+**(a) Falsa.** "O $4$ pertence ao $B$", e o $B$ é feito de $5$, $6$, $7$ e $8$. O $4$ mora no $A$
+e no $C$, e não no $B$.
+
+**(b) Verdadeira.** "O $C$ está contido no $A$", e o $C$ é o $\{2, 4\}$: os dois moradores dele
+também são moradores do $A$, então o $C$ inteiro cabe dentro do $A$.
+
+**(c) Falsa, e ela é falsa por escrita, não por conta.** O $\subset$ liga conjunto com conjunto, e
+o $2$ é um número solto. O certo é $2 \in C$. Se você quiser mesmo usar o $\subset$, tem que pôr
+o $2$ dentro de um conjunto: $\{2\} \subset C$, aí sim.
+
+**(d) Verdadeira.** O $A$ vai do $1$ ao $6$, então o $7$ não é morador dele.
+
+<Conjunto
+  layout="aninhados"
+  conjuntos={[
+    { nome: 'A', elementos: [1, 2, 3, 4, 5, 6] },
+    { nome: 'C', elementos: [2, 4] },
+  ]}
+  destacar={[2, 4]}
+  titulo="C dentro de A"
+  legenda="todo morador do C já era morador do A, e é isso que o ⊂ diz"
+/>
+
+### Erros comuns
+
+**Trocar $\in$ por $\subset$**, que é o caso da (c). Os dois viram "está dentro" quando a pessoa
+lê rápido, e eles são de níveis diferentes: o $\in$ compara **um morador** com a casa, e o
+$\subset$ compara **uma casa inteira** com a outra.
+
+</Resolucao>

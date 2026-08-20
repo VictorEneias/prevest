@@ -1,0 +1,66 @@
+---
+resumo: Uma sequência de subidas e descidas de temperatura, separando onde ela parou de quanto ela andou
+fonte: Autoral
+nivel: medio
+modulos: [juncao]
+resposta: "parou em -6 °C, e andou 13 °C no total"
+verificado: false
+---
+
+De manhã o termômetro marcava $3\ ^\circ\text{C}$. Ao longo do dia ele caiu $7$ graus, depois
+subiu $2$, depois caiu mais $4$.
+
+**(a)** Em quantos graus ele parou?
+
+**(b)** Somando todas as mexidas, quantos graus o ponteiro andou no total?
+
+<Dicas>
+  <Dica>
+    Escreve o dia inteiro como uma junção só, com o sinal de cada mexida. Cair é andar pra que
+    lado da reta?
+  </Dica>
+  <Dica>
+    Na (b) a pergunta mudou de assunto: ela não quer saber onde você parou, quer saber quanto
+    caminho você fez. O que você faz com o sinal de cada seta pra responder isso?
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="parou em -6 °C, e andou 13 °C no total">
+
+**(a)** O dia inteiro numa junção só:
+
+$$
+3 - 7 + 2 - 4
+$$
+
+Junto os que vão pro mesmo lado, que é o que a ordem livre me deixa fazer:
+
+$$
+(3 + 2) + (-7 - 4) \;=\; 5 - 11 \;=\; -6
+$$
+
+Ele parou em $-6\ ^\circ\text{C}$.
+
+<Setas
+  parcelas={[3, -7, 2, -4]}
+  legenda="3 − 7 + 2 − 4  →  saindo do zero e encadeando as quatro setas"
+  titulo="O dia inteiro na reta"
+  dominio={[-8, 6]}
+/>
+
+**(b)** Agora eu não quero saber pra que lado, quero o tamanho de cada seta. São $7 + 2 + 4 = 13$
+graus de caminho, e a temperatura de partida não entra, porque ela é onde o ponteiro estava e não
+uma mexida.
+
+### Raciocínio
+
+As duas perguntas usam os mesmos quatro números e jogam fora coisas diferentes: a (a) usa os
+sinais e a (b) usa os módulos. É o mesmo par que aparece na reta numérica, e é o mesmo par que
+vai separar deslocamento de distância percorrida quando você chegar em Física.
+
+### Erros comuns
+
+**Responder $-13$ na (b)**, somando as mexidas com o sinal delas. Caminho andado não tem lado:
+descer $7$ e subir $2$ não te dá $5$ de caminho, te dá $9$ de caminho e $-5$ de posição.
+
+</Resolucao>

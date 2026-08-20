@@ -1,0 +1,73 @@
+---
+resumo: Somar duas frações de denominadores diferentes achando o MMC
+fonte: Autoral
+nivel: facil
+modulos: [fracoes]
+resposta: "19/12"
+verificado: false
+---
+
+Resolva:
+
+$$
+\frac{3}{4} + \frac{5}{6}
+$$
+
+E antes de fazer a conta, chuta: o resultado passa de $1$?
+
+<Dicas>
+  <Dica>
+    Quarto e sexto são pedaços de tamanhos diferentes, então ainda não dá pra contar os pedaços
+    juntos. O que precisa acontecer antes?
+  </Dica>
+  <Dica>
+    Procura o primeiro número que aparece na lista dos múltiplos de $4$ e também na dos múltiplos
+    de $6$.
+  </Dica>
+  <Dica>
+    Achou o $12$? Reescreve as duas com denominador $12$ e aí conta os pedaços, lembrando que o
+    denominador é o nome do pedaço e não some com o outro.
+  </Dica>
+</Dicas>
+
+<Resolucao resposta="19/12">
+
+O chute vem antes: $\frac{3}{4}$ já é quase um inteiro e $\frac{5}{6}$ também, então a soma passa
+de $1$ com folga. Isso não resolve a conta, e serve pra você reconhecer resposta absurda depois.
+
+O menor número em que $4$ e $6$ cabem inteiros é o $12$:
+
+$$
+\frac{3}{4} = \frac{9}{12} \qquad\qquad \frac{5}{6} = \frac{10}{12}
+$$
+
+Agora os pedaços têm o mesmo tamanho, então é só contar:
+
+$$
+\frac{9}{12} + \frac{10}{12} \;=\; \frac{19}{12}
+$$
+
+O $19$ e o $12$ não têm divisor comum, então já está irredutível. E $\frac{19}{12}$ é maior que
+$1$, como o chute dizia.
+
+<Barra a={[3, 4]} b={[5, 6]} soma={true} titulo="Só junta depois de igualar os pedaços" />
+
+### Raciocínio
+
+Se eu travasse no MMC, eu multiplicaria $4 \times 6 = 24$ e seguiria em frente: $\frac{18}{24} +
+\frac{20}{24} = \frac{38}{24}$, que simplifica pra $\frac{19}{12}$. O produto dos denominadores
+nunca falha, ele só me dá números maiores pra carregar.
+
+### Erros comuns
+
+**Somar em cima e embaixo:**
+
+$$
+\frac{3}{4} + \frac{5}{6} \;=\; \frac{8}{10} \qquad \text{(errado)}
+$$
+
+O $\frac{8}{10}$ é menor que $1$, e as duas parcelas sozinhas já eram quase $1$ cada uma. Quem
+soma os denominadores está somando o **nome do pedaço**, e nome não se soma: uma maçã mais duas
+maçãs são três maçãs, não são três "maçãmaçãs".
+
+</Resolucao>
